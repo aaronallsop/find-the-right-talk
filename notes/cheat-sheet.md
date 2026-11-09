@@ -67,7 +67,7 @@ it is built.
     [Say this only once the fourth voice and the re-ranker are built; until then: "that is the
     next step on the board."]
 
-## The demo, in ninety seconds (Aaron's script, approved 12:05; replaces the day plan's version)
+## The old 90-second demo (Aaron's script, approved 12:05; superseded by the 3-minute video below, now that there is no live presentation)
 
 Words are Aaron's, kept as written. Square brackets are what is on screen, not words to say.
 
@@ -108,26 +108,56 @@ sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said on
 voice is built (it is, since 12:12, in the cloud only; the laptop leaves it out, so demo from the
 cloud); if it does not answer, say "searched three ways" and stop.
 
-**Not true yet, as of 12:31 (do not rehearse as if it were):** the Hello World Gazette, the demo
-outlet since 12:16, still fails its answer key by one place (Faros 13th); "in a second" is not true
-right now, because the page has slowed to about 8 to 10 seconds per answer (Titan is fixing it); with
-start-ups on, the plain search's Talks tab shows sponsors (Titan is fixing it). Cassini's check of the
-flip (12:20) found its talks on target but its outlet scores bunched close together. The Breach
-Chronicle is set aside: it stays in the data and is reported honestly as a miss.
+**Still not perfect, as of 12:50 (say so, do not hide it):** the Hello World Gazette misses its answer
+key by one place (Faros 13th); the flip's outlet order is a weak signal while its talks are strong;
+re-ranked, the GPU search puts vCluster above Edera. The Breach Chronicle is set aside: it stays in
+the data and is reported honestly as a miss.
 
-## Honest limits (measured today; say them before a judge finds them)
+## The 3-minute video (draft by Rhea, 12:50, for Aaron to approve or change)
 
-- **The Hello World Gazette** (the demo outlet) finds every must-find but one: Coder and Momentic
-  and the hidden gem, mirrord, are in its top ten, but Faros is 13th. Faros is a cost-of-agents tool
-  for managers; the outlet's readers are developers, so it is a weak fit by wording, and no honest
-  rewording lifts it without adding an idea the outlet never had.
-- **The Breach Chronicle** (set aside) misses: its wording is about attacks and breaches, while its
-  companies talk about vulnerabilities and sandboxes. It stays in the data and is reported as a
-  miss. With the start-ups switch on, it does show Maze and Archestra AI, two of its must-finds.
-- **The flip:** the order of the outlets it returns is a weak signal, because their scores bunch
-  close together; the talks it finds are strong.
-- **Not built:** the fit check (an AI judgement of the top results), and geo queries (the data has
-  no coordinates). Elastic's hosted re-ranker is kept (12:37) as a separate "Re-ranked" view.
+Under three minutes spoken. Words marked **[Aaron]** are Aaron's own approved words, kept verbatim;
+every other line is Rhea's draft in Aaron's voice, written only from results Cassini or Titan
+measured today. Change anything. Nothing on screen is staged: each shot is a real thing the page or
+Terminal does.
+
+**Before recording (Aaron):** at 16:10 run `.venv/bin/python -m ftrt.warm` (and again at 16:25 before
+submitting). **The agent is its own clip, recorded once (Aaron, 13:10), at about 14:05 after the
+go/no-go,** in the cloud Kibana (Agents, "Find the Right Talk"), using the screen check below. Ask:
+"Which sponsors and talks at KubeCon fit the Hello World Gazette?" Nobody asks the agent anything
+before that (refused questions use the trial allowance too). If Elastic refuses, stop and tell Saturn;
+do not retry on camera.
+
+**Screen check before recording, 16:05 (Dione):**
+1. Film the cloud Kibana, never localhost:5601: the laptop Kibana lists Aaron's private catalogues.
+   Check the address bar before recording.
+2. Use a private window or a fresh browser profile with two tabs only: cloud Kibana and
+   http://127.0.0.1:8765. Hide the bookmarks bar, turn Do Not Disturb on, and keep any Terminal or
+   settings file out of shot.
+3. In Kibana do not open Settings, API keys, Connectors, Elasticsearch Endpoints, Discover, Dev Tools,
+   or the Agent Builder's Traces or Logs. Crop out the project name and address if you can.
+4. Clear any leftover typed text on the page first.
+
+| # | Seconds | On screen | Aaron says |
+|---|---|---|---|
+| 1 | 0:00 to 0:45 | The page, press door, nothing picked yet. "Elastic Cloud serverless, with Elastic's ELSER" visible. | **[Aaron]** "I'm a video producer. I've covered a lot of conferences as media, and the plan never survives the morning. An interview cancels, another one moves, and suddenly you've got ninety free minutes, six hundred talks, two hundred booths, and no idea where to start. You don't want to sit in the press room, but you also can't read the whole schedule. So I built the thing I wanted in that moment: KubeCon's own programme, public data with credit, made searchable by meaning in Elastic Cloud, today." |
+| 2 | 0:45 to 1:10 | Pick Hello World Gazette, press Go. Matches come up. Point at the passage under one match. Point at mirrord, flagged Start-Up. | **[Aaron]** "Hello World Gazette is a newsletter for developers about new tools being created. They are at KubeCon to focus specifically on ai agents that are built to help developers work day to day." Then (draft): "Every result shows the passage that made it fit, so you can check my working. And start-ups are flagged: mirrord, a start-up, is in the top ten." |
+| 3 | 1:10 to 1:35 | Search box. Type: scale up for a traffic spike and back down afterwards. Show the Words column empty and the Meaning column with Kedify first, tagged Start-Up. | (draft) "Now the same programme searched by words and by meaning. I describe a problem in my own words: scale up for a traffic spike and back down afterwards. Words find nothing, because no sponsor uses those words. Meaning finds Kedify, a start-up." |
+| 4 | 1:35 to 2:05 | "Compare all" on the GPU sentence: keeping different tenants' GPU workloads isolated from each other on shared hardware. Five columns: Words, Meaning, Elastic ELSER, Blended, Re-ranked. Point at Edera in Words and vCluster in the re-ranked column. | (draft) "Compare all runs one search five ways, including Elastic's own ELSER model and Elastic's re-ranker. Words find Edera, who isolate GPUs. Meaning puts vCluster first, who share them. Re-ranked, vCluster is still above Edera. So the models find the topic, not the stance, and I want you to see that." |
+| 5 | 2:05 to 2:25 | Vendor door. Pick Kedify. Its outlets and nearest talks come up. | (draft) "Same engine, turned round. I'm a vendor, Kedify. Which outlets should I talk to, and which talks are near my story?" |
+| 6 | 2:25 to 2:45 | **The agent clip, recorded once in advance (about 14:05) and cut in here.** The recorded Agent Builder answer, with its quoted passages and the line "AI-written by the Find the Right Talk agent (Elastic Agent Builder)". | (draft) "And an Elastic Agent Builder agent answers in plain words. It must quote the programme's own passage for every company it suggests, and it labels its answer AI-written." |
+| 7 | 2:45 to 2:55 | Back to the page, Elastic Cloud serverless on screen. | (draft) "Elastic Cloud serverless, Elastic's own models, all the code written today from an empty folder." |
+
+**Spoken length:** see the count at the end of this section. If it runs long, cut shot 5 or shot 6
+first (the flip and the agent), then shorten shot 4.
+
+**Do not say** (not measured, or not true): that it answers "in a second"; that "nothing is sent
+anywhere"; anything about the Breach Chronicle as the demo outlet; that the agent is fast (one
+answer took 41 seconds, so the video shows a recording of one answer, not a live wait).
+
+**If Aaron wants it honest on screen:** the optional line for shot 2: "It isn't perfect: one company I
+expected, Faros, comes thirteenth."
+
+**Spoken word count:** about 302 words, which is about 129 seconds at a normal pace of 140 words a minute.
 
 ## Built on the day, one line per piece
 
@@ -165,4 +195,4 @@ Chronicle is set aside: it stays in the data and is reported honestly as a miss.
 - **Warming Elastic's models (12:29):** Elastic's models sleep when nobody uses them, so one command wakes them before a demo, and if one is still slow a search answers without it in a few seconds and says so, rather than leaving the page blank.
 - **Re-ranking (12:32):** A 'Re-ranked' switch hands the top twenty blended results to Elastic's own re-ranking model, which reads the question and each passage together and puts them in a new order, so the demo can show the list before and after. For that view only, the text goes to Elastic's hosted service outside the project.
   Demo note: re-ranked, the GPU search puts vCluster (shares GPUs) above Edera (isolates them): the re-ranker cannot tell the stance either, so say so rather than hope nobody asks.
-- **The agent (12:46):** An Elastic Agent Builder agent can answer in plain words, using three read-only tools over our two catalogues, and it must quote the programme's own passage for every company or talk it suggests, so a reader can check it never made anything up. Its words are written by a language model on Elastic's hosted service, and every answer says so.
+- **The agent (12:46):** An Elastic Agent Builder agent, 'Find the Right Talk', answers in plain words using three read-only tools over our two catalogues, quotes the programme's own passage for every company or talk it suggests, and labels its answer AI-written; on Elastic's trial it can answer about one long question every few minutes (a second question at 12:45 was refused with 'wait 6m53s'), so the video shows one recorded answer.

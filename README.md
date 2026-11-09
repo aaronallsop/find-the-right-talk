@@ -115,8 +115,6 @@ Measured on 9 November against two test outlets whose answer keys were written b
   Elastic's hosted inference service, and are labelled as AI-written.
 - [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
   wrote none of the code.]
-- [If used: Jules (Google) checked the README's claims against the code at the feature freeze;
-  it changed nothing.]
 
 ## Checked by Aaron
 

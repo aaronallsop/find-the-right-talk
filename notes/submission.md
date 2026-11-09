@@ -71,7 +71,7 @@ starts at 11:00.
 - [ ] Public repository link: https://github.com/aaronallsop/find-the-right-talk
 - [ ] README setup passed the fresh-copy test (Cassini's early test at 11:53 passed with fixes; it
       is redone after the freeze)
-- [ ] AI use disclosed in the README (written; the Gemini and Jules lines stay bracketed until used)
+- [ ] AI use disclosed in the README (written; the Gemini line stays bracketed until Aaron says whether he uses it; Jules is skipped)
 - [ ] What existed before 11:00 and what was built after, in two sentences (above)
 - [ ] Data credit: KubeCon + CloudNativeCon North America 2026 programme as of 4 November 2026, The
       Linux Foundation, CC BY 3.0

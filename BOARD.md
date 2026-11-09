@@ -102,6 +102,8 @@ the demo searches before and after):**
 
 (what Saturn or Rhea needs from you, each with the time; taken off when you have answered)
 
+- About 14:05, after the go/no-go: record the agent clip once, in the CLOUD Kibana (Agents, "Find the Right Talk"), using Dione's screen checklist below. Ask: "Which sponsors and talks at KubeCon fit the Hello World Gazette?" Then tell Saturn, and Cassini checks that saved answer without asking again. If Elastic refuses, stop and tell Saturn; do not retry on camera.
+- 16:05 Before recording, screen check (Dione): (1) film the CLOUD Kibana, never localhost:5601 (the laptop Kibana lists your private catalogues); check the address bar before recording. (2) Private window or a fresh browser profile, two tabs only: cloud Kibana and http://127.0.0.1:8765; bookmarks bar hidden; Do Not Disturb on; no Terminal or settings file in shot. (3) In Kibana do not open Settings, API keys, Connectors, Elasticsearch Endpoints, Discover, Dev Tools, or Agent Builder's Traces/Logs; crop out the project name and address if you can. (4) Clear any leftover typed text on the page first.
 - 12:47 The project's trial allows about one long agent question every 7 minutes. For the video: record one good answer, don't retry live, and ask the agent nothing in the 10 minutes before recording.
 - 12:45 Still open: does "run on the cloud" mean the searches (already so) or hosting the page itself online?
 - 12:23 At 13:20 read the usage page (Claude app, Settings, Usage) and tell Saturn the five-hour and weekly figures.
@@ -112,16 +114,12 @@ the demo searches before and after):**
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: holding. The Agent Builder agent is saved.
-- Rhea: README rewritten at 12:36 as the product's face, for a judge who reads and watches (setup moved lower); the words are drafted; waiting for the page-speed and Talks-tab fixes, then redoes the numbers after the freeze.
-- Cassini: checking the start-ups toggle. Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
+- Titan: holding, no new features. The fixes, "Compare all" and the Agent Builder agent are all saved and pushed.
+- Rhea: drafted the 3-minute video script in the cheat sheet (12:50) for Aaron to approve; the README and submission paragraph are written and wait for the freeze.
+- Cassini: will check the agent's saved answer once Aaron has recorded the clip (no more questions to the agent); keeping its evidence in notes/evidence.md.
 - Dione: standing by.
 
-Watch for the demo: Elastic's in-project model sleeps when idle and took 81 seconds to wake. Run one search a minute or two before presenting; the same goes in the 17:15 screen check (the day plan, not Rhea's file, so Saturn adds it there) and before the 16:15 recording and 16:30 submission.
-
 Watch (demo note): with start-ups only, the Breach Chronicle shows Maze and Archestra AI, two of its must-finds.
-
-Watch: by words alone some outlets find little or nothing (TechRevolt News nothing at all).
 
 Watch: both test outlets still FAIL their answer keys (re-scored 12:15, with Elastic's model). The
 Hello World Gazette, the demo outlet since 12:16, is one short (Faros 13th). The Breach Chronicle is
@@ -130,17 +128,15 @@ as a miss.
 
 ## Next
 
-Aaron's plan as of 12:40 (after the organiser and the info message): no live presentation. Judging is
-the GitHub repository plus a 3-minute video on the WeMakeDevs platform by 17:30, and judges are
-unlikely to run it. The freeze at 15:45 holds.
+Aaron's plan as of 12:40: no live presentation. Judging is the GitHub repository plus a 3-minute video
+on the WeMakeDevs platform by 17:30. We are ahead of every milestone. The freeze at 15:45 holds.
 
-1. Titan's page-speed and Talks-tab fixes.
-2. A side-by-side compare view on the page.
-3. An Agent Builder agent, scoped first, only if we get there.
-4. From 15:45: the README as the product's face (Rhea), the evidence page of measured results
-   (Cassini), screenshots, Aaron's recording.
+1. Aaron approves or changes the 3-minute video script (cheat sheet).
+2. Aaron records the agent clip once (about 14:05); Cassini checks that saved answer and finishes the evidence page.
+3. Only fixes from here; nothing new goes in. Freeze 15:45.
+4. From 15:45: the README as the product's face (Rhea), the evidence page (Cassini), screenshots,
+   Aaron's recording (he warms the Elastic models first, at 16:10).
 5. Aaron submits at 16:30 with take one; 16:30 to 17:30 a better take, if the platform allows edits.
-   Warming the Elastic models before recording is Aaron's job.
 
 ## Done
 
@@ -153,7 +149,7 @@ unlikely to run it. The freeze at 15:45 holds.
 - 11:57 Saved and pushed (321b069): the match's order no longer shifts with how many results are shown, and the first run on a new machine downloads the meaning model. Passage count explained: 2,225 programme passages plus 25 outlet passages is 2,250.
 - 12:12 Elastic's own meaning model, ELSER, saved and pushed (2e26f1b): in the cloud it reads every passage and gets one vote in the blend; the laptop leaves it out. Cloud load now takes 470 seconds (Titan, measured 12:01 to 12:09). The cloud was reloaded on Aaron's go-ahead. Demo searches unchanged at the top; Elastic's model alone also gets all three right. A four-helper review found and fixed 7 faults before saving. Not yet re-scored.
 - 12:33 Rhea finished the submission draft, added "Where it falls short" to the README and "Honest limits" to the cheat sheet, and wrote the fit check as not built. Aaron reads the paragraph by 15:30.
-- 12:46 The Elastic Agent Builder agent saved and pushed (44b827a, on Aaron's yes in Titan's session): "Find the Right Talk", three read-only tools over today's two catalogues. Its answers are written by Claude Sonnet 4.5 on Elastic's hosted service and labelled AI-written. Titan measured one Gazette answer in 41 seconds and checked all 14 quotations word for word. Cassini is checking it with one question.
+- 12:46 The Elastic Agent Builder agent saved and pushed (44b827a, on Aaron's yes in Titan's session): "Find the Right Talk", three read-only tools over today's two catalogues. Its answers are written by Claude Sonnet 4.5 on Elastic's hosted service and labelled AI-written. Titan measured one Gazette answer in 41 seconds and checked all 14 quotations word for word. Cassini is checking it with one question. A second question at 12:45 was refused by Elastic's trial limit ("wait 6m53s"), so the video shows one recorded answer. Saved with Cassini's evidence file in e9617f7.
 - 12:43 Aaron tried the flip at the vendor door and it works; Cassini checked three sponsors. M5 is done.
 - 12:37 "Compare all" on the page (acdd654): five columns side by side (words, meaning, Elastic's ELSER, blended, re-ranked), so the video can show Elastic's voice. Checked by Cassini in a real browser (12:42), three runs each, identical: the GPU sentence takes 1.2 to 1.7 seconds, every column matches its own view, and the Start-Up tags are all correct. The page shows "Elastic Cloud serverless, with Elastic's ELSER" on screen, for the video.
 - 12:35 Page fixes (c4a8ae8): checked by Cassini in a real browser (12:42), three runs each, identical: a Gazette Go takes about 2.5 seconds and a re-ranked search about 1.2 seconds; Talks cannot be chosen with start-ups on.
@@ -191,6 +187,8 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
 - Aaron (relayed by Neptune, 12:05 by Neptune's clock): approved a rewritten 90-second demo script and three new judge answers (why Elastic Cloud, why no geo, why Elastic's own models). Rhea put them in the cheat sheet; the day plan's demo is superseded.
 - 12:32, Aaron (said in Titan's session): yes to the hosted Jina re-ranker; it is kept.
+- 13:10, Aaron: the agent goes in the video as one clip, recorded once. Nobody asks the agent anything before then (the trial allowance refills slowly; refused questions use it too).
+- 12:48, Aaron: skip Jules. The 15:45 fact-check step goes from the plan (the day plan's Jules task is superseded), and Jules is out of the README. Gemini's line stays bracketed until Aaron says whether he uses it.
 - 12:43, Aaron: Cassini's evidence goes in notes/evidence.md, a clean file for judges. He also says the Agent Builder question is "already answered" (typed in Titan's session); Saturn and Titan to confirm what the answer was.
 - 12:40, Aaron (after the organiser and the info message): no live presentation. Judging is the GitHub repository plus a 3-minute video on the WeMakeDevs platform by 17:30; judges are unlikely to run it. Build to work and be shown; no more effort on hosting, packaging, cold starts or edge cases; the own-project setup stays in the README with the one fresh-copy test already done (11:53). What is on screen is real and measured by Cassini; nothing staged. Aaron submits at 16:30 with take one; a better take 16:30 to 17:30 if the platform allows edits.
 - 12:35, Aaron: the submission form is one shot, so no early submission. Submit once, after the freeze, the fresh-copy test and a rehearsal, by 16:30 at the latest. Rhea has the submission paragraph ready for Aaron to read by 15:30.

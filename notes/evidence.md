@@ -165,3 +165,30 @@ fresh-copy run was made after that. Nothing here says how the page looks on a ph
 behaves for anyone but the person who built it. The word counts quoted for the Breach Chronicle's wording are a
 single count over the sponsors' text. The Gazette misses its own key's pass test by one company; the Breach
 Chronicle misses it entirely. No geographic search is offered: the data has no coordinates.
+
+## 7. The Elastic Agent Builder agent (version 44b827a)
+
+An AI-written second way in: an agent in Elastic's Agent Builder with three read-only tools over today's two
+catalogues, answering in Elastic's hosted language model (Anthropic Claude Sonnet 4.5).
+
+**One real answer, checked from the saved record (13:08 on 9 November; the checker made no model call).** The
+question "Which sponsors and talks at KubeCon fit the Hello World Gazette?" was asked at 12:42:49. The record says:
+completed; first words after 11.6 seconds, finished after 33.7 seconds; 4 calls to the model, 41,917 input and
+1,282 output tokens; three tool calls (the outlet's profile, then two searches of the programme, one with the
+outlet's assignment and one with its beat). What was checked in the answer:
+
+| Check | Result |
+|---|---|
+| Every company named is a sponsor in the data | 5 of 5 (Coder, Dash0, Momentic, mirrord by MetalBear, Docker), with the tier the answer gave |
+| Every talk named exists, and the day and time given are the programme's | 5 of 5 exist; the 3 that were dated match |
+| Every quotation appears word for word in the programme's text | 19 of 19 |
+| Ends with the AI-written line, exactly | yes |
+| Against the answer key for this outlet | 4 of its 5 sponsors are on the key (Coder, Momentic, the hidden gem mirrord, Docker); Faros and JetBrains were not named; Dash0 is not on the key |
+
+Two things a reader should know: the answer opens with a line of the model's own narration ("Perfect! I now have
+comprehensive results..."), and its one-line reasons are the model's wording, which was not checked; only the
+quotations were. This is one answer from one question, not a repeated measurement.
+
+**The quota is tight.** The same single question, asked twice more (12:53 and 13:06), was refused both times
+after about 30 seconds with the trial's rate limit (HTTP 429): "wait 8m44s for your trial quota to be refilled",
+then, thirteen minutes later, "wait 6m7s". A live answer from the agent cannot be relied on within a short window.

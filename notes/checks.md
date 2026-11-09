@@ -1008,3 +1008,77 @@ Maze is the only gem-tagged start-up outside the beat companies shown (with Rada
 **Not checked:** how the columns look at phone width or with the longest names (the grid is code-defined to wrap);
 the hover passages; Compare all with start-ups only switched on; talks and speakers tabs beyond the badge
 check and each column's first entry.
+
+---
+
+# The Agent Builder agent (commit 44b827a): one question, 12:53 (machine clock) — REFUSED, nothing checked
+
+Asked exactly one question, at 12:53:23, after waiting until 12:53 as told:
+`.venv/bin/python -m ftrt.agent ask "Which sponsors and talks at KubeCon fit the Hello World Gazette?"`
+(the question in the commit message of 44b827a). **The agent did not answer: HTTP 429, "Too Many Requests",
+from Elastic's hosted language model: "You have reached your trial limit for this model ... or wait 8m44s for
+your trial quota to be refilled."** The refusal came back after 30 seconds. As instructed I did not retry, so:
+no answer, no list of companies, no quotations, no closing line to check, and no time for an answer to
+report. The quota should refill at about 13:02 (12:53:53 plus 8m44s, machine clock), if the earlier use was the cause.
+The checker for the answer (every company named is a sponsor in `data/sponsors.csv`, every quotation found
+word for word in the programme text, the closing line exactly as the agent's instructions require) is ready and
+unused. What I have of the agent's earlier answer (12:42 to 12:45, 41 s, in the commit message of 44b827a)
+is the other session's report, not my measurement, and I did not repeat it.
+
+## The Agent Builder agent, second try at 13:06 (machine clock): REFUSED again
+
+Waited until 13:06 (13 minutes after the first refusal), then asked the same one question at 13:06:08.
+**Refused after 32 seconds with the same HTTP 429 from Elastic's hosted model, this time: "wait 6m7s for your
+trial quota to be refilled."** (First refusal, 12:53:53: wait 8m44s.) Not retried, as instructed: nothing to
+check, no answer time. What the two refusals show: the quota had not refilled after 13 minutes, and each
+refused request ran for about 30 seconds before the refusal came back, which suggests the agent had already
+used the model (reading the outlet, searching) before the limit stopped it; I cannot see inside to confirm.
+The wait it quoted shortened from 8m44s to 6m7s over 13 minutes, so the trial quota behaves as a longer
+rolling allowance, not one question every 7 minutes. Next possible time on its own figure: about 13:12:45 on
+this clock (13:06:40 plus 6m7s), with no guarantee.
+
+---
+
+# The Agent Builder agent, read back from its saved conversation (13:08, machine clock). No model call made.
+
+Read only: listed the project's saved agent conversations (`GET /api/agent_builder/conversations`: six, of which
+five are the project's agent; the other belongs to Elastic's built-in agent and I did not open it) and read the one
+titled "KubeCon Sponsors and Talks for Hello World Gazette", created 12:42:46 local (19:42:46 UTC), the one
+asked 12:42. My own two refused questions (12:53, 13:06) are listed as conversations too; I read none of them.
+Nothing created, changed or deleted. (An 'ask' by me at 12:53:23 and 13:06:08 created those two empty records.)
+
+**What was asked:** "Which sponsors and talks at KubeCon fit the Hello World Gazette?" Status completed.
+**Time and cost, as the record states:** started 12:42:49.659; first words after 11.6 s; finished after 33.7 s
+(the 41 s Titan reported includes starting and printing); 4 calls to the language model (Anthropic Claude
+Sonnet 4.5 on Elastic's hosted service), 41,917 input tokens, 1,282 output tokens.
+**Tool calls it made (3, in order):** `ftrt.outlet_profile` with "Hello World Gazette"; `ftrt.search_programme`
+with "AI agents built for developers that help you write code" (kind any, start-ups only false);
+`ftrt.search_programme` with "new developer tools programming languages frameworks how developers write test
+and ship code" (kind any, start-ups only false). No other tool, and none outside the project's three.
+
+**Companies named, against `data/sponsors.csv`:** five sponsors, all in the file, with the tier the answer gave:
+Coder (Silver), Dash0 (Platinum), Momentic (Silver), mirrord by MetalBear (Start-Up), Docker (Platinum). (My
+checker also counted "Elastic" as a sponsor name: that is the closing line's "Elastic Agent Builder", not a pick.)
+**Talks named, against `data/sessions.csv`:** five, all exist, and the day and time the answer gave match the file
+for the three it dated: "What monday.com's 500+ Engineers and AI Agents Have in Common" (Thursday 12 November,
+11:00–11:30), "Demo Theater: From YOLO to Golden Paths..." (Thursday 12 November, 11:00–11:20), "Demo Theater:
+Agent Sandbox on EKS..." (Wednesday 11 November, 11:25–11:45); the other two ("Agents Fail. Workflows Recover.",
+"From Platform Catalog to Conversational Agent") carry no date in the answer. No speaker named.
+**Quotations:** 19 quoted pieces (sponsor passages, talk descriptions and talk titles): **all 19 found word
+for word, character for character (whitespace aside), in the programme's own CSV text.** None failed even the
+looser punctuation-free test. The agent used "…" nowhere inside a quotation.
+**The closing line:** the answer's last line is exactly "AI-written by the Find the Right Talk agent (Elastic
+Agent Builder). Check each quoted passage before you rely on it." (checked against the instruction text).
+
+**Against the project's own answer key for this outlet (`notes/answer-keys.md`):** of the five sponsors the agent
+named, four are on the key (Coder and Momentic, two of the three must-finds; mirrord by MetalBear, the hidden gem;
+Docker, a "should also do well"); Dash0 is not on the key. It did not name Faros (the third must-find) or JetBrains.
+It did not name KodeKloud or Endor Labs.
+
+**Flaws to know about (not failures of the checks):**
+1. The answer opens with narration before the answer: "Perfect! I now have comprehensive results. Let me provide
+   the Hello World Gazette with the top sponsors and talks ...". On screen or in a recording that line shows.
+2. The instructions say "up to five picks"; it gave five sponsors and five talks (ten picks in two lists).
+3. Its one-line reasons are the model's own words (for example "Perfect match for the assignment", "Novel
+   approach to letting AI agents test against real environments") and are not checked against anything: only the
+   quotations were.
