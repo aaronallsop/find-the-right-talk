@@ -16,7 +16,7 @@ from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse, textwrap
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
-from . import config, passages
+from . import config, passages, tracing
 from .engine import connect
 from .search import ELSER_MISSING, MISSING, RERANK_MISSING, _fetch_size, _fields, _group, embed, filters, fuse, jina_question, rerank, search_elser, search_jina, search_meaning_vector, with_passages
 
@@ -98,19 +98,28 @@ def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: b
     # every part asks every way at the same time (they do not depend on each other); the lists are then put
     # together in a fixed order, so the result is exactly what asking one after another gives, only sooner
     jobs = [(part, way) for part in parts for way in ways]
-    with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
-        answers = dict(zip(jobs, pool.map(lambda job: ways[job[1]](parts[job[0]]), jobs)))
+    def ask(job):   # one part, one way: a step of its own in the trace
+        with tracing.span(f"{job[1]} search", part=job[0], kind=kind or "all") as s:
+            found = ways[job[1]](parts[job[0]])
+            tracing.note(s, found)
+            return found
+    with tracing.span("match", kind=kind or "all", parts=len(parts), startups=startups), \
+         ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+        answers = dict(zip(jobs, pool.map(tracing.carry(ask), jobs)))
     lists = {way: [] for way in ways}
     for part, way in jobs:
         results = answers[(part, way)]
         if results is not None:   # ELSER is skipped on the laptop engine
             lists[way].append(([{**r, "via": f"{PART_NAMES[part]}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
-    out = {way: with_passages(client, fuse(ls, n)) for way, ls in lists.items() if ls}
-    blended = with_passages(client, fuse([l for ls in lists.values() for l in ls], max(n, config.RERANK_TOP)))
+    with tracing.span("fetch passages", kind=kind or "all"):
+        out = {way: with_passages(client, fuse(ls, n)) for way, ls in lists.items() if ls}
+        blended = with_passages(client, fuse([l for ls in lists.values() for l in ls], max(n, config.RERANK_TOP)))
     out["blended"] = blended[:n]
     # Elastic's re-ranker reads the profile (its KubeCon part first) against each of the blended top passages
     question = " ".join(parts[p]["text"] for p in sorted(parts, key=lambda p: -config.MATCH_WEIGHTS[p]))
-    reordered = rerank(client, question, blended)
+    with tracing.span("re-rank", kind=kind or "all") as s:
+        reordered = rerank(client, question, blended)
+        tracing.note(s, reordered)
     if reordered is not None:   # Elastic Cloud only, and only when it answers
         out["reranked"] = [{**r, "via": "Elastic's re-ranker"} for r in reordered[:n]]
     return out
@@ -122,8 +131,8 @@ WAY_NAMES = {"words": "words", "meaning": "meaning", "elser": "Elastic's ELSER",
 def with_jina(client, parts: dict) -> dict:
     """The parts with each one's Jina numbers asked for once, so the several kinds of one match share them.
     Kept only for this request; a part Jina does not answer for simply has none (Jina is then left out)."""
-    with ThreadPoolExecutor(max_workers=len(parts)) as pool:
-        vectors = dict(zip(parts, pool.map(lambda part: jina_question(client, parts[part]["text"]), parts)))
+    with tracing.span("jina question", parts=len(parts)), ThreadPoolExecutor(max_workers=len(parts)) as pool:
+        vectors = dict(zip(parts, pool.map(tracing.carry(lambda part: jina_question(client, parts[part]["text"])), parts)))
     return {part: {**p, "jina": vectors[part]} for part, p in parts.items()}
 PART_NAMES = {"beat": "what it always covers", "assignment": "its KubeCon assignment",
               "does": "what it does", "showing": "what it shows at KubeCon"}

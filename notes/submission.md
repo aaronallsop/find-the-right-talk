@@ -33,7 +33,7 @@ Elastic's ELSER model are blended in Elastic Cloud serverless, and a re-ranked v
   addresses in the loaded text (Titan, re-measured 11:38; Cassini's fresh copy, 11:52).
 - 32 of the 226 sponsors are Start-ups; the switch takes the picker from 226 to 32 and back to 226
   (Titan, 12:24 to 12:25; Cassini, in a real browser, 12:31).
-- Elastic Cloud load takes 470 seconds because ELSER reads every passage; 12 seconds on the laptop
+- Elastic Cloud load takes 66 seconds (ELSER and Jina read every passage); 12 seconds on the laptop
   engine (Titan, 12:01 to 12:09).
 - The demo searches gave the same top results in three runs each (Cassini, 11:49).
 - Demo outlet: the Hello World Gazette (Aaron, 12:16). The Breach Chronicle, the other test outlet,

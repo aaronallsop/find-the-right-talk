@@ -100,15 +100,30 @@ the demo searches before and after):**
 
 ## For Aaron
 
-What is going on, and only what you still need to do, in time order. Nothing here is a question about
-anything already settled (the Breach Chronicle, Gitar, hosting, Jules and the naming are all settled).
+What is going on, and only what you still need to do, in time order. Items A to C were added at 13:46 for the grand-prize plan; the rest are in time order.
 
-1. Now: in the cloud Kibana, Model management: make sure Default model (and any Agent Builder model
-   setting) is the OpenAI endpoint and saved. In Agent Builder's chat box, the model selector should
-   show OpenAI. Ask the agent nothing; tell Saturn what you see.
+A. Create the Dash0 account. Titan will say which file and line names for the token; you put the
+   token in a settings file yourself.
+B. Radar (you get a free Kubernetes cluster, deleted on 13 November): (1) join on Radar's join page
+   with the team code Saturn gave you (it is on the private status page, not here, because this board
+   is public), a team name (lower case, digits, dashes, at most 20 characters) and your email; (2) sign
+   in at https://app.radarhq.io and accept; (3) get the starter repository's link from the Radar table
+   or the kickoff page; tell Saturn the team name and the link. Skip the `claude mcp add` step. Later:
+   enter your Elastic key into the cluster as a secret yourself.
+C. The Breach Chronicle: the split already failed at 13:31 and it is out of the demo. Is there another
+   fix you meant? (If not, nothing to do.)
+
+1. Now: switch the agent to your OpenAI model (steps from Dione's reading of Elastic's docs; the
+   on-screen wording may differ a little):
+   1. Cloud Kibana: click the search box at the top, type "Model management" (it may be called
+      "Feature settings"), and open it.
+   2. Find "Default model"; pick openai-chat_completion-k563qy9gg9; click Save. If the page has an
+      Agent Builder section with its own model choice, set that to the same endpoint and Save.
+   3. Open Agent Builder, "Find the Right Talk", and look at the model selector in the chat box
+      (do not send anything): it should show the OpenAI model; if not, pick it there.
+   4. Tell Saturn what it shows; Cassini then asks the one test question.
 2. Now, optional: the Jina reload needs your yes typed in Titan's session. If not by 13:45, it runs
    after 14:25 (not 14:00 to 14:25; done before 15:30).
-3. 14:00 Go/no-go, out loud, with Saturn.
 4. About 14:05: record the agent clip once in the cloud Kibana (Agents, "Find the Right Talk"), with
    the OpenAI model if Cassini has confirmed it works, else the trial model. Ask: "Which sponsors and
    talks at KubeCon fit the Hello World Gazette?" Then tell Saturn; Cassini checks the saved answer.
@@ -134,15 +149,16 @@ as a miss.
 
 ## Next
 
-Aaron's plan as of 13:27. We are ahead of every milestone. The freeze at 15:45 and the submission at
+Aaron's plan as of 13:46. We are ahead of every milestone. The freeze at 15:45 and the submission at
 16:30 do not move. If behind, cut from the bottom.
 
 1. The reload plan below (Gitar's review and Cassini's before set are done).
-3. The one reload (not 14:00 to 14:25, and none after 15:30): Jina embeddings as one more voice (the
+2. The one reload (not 14:00 to 14:25, and none after 15:30): Jina embeddings as one more voice (the
    Breach Chronicle split is not built).
-4. The agent's new model through Aaron's OpenAI connector, then Cassini's one question and read-back.
+3. The agent's new model through Aaron's OpenAI connector, then Cassini's one question and read-back.
    If the connector fails, the 14:05 trial clip stands.
-5. Workflows only if everything is done by 15:00, with a 45-minute cap.
+4. Workflows only if everything is done by 15:00, with a 45-minute cap.
+5. Dash0 tracing (Titan, 45-minute cap) and the Radar hosted page (Dione builds, Titan commits, 60-minute cap, only after Aaron confirms with Radar).
 6. Freeze 15:45; the README, evidence page and screenshots; Aaron's recording; submit 16:30.
 
 ## Done
@@ -201,6 +217,10 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
 - Aaron (relayed by Neptune, 12:05 by Neptune's clock): approved a rewritten 90-second demo script and three new judge answers (why Elastic Cloud, why no geo, why Elastic's own models). Rhea put them in the cheat sheet; the day plan's demo is superseded.
 - 12:32, Aaron (said in Titan's session): yes to the hosted Jina re-ranker; it is kept.
+- 13:48, Aaron: go/no-go 1 is GO (everything due by 15:15 is done and checked). Radar hosted page: GO, with a hard stop at 15:15 (drop it if it is not live; the README then says so). Correction: Radar does give each team a free Kubernetes cluster, deleted on 13 November. Dione builds the lean hosted page in a new hosted/ folder; Titan saves it.
+- 13:49, Aaron: keep Jina. Elastic's "Jina models for embeddings" ask is done.
+- 13:46, Aaron (his note, 13:55): go for the grand prize, which needs all four sponsor tools (Elastic, Gitar, Dash0, Radar). Dash0: Titan adds tracing to the page (45-minute cap); Aaron creates the Dash0 account and puts the token in a settings file himself. Radar: a lean hosted version of the page, built by Dione in its own folder, committed by Titan, and deployed to Radar's cluster with Aaron's Elastic key entered by Aaron himself as a cluster secret; only after Aaron confirms with Radar that the cluster outlives judging and a deploy is quick (60-minute cap). Gitar continues on the new code. The freeze at 15:45 holds. The 13:40 hosting decision (hosting is off) is reversed by this.
+- 13:44 Jina embeddings are in, saved and pushed (809ca91): one more voice in the blend and one more column in Compare all (cloud only); all 2,250 passages go to Elastic's hosted service once at load. Load to Elastic Cloud now takes 66 seconds (Titan, 13:35), not 470. The page's engine line now names ELSER, Jina embeddings and a re-ranker.
 - 13:36, Aaron created an OpenAI model endpoint in the cloud Kibana for the agent ("openai-chat_completion-k563qy9gg9", gpt-4.1); Dione confirmed it exists. At 13:38 Cassini's test question still went to the old trial model and was refused: the agent uses the project's default model, and the switch had not taken effect. Aaron is checking the setting. No Agent Builder trial worries if OpenAI works.
 - 13:37, Aaron: drop the Breach Chronicle from the demo; three minutes is too short for two outlets. The video script and the README's walk-through use the Hello World Gazette only. The Chronicle stays in the data and in Cassini's evidence as an honest miss, with one line in the README's limits.
 - 13:27, Aaron's decisions for the second half (Saturn's report): hosting the page online is off ("run on the cloud" meant the searches, already so). One reload before 15:30: (a) the Breach Chronicle's two-part assignment as two voting parts, kept only if a must-find enters its blended top ten; (b) Jina embeddings as one more voice, tested on ten passages first, skipped if slow or refused. No reload after 15:30. Aaron adds an OpenAI connector for the agent himself ($50 credits) to lift the trial limit; if it fails, the 14:05 trial clip stands. Workflows only if the rest is done by 15:00, with a 45-minute cap. Neptune is redrafting the video script; Aaron brings it to Rhea.

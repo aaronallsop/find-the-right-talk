@@ -18,7 +18,7 @@ from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse, sys, textwrap, threading, time
 from concurrent.futures import ThreadPoolExecutor
 from elasticsearch import ApiError, TransportError
-from . import config, engine
+from . import config, engine, tracing
 from .engine import connect
 
 _model = None
@@ -215,8 +215,13 @@ def every_way(client, query: str, n: int = 10, index: str = config.PROGRAMME_IND
     "elser": [...] or None, "jina": [...] or None}."""
     depth = max(n, config.BLEND_DEPTH)   # fixed, so the blend does not change with how many are shown
     ways = (("words", search_words), ("meaning", search_meaning), ("elser", search_elser), ("jina", search_jina))
+    def ask(way):   # each way a step of its own in the trace
+        with tracing.span(f"{way[0]} search") as s:
+            found = way[1](client, query, depth, index, filt, passages=False)
+            tracing.note(s, found)
+            return found
     with ThreadPoolExecutor(max_workers=len(ways)) as pool:
-        return dict(zip((w for w, _ in ways), pool.map(lambda way: way[1](client, query, depth, index, filt, passages=False), ways)))
+        return dict(zip((w for w, _ in ways), pool.map(tracing.carry(ask), ways)))
 
 
 def blend(found: dict, n: int) -> list[dict]:
@@ -231,8 +236,11 @@ def search_blended(client, query: str, n: int = 10, index: str = config.PROGRAMM
 def compare_all(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> dict:
     """Every way side by side, each asked once: the blended and re-ranked columns come from the same answers."""
     found = every_way(client, query, n, index, filt)
-    blended = with_passages(client, blend(found, max(n, config.RERANK_TOP)))   # the re-ranker reads these passages
-    reordered = rerank(client, query, blended)
+    with tracing.span("fetch passages"):
+        blended = with_passages(client, blend(found, max(n, config.RERANK_TOP)))   # the re-ranker reads these passages
+    with tracing.span("re-rank") as s:
+        reordered = rerank(client, query, blended)
+        tracing.note(s, reordered)
     return {**{w: (None if rs is None else with_passages(client, rs[:n])) for w, rs in found.items()},
             "blended": blended[:n], "reranked": None if reordered is None else reordered[:n]}
 

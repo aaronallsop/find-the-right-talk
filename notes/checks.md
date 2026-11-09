@@ -1167,3 +1167,85 @@ own saved definition has no model field (only instructions, tools, capabilities)
 default connector is when it runs; at 13:38:46 that was still the Anthropic one. The earlier refusals: 12:53:53 (wait
 8m44s), 13:06:40 (wait 6m7s); this one at 13:39:29 (wait 3m36s).
 Nothing to check: no answer, no companies, quotations or closing line. The checked answer remains the 12:42 one.
+
+---
+
+# "After Breach/Jina reload" set: 809ca91, cloud reloaded 13:35 to 13:37, measured 13:45 to 13:48 (machine clock)
+
+Six ways now: words, meaning, ELSER, **Jina** (a further embedding model, one more voice), blended, re-ranked. Sponsors only.
+The commit message says the Breach Chronicle split was "tried and dropped", so the Breach outlet is still matched on its beat and
+its one assignment. Agent not asked anything.
+
+**A new fact: the match is no longer exactly repeatable run to run.** Words, meaning and ELSER were identical in every
+run. The Jina list is not: its *names and order* were identical in all runs but its scores shifted in the fourth decimal
+in some runs (for example Endor Labs 0.0393 in two runs and 0.0390 in the third). Because blending adds scores, that
+moves companies that are almost tied. Measured: Gazette, n=10, 13 runs in all (3 at 13:46:36 to :41, 10 more at 13:47):
+- **Jina top ten names and order: identical in all 13** (scores in two variants).
+- **Blended top five: identical in all 13.** Places 1 to 8 identical in all 13; places 9 and 10 flip between two
+  versions: "Cosmonic, Syntasso" (about 6 of 10 runs, and runs 1 and 2) and "Syntasso, Dash0" (about 4 of 10 and run 3).
+- **Re-ranked:** places 1 to 9 identical in all 13; place 10 flips between ControlTheory and Dash0 the same way
+  (6 and 4 of the 10 extra runs), and in run 3 places 3 to 9 had slightly different scores.
+Cause not investigated (I do not read or change code).
+**n=10 against n=50:** the Gazette's top ten at n=10 equals the first ten of the n=50 run exactly in words, meaning and ELSER in
+all three runs, in Jina, blended and re-ranked in runs 1 and 2, but **not in run 3** (blended places 9 and 10, re-ranked
+places 3 to 10 differ). So the difference Titan saw is this run-to-run wobble in the Jina voice, not a depth fault: the same
+command run twice at the same n=10 gives the two versions. I have not seen it differ for a reason that depends on n.
+
+## The three demo searches (compare, sponsors, three runs each: 13:45:20 to :35, 13:45:42 to :57, 13:46:05 to :21)
+
+All three runs agreed on names and order in every way, every search. Jina scores in the GPU search moved by 0.0001 to
+0.0002 between runs (Edera 0.7480, 0.7478, 0.7478) without changing any order.
+
+| Search | Words | Meaning | ELSER | Jina | Blended | Re-ranked |
+|---|---|---|---|---|---|---|
+| "SLSA Level 3" | ActiveState, Docker | OpenSSF, HeroDevs, Akeyless Security, AEnix, Nebius | ActiveState, Emphere (Start-Up), OpenSSF, Docker, Chainguard | OpenSSF, Sonrai Security, Akeyless Security, Sonatype, Maze (Start-Up) | ActiveState 0.0593, OpenSSF 0.0487, Docker 0.0469, StackGen, Akeyless Security | ActiveState, Docker, OpenSSF, Emphere |
+| "scale up for a traffic spike and back down afterwards" | nothing | Kedify (Start-Up), ScaleOps, DataAgent, Better Stack, Ascendra Networks | Kedify, DevZero, PlanetScale, ScaleOps, Zesty | ScaleOps, Tailscale, Kedify, PlanetScale, PerfectScale by DoiT | Kedify 0.0487, ScaleOps 0.0481, Ascendra Networks, DevZero, PlanetScale | Kedify, ScaleOps, Zesty |
+| GPU sentence | Edera | vCluster, Edera, Rafay Systems, AEnix, Cast AI | Edera, vCluster, Cast AI, AEnix, Lablup | Edera, vCluster, CoreWeave, Lablup, Cast AI | Edera 0.0653, vCluster, Cast AI, Rafay Systems, Lablup | vCluster, Edera |
+
+Against the 13:29 "before": words and meaning unchanged; ELSER slightly changed (SLSA: Emphere now 2nd, ahead of OpenSSF);
+blended: SLSA is now ActiveState, OpenSSF, Docker, StackGen, Akeyless (before: ActiveState, Docker, OpenSSF, HeroDevs, Nebius: Docker
+and OpenSSF swapped); traffic spike blended: Kedify, ScaleOps, Ascendra Networks, DevZero, PlanetScale (before ...Zesty, DevZero); GPU
+blended: Edera, vCluster, Cast AI, Rafay Systems, Lablup (before ...AEnix, Rafay). The top result of all three is unchanged in blended.
+Jina on its own finds ScaleOps (not Kedify) first for the traffic-spike sentence, and OpenSSF first for SLSA.
+
+## Hello World Gazette, sponsors (n=10; runs 13:46:36, :38, :41; n=50 at 13:46:43)
+
+| Company | Words | Meaning | ELSER | Jina | Blended | Re-ranked |
+|---|---|---|---|---|---|---|
+| Coder (must) | – (29) | – (11) | – (19) | **1** | **5** | – (17) |
+| Momentic (must) | 8 | – (21) | **2** | 4 | **3** | 4 |
+| Faros (must) | – (38) | 7 | – (39) | – (27) | – (**18**) | not in the 47 shown |
+| mirrord by MetalBear (gem) | – (26) | 4 | 3 | 8 | **4** | 2 |
+| Docker (also) | 3 | – (14) | 1 | 3 | 1 | 1 |
+| JetBrains (also) | 1 | 3 | – (35) | 9 | 2 | 8 |
+| KodeKloud (beat only) | not in top 50 | – (27) | not in top 50 | not in top 50 | not in top 50 | not in top 50 |
+| Endor Labs (trap) | – (17) | – (45) | – (31) | **6** | – (13) | not in top 50 |
+
+Assignment companies (3 must + gem) in the top 10: words 1, meaning 2, ELSER 2, **Jina 3 (Coder, Momentic, mirrord)**,
+**blended 3 (Coder, Momentic, mirrord)**, re-ranked 2. Blended top ten (run 1): Docker, JetBrains, Momentic, mirrord by MetalBear, Coder,
+Resolve AI, Sentry, Stacklet, Cosmonic, Syntasso; re-ranked: Docker, mirrord, Temporal, Momentic, Cosmonic, Resolve AI, Sentry, JetBrains,
+Syntasso, ControlTheory. Key's pass test (all three must-finds in the blended top 10): **still fails, Faros 18th (was 13th)**; gem 4th
+(was 3rd); KodeKloud and Endor Labs not in the top 10 blended (Endor Labs 13th, was 17th), but **Endor Labs, the trap, is 6th in Jina's own list,
+above mirrord and JetBrains**. Docker and JetBrains now 1st and 2nd blended; Coder rose from 8th to 5th, Momentic from 4th to 3rd.
+
+## The Breach Chronicle (once: n=10 at 13:47:34, n=50 at 13:47:36)
+
+Still no must-find and no gem in the blended top 10; **Maze is 11th in blended** (was 23rd), the first time any must-find is that close in blended.
+Ranks at n=50 of each must-find:
+
+| Company | Words | Meaning | ELSER | Jina | Blended | Re-ranked |
+|---|---|---|---|---|---|---|
+| Maze (must) | not in top 50 | 4 | 27 | **7** | **11** | not in the 41 shown |
+| Emphere (must) | not in top 50 | not in top 50 | not in top 50 | 25 | not in top 50 | not in top 50 |
+| Endor Labs (must) | not in top 50 | 43 | not in top 50 | **11** | 28 | 28 |
+| Edera (must) | not in top 50 | not in top 50 | 42 | not in top 50 | not in top 50 | not in top 50 |
+| Cosmonic (must) | not in top 50 | 36 | not in top 50 | 42 | not in top 50 | not in top 50 |
+| Teleport, Archestra AI (must) | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 |
+| Vijil (gem) | not in top 50 | 23 | not in top 50 | 32 | 41 | 41 |
+| Akamai (beat only) | not in top 50 | 40 | 10 | 18 | 19 | 10 |
+| Orca Security (partial) | not in top 50 | not in top 50 | not in top 50 | 36 | not in top 50 | not in top 50 |
+| RapidFort, Echo | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 |
+
+Blended top ten: Sysdig, Resolve AI, Jozu, Plural, Edge Delta, Docker, Kubex, Chainguard, Tigera, Wiz. Jina's top ten: Digital.ai, Chainguard,
+Jozu, Edge Delta, Docker, Resolve AI, Maze (7th), Sysdig, ActiveState, Tigera. Pass test: **still fails**: 0 of 7 must-finds and not Vijil in the
+blended top 10 (Maze 11th, Endor Labs 28th, Vijil 41st). Jina is the first way to put two must-finds (Maze 7th, Endor Labs 11th) near the top.

@@ -15,7 +15,7 @@ passage that matched. A sponsor with nothing for KubeCon is matched on what it d
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse
 from concurrent.futures import ThreadPoolExecutor
-from . import config, load, match, passages
+from . import config, load, match, passages, tracing
 from .engine import connect
 
 TALKS = "talk"
@@ -59,8 +59,8 @@ def flip(client, parts: dict, n_talks: int = 10) -> dict[str, dict[str, list[dic
     """{"outlet": {way: [...]}, "talk": {way: [...]}}: every outlet ranked, and the nearest talks."""
     every_outlet = 100   # far more than there are; the outlets catalogue is small
     with ThreadPoolExecutor(max_workers=2) as pool:   # the two are independent: ask both at once
-        outlets = pool.submit(match.match, client, parts, every_outlet, "outlet", index=config.OUTLETS_INDEX)
-        talks = pool.submit(match.match, client, parts, n_talks, TALKS)
+        outlets = pool.submit(tracing.carry(match.match), client, parts, every_outlet, "outlet", index=config.OUTLETS_INDEX)
+        talks = pool.submit(tracing.carry(match.match), client, parts, n_talks, TALKS)
         return {"outlet": outlets.result(), TALKS: talks.result()}
 
 

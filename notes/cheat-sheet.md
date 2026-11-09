@@ -177,7 +177,7 @@ expected, Faros, comes thirteenth."
   words and vCluster then Edera from meaning.
 - **Elastic Cloud (11:24):** The same two catalogues now live in an Elastic Cloud serverless
   project; the code uses the cloud when its settings file is filled in and the laptop engine
-  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud now takes 470 seconds, because Elastic's ELSER reads every passage
+  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud now takes 66 seconds (measured 13:35; ELSER and Jina read every passage)
   and the three demo searches give the same top results there as on the laptop.
 - **Cleaner loading and searching (11:39):** The loader now cuts every passage to fit what the
   meaning model actually reads, drops placeholder bios like "TODO", puts the day and time into
@@ -196,3 +196,4 @@ expected, Faros, comes thirteenth."
 - **Re-ranking (12:32):** A 'Re-ranked' switch hands the top twenty blended results to Elastic's own re-ranking model, which reads the question and each passage together and puts them in a new order, so the demo can show the list before and after. For that view only, the text goes to Elastic's hosted service outside the project.
   Demo note: re-ranked, the GPU search puts vCluster (shares GPUs) above Edera (isolates them): the re-ranker cannot tell the stance either, so say so rather than hope nobody asks.
 - **The agent (12:46):** An Elastic Agent Builder agent, 'Find the Right Talk', answers in plain words using three read-only tools over our two catalogues, quotes the programme's own passage for every company or talk it suggests, and labels its answer AI-written; on Elastic's trial it can answer about one long question every few minutes (a second question at 12:45 was refused with 'wait 6m53s'), so the video shows one recorded answer.
+- **Jina's embeddings (13:44):** In Elastic Cloud a third meaning model, Jina's, reads every passage through Elastic's hosted service and gets one vote in the blend, so each result now combines four voices: the words, the small meaning model, Jina's model and Elastic's own ELSER, and Compare all shows each of them side by side.

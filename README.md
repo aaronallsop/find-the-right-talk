@@ -21,8 +21,8 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
   What a sponsor is showing at KubeCon, like an outlet's assignment, counts double.
 - **The start-up flag.** A "Start-ups only" switch narrows every sponsor list to the 32 start-ups
   among the 226 sponsors, and switching it off brings the full lists back.
-- **Words, meaning, and Elastic's voice.** On the page, "Compare all" shows five
-  columns side by side (words, meaning, Elastic's ELSER, blended, re-ranked), and a switch picks
+- **Words, meaning, and Elastic's voice.** On the page, "Compare all" shows six
+  columns side by side (words, meaning, Elastic's ELSER, Jina's embeddings, blended, re-ranked), and a switch picks
   one; in Terminal, compare mode runs one search every way. Either way you can watch them disagree. Words win on an exact name ("SLSA
   Level 3"); meaning wins when no one uses your words ("scale up for a traffic spike and back down
   afterwards" finds the start-up Kedify, where words find nothing).
@@ -37,11 +37,16 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
 - **Elasticsearch** does the words search, the meaning (vector) search and the filters in one place.
 - **Elastic's own ELSER model**, running inside the project, reads every passage as it loads and
   every search's text, and gets one vote in the blend (cloud only).
+- **Jina's embedding model** (`.jina-embeddings-v3`, through Elastic's hosted inference service)
+  also reads every passage at load time, and gets one vote in the blend and one column in Compare
+  all (cloud only; left out on the laptop engine). All 2,250 passages are sent to that hosted
+  service once at load, and each search's question when it runs, billed per use.
 - **Elastic's hosted re-ranker** (Jina, through Elastic's inference service) re-orders the blended
   top 20 in the "Re-ranked" view (cloud only). For that view only, the search text (or the outlet's
   or sponsor's profile) and those 20 passages are sent to Elastic's hosted inference service, which
-  is outside your own Elastic Cloud project and is billed per use. Every other view stays inside
-  your own Elastic Cloud project, and the re-ranker is not used on the laptop engine. About half a
+  is outside your own Elastic Cloud project and is billed per use. The re-ranker is not used on
+  the laptop engine. Only the ELSER, words and meaning views stay inside your own Elastic Cloud
+  project; Jina's embeddings (above), the re-ranker and the agent use Elastic's hosted service. About half a
   second is added to a search and 1 to 1.5 seconds to a page "Go" (measured 9 November).
 - **Elastic Agent Builder** runs an AI agent, "Find the Right Talk" (in Kibana: Agents), with three
   read-only tools over today's two catalogues only. It is a second, AI-written way in, not the
@@ -59,14 +64,13 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
 
 ## What Elastic asked entrants to use
 
-Status at 13:30 on 9 November, one line each:
+Status at 13:45 on 9 November, one line each:
 
 1. **Elastic Cloud serverless:** done. Everything runs on a serverless Elasticsearch project.
 2. **Ingesting data:** done. The programme, speakers, sponsors and outlets are loaded as 2,250
    passages into two catalogues.
-3. **Jina models for embeddings:** half done. Elastic's hosted Jina re-ranker is used to re-order the
-   blended top 20 (the "Re-ranked" view). Jina embeddings as a further voice are being tried and are
-   not in yet.
+3. **Jina models for embeddings:** done. Jina's embedding model is one more voice in the blend, and
+   Elastic's hosted Jina re-ranker re-orders the blended top 20 (the "Re-ranked" view).
 4. **An Agent Builder agent with custom tools:** done. "Find the Right Talk" has three tools of our
    own over the two catalogues.
 5. **Elastic Workflows:** not used.
@@ -133,8 +137,10 @@ Measured on 9 November against two test outlets whose answer keys were written b
 - **The meaning search** uses all-MiniLM-L6-v2, a small open-source model that runs on this
   laptop and generates no text. In Elastic Cloud, every passage, and the text of every search, is
   also read by Elastic's own ELSER model, which runs inside the project's own Elastic Cloud
-  deployment, not on a separate service. The optional "Re-ranked" view is an exception: it sends
-  the search text and the top 20 passages to Elastic's hosted re-ranking service (see above). The
+  deployment, not on a separate service. The "Re-ranked" view and Jina's embeddings are exceptions: the first sends
+  the search text and the top 20 passages to Elastic's hosted re-ranking service, the second sends
+  every passage once at load and each search's question when it runs to Elastic's hosted inference
+  service (see above). The
   Agent Builder agent is the other: its answers are written by Anthropic's Claude Sonnet 4.5 on
   Elastic's hosted inference service, and are labelled as AI-written.
 - **Sonar's Gitar** reviewed all of today's code on a review pull request that was never merged: it
@@ -169,14 +175,14 @@ test passed, and the fixes it called for have since been made to this README):
    front of a command uses the local engine instead.
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
-4. Load the data: `.venv/bin/python -m ftrt.load`. It takes 470 seconds to Elastic Cloud, because
-   Elastic's ELSER model reads every passage as it loads, and 12 seconds on the laptop engine
+4. Load the data: `.venv/bin/python -m ftrt.load`. It takes 66 seconds to Elastic Cloud (measured 13:35; Elastic's ELSER and Jina's models
+   read every passage as it loads), and 12 seconds on the laptop engine
    (`FTRT_ENGINE=local .venv/bin/python -m ftrt.load`); both were measured on 9 November. The first
    run downloads the small meaning model (about 90 MB) once; later runs work offline. It reads the
    four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into 2,250
    passages (2,225 for the programme and 25 for the outlets: 501 talks, 100 events, 715 speakers,
    226 sponsors and 14 outlets), turns each into 384 numbers with the meaning model (in Elastic
-   Cloud, Elastic's ELSER model also reads each one), and fills two new catalogues,
+   Cloud, Elastic's ELSER and Jina's models also read each one), and fills two new catalogues,
    `ftrt-programme` and `ftrt-outlets`. A search of the loaded text for email addresses finds none.
    Run it again any time: it rebuilds both from scratch.
 5. Start the page: `.venv/bin/python -m ftrt.page`, and open http://127.0.0.1:8765 (on this laptop
@@ -187,7 +193,7 @@ The same commands, from Terminal, as they were run on 9 November (Elastic Cloud 
 to read another Elastic Cloud settings file):
 
 - **Search:** `.venv/bin/python -m ftrt.search --mode compare --kind sponsor -n 5 "SLSA Level 3"`.
-  The ways are `words`, `meaning`, `elser`, `reranked`, the default blended, and `compare`, which
+  The ways are `words`, `meaning`, `elser`, `jina`, `reranked`, the default blended, and `compare`, which
   shows one search all ways with the passage that made each result match: four in Elastic Cloud
   (words, meaning, Elastic's ELSER, blended), three on the laptop engine, which skips ELSER and says
   so. Add `--startups` to narrow it to the start-ups.
