@@ -54,7 +54,7 @@ it is built.
 
 ## Built on the day, one line per piece
 
-- **Loading (B1, 11:03):** One command reads the five spreadsheets, cuts every talk, speaker,
+- **Loading (B1, 11:03):** One command reads the spreadsheets, cuts every talk, speaker,
   sponsor and outlet into passages of about 120 words (2,209 in all), turns each passage into 384
   numbers with the small meaning model on the laptop, and loads them into two brand-new catalogues
   in about 12 seconds; a search of the loaded text for email addresses finds none.

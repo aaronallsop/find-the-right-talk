@@ -27,4 +27,6 @@ ENGINE_USER = "elastic"
 # Search settings (used from B2 on).
 WORDS_MIN_MATCH = "2<75%"   # one or two words typed: all must be present; more: three quarters
 MEANING_CANDIDATES = 200    # how many stored passages the engine re-checks at full detail
+FETCH_FLOOR = 120           # passages fetched per search before grouping into records, at least
+FETCH_CAP = 2000            # and at most (the engine's window is 10,000)
 RRF_K = 60                  # reciprocal rank fusion constant, from the original paper

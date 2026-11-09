@@ -40,6 +40,13 @@ def filters(kind: str | None = None, startups: bool = False, part: str | None = 
     return f
 
 
+def _fetch_size(n: int) -> int:
+    """How many passages to ask the engine for: enough to fill n records after grouping, fixed at a
+    floor so the same question gives the same answer whether 3 or 30 results are shown, and capped
+    at the engine's window."""
+    return min(max(n * 6, config.FETCH_FLOOR), config.FETCH_CAP)
+
+
 def _group(hits: list[dict], n: int) -> list[dict]:
     """Passages come back ranked; keep the best passage of each record, in order, up to n records."""
     out, seen = [], set()
@@ -62,17 +69,17 @@ _FIELDS = ["record_id", "kind", "name", "text", "tier", "startup", "track", "com
 def search_words(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
     body = {"bool": {"must": {"match": {"text": {"query": query, "minimum_should_match": config.WORDS_MIN_MATCH}}},
                      "filter": filt or []}}
-    r = client.search(index=index, query=body, size=n * 6, source_includes=_FIELDS)
+    r = client.search(index=index, query=body, size=_fetch_size(n), source_includes=_FIELDS)
     return _group(r["hits"]["hits"], n)
 
 
 def search_meaning_vector(client, vector: list[float], n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
     """Meaning search from numbers already in hand (the match reuses this with an outlet's numbers)."""
-    knn = {"field": "vector", "query_vector": vector, "k": n * 6,
-           "num_candidates": max(config.MEANING_CANDIDATES, n * 6)}
+    k = _fetch_size(n)
+    knn = {"field": "vector", "query_vector": vector, "k": k, "num_candidates": max(config.MEANING_CANDIDATES, k)}
     if filt:
         knn["filter"] = {"bool": {"filter": filt}}
-    r = client.search(index=index, knn=knn, size=n * 6, source_includes=_FIELDS)
+    r = client.search(index=index, knn=knn, size=k, source_includes=_FIELDS)
     return _group(r["hits"]["hits"], n)
 
 
@@ -108,12 +115,13 @@ MODES = {"words": search_words, "meaning": search_meaning, "blended": search_ble
 def show(title: str, results: list[dict], width: int = 100):
     print(f"\n{title}")
     if not results:
-        print("   (nothing: no record has enough of these words)")
+        print("   (nothing: no record has enough of these words)" if title.startswith("=== WORDS") else "   (nothing matches these filters)")
     for i, r in enumerate(results, start=1):
         tag = r["kind"] + (f", {r['tier']}" if r.get("tier") else "")
         extra = f"  [also found by the other list]" if r.get("found_by") == 2 else ""
         print(f"{i:3d}. {r['name']}  ({tag})  score {r['score']:.4f}{extra}")
-        passage = r["passage"].split(". ", 1)[-1] if r["passage"].startswith(r["name"]) else r["passage"]
+        prefix = f"{r['name']}. "
+        passage = r["passage"][len(prefix):] if r["passage"].startswith(prefix) else r["passage"]
         print(textwrap.fill("found because: " + passage, width=width, initial_indent="       ", subsequent_indent="       ", max_lines=2, placeholder=" …"))
 
 
@@ -121,10 +129,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("query")
     ap.add_argument("--mode", choices=["words", "meaning", "blended", "compare"], default="blended")
-    ap.add_argument("-n", type=int, default=10)
+    ap.add_argument("-n", type=int, default=10, help="how many results (1 to 200)")
     ap.add_argument("--kind", choices=["talk", "event", "speaker", "sponsor"])
     ap.add_argument("--startups", action="store_true", help="Start-Up tier sponsors only")
     a = ap.parse_args()
+    a.n = min(max(a.n, 1), 200)
     client = connect()
     filt = filters(a.kind, a.startups)
     if a.mode == "compare":
@@ -133,7 +142,12 @@ def main():
             show(f"=== {m.upper()} ===  {a.query!r}", res)
         tops = {m: (res[0]["name"] if res else "nothing") for m, res in lists.items()}
         print(f"\nTop result: words → {tops['words']} | meaning → {tops['meaning']} | blended → {tops['blended']}")
-        print("Words and meaning " + ("AGREE" if tops["words"] == tops["meaning"] else "DISAGREE") + " on the top result.")
+        if not lists["words"] and not lists["meaning"]:
+            print("Nothing matches: check the filters.")
+        elif not lists["words"]:
+            print("Words found nothing; meaning answered anyway (it always returns the nearest thing).")
+        else:
+            print("Words and meaning " + ("AGREE" if tops["words"] == tops["meaning"] else "DISAGREE") + " on the top result.")
     else:
         show(f"=== {a.mode.upper()} ===  {a.query!r}", MODES[a.mode](client, a.query, a.n, filt=filt))
 

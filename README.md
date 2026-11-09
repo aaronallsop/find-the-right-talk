@@ -12,13 +12,13 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
 
 [Exact steps, tested on the day from a fresh copy of this repository into an empty folder:]
 1. Install Docker Desktop and start it.
-2. Install Elasticsearch and Kibana locally with Elastic's start-local script:
-   `curl -fsSL https://elastic.co/start-local | sh` (it creates a folder `elastic-start-local` with the
-   password in its `.env` file; this project reads the password from there and never stores it).
+2. Install Elasticsearch and Kibana locally with Elastic's start-local script, **run from your home
+   folder**: `cd ~ && curl -fsSL https://elastic.co/start-local | sh` (it creates `~/elastic-start-local`
+   with the password in its `.env` file; this project reads the password from there and never stores it).
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on a laptop (measured
-   9 November). It reads the five spreadsheets, cuts the text into 2,209 passages, turns each into
+   9 November). It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into 2,209 passages, turns each into
    384 numbers with the meaning model, and fills two new catalogues, `ftrt-programme` and
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
 5. Start the page: [command], and open [address].

@@ -13,5 +13,5 @@ def connect() -> Elasticsearch:
     url = os.environ.get("ES_LOCAL_URL", config.ENGINE_DEFAULT_URL)
     client = Elasticsearch(url, basic_auth=(config.ENGINE_USER, password), request_timeout=120)
     if not client.ping():
-        raise SystemExit(f"The engine at {url} is not answering. Start it (see README) and try again.")
+        raise SystemExit(f"The engine at {url} is not answering, or refused the password in {config.ENGINE_SETTINGS_FILE}. Start it (see README) and try again.")
     return client
