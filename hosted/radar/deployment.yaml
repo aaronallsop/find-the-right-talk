@@ -1,0 +1,64 @@
+# For Radar's GitOps repo (Aaron's caiv-radar, from the cnh-starter template): copy this over deploy/deployment.yaml.
+# "image: app" is deliberate: deploy/kustomization.yaml swaps it for ghcr.io/<repo>:<commit> on every build.
+# The Elastic address and key come from the Secret "app-credentials" in namespace team-<team>, which Aaron creates
+# himself in the cluster BEFORE the first push; only the Secret's name is here, never a value.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          image: app
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: ES_CLOUD_URL
+              valueFrom:
+                secretKeyRef: {name: app-credentials, key: ES_CLOUD_URL}
+            - name: ES_CLOUD_API_KEY
+              valueFrom:
+                secretKeyRef: {name: app-credentials, key: ES_CLOUD_API_KEY}
+            # searches are billed to Elastic: the overall cap is what protects the bill (the per-address one
+            # trusts a header any visitor can fake)
+            - name: HOSTED_RATE_PER_MINUTE
+              value: "20"
+            - name: HOSTED_RATE_OVERALL_PER_MINUTE
+              value: "120"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: ["ALL"]
