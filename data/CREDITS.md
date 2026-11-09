@@ -1,9 +1,9 @@
 # Where this data comes from
 
-**Programme, speakers, sponsors, media partners:** KubeCon + CloudNativeCon North America 2026
-programme, The Linux Foundation, CC BY 3.0. Copied once on 4 November 2026 from the event's
+**Program, speakers, sponsors, media partners:** KubeCon + CloudNativeCon North America 2026
+program, The Linux Foundation, CC BY 3.0. Copied once on 4 November 2026 from the event's
 public schedule and sponsor directory; the live pages have changed slightly since. Email
-addresses on those pages were dropped. Logos and speaker photos are not included: the licence
+addresses on those pages were dropped. Logos and speaker photos are not included: the license
 does not cover logos, and no permission has been asked for photos.
 
 **Files**
@@ -14,10 +14,10 @@ does not cover logos, and no permission has been asked for photos.
 - `media-partners.csv` — the 10 media partners the conference lists.
 - `outlets.csv` — one profile per media outlet, see below.
 
-**Written by AI, and labelled so:**
+**Written by AI, and labeled so:**
 - Every `sponsors.csv` column starting `ai_` was drafted by Claude (Anthropic) on 4 November
   2026 from that company's own public homepage and About page, label "From their website,
-  summarised by AI". The other columns are the conference's own listing. Six were drafted from
+  summarized by AI". The other columns are the conference's own listing. Six were drafted from
   the conference listing alone, because the website could not be read (`ai_source_quality`
   says "conference only").
 - `outlets.csv`: eight of the ten real partners, drafted by Claude on 5 November 2026 from
