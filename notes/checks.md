@@ -550,3 +550,220 @@ Education 4, Jozu 5, Tigris Data 6, VAST Data 7, Docker 8, Aiven 9, Diagrid 10. 
 Twingate 2, Sysdig (Gold) 3, Plural 5, Tigera 6, Komodor 7, Datadog (Platinum) 8, Jozu 9, groundcover 10.
 Blended: Resolve AI 1, Jozu 2, PagerDuty 3, Plural 4, Sysdig 5, Edge Delta 6, Radar (Start-Up) 7, Northflank 8,
 Nirmata 9, Docker 10. As before, mostly ordinary security, observability and platform companies.
+
+---
+
+# M2 scoring sheet, THIRD column set: with Elastic's own model, ELSER (commit 2e26f1b, cloud reloaded 12:01 to 12:10)
+
+Scored 12:13 (Gazette runs 12:13:18, :20, :22; Breach runs 12:13:28, :30, :32; `-n 50` once at 12:13:25 and
+12:13:34), Elastic Cloud serverless, sponsors only, `-n 10`. Four ways: words, meaning, **elser** (Elastic's
+own model, `--mode elser`), blended (now six lists: words, meaning and ELSER for each of the beat and the
+assignment). **Three runs: identical names, ranks and scores in all three, for both outlets.** The first
+and second column sets above are kept. "(n50)" is the rank at `-n 50` where it is outside the top 10.
+"2nd" is the second set (321b069, before ELSER).
+
+**Words against the previous set:** Hello World Gazette's words list is **identical** to the second set
+(same names, ranks and scores). The Breach Chronicle's words list **changed with the reload** (as Titan said;
+the engine re-counts word rarity): top ten is now Sysdig, PagerDuty, Wiz, Northflank, Uber, Linux Foundation
+Education, Jozu, Tigris Data, VAST Data, Docker; it was PagerDuty, Northflank, Uber, Linux Foundation
+Education, Jozu, Tigris Data, VAST Data, Docker, Aiven, Diagrid. Still no must-find in it. Meaning is
+identical to the second set for both outlets (names and scores), as it should be.
+
+## Hello World Gazette — still FAIL by Faros, now 13th (was 11th)
+
+| Group | Company | Words | Meaning | ELSER | Blended | In blended top 10 | 2nd set blended |
+|---|---|---|---|---|---|---|---|
+| Must find | Coder | – (n50: 29) | – (n50: 11) | – (n50: 13) | 8 | **Y** | 9 |
+| Must find | Momentic | 8 | – (n50: 21) | 3 | 4 | **Y** | 8 |
+| Must find | Faros | – (n50: 38) | 7 | – (n50: 37) | – (n50: 13) | **N** | – (11) |
+| **Hidden gem** | **mirrord by MetalBear** | – (n50: 26) | 4 | 2 | 3 | **Y** | 4 |
+| Should also do well | Docker | 3 | – (n50: 14) | 1 | 1 | Y | 3 |
+| Should also do well | JetBrains | 1 | 3 | – (not in top 50) | 5 | Y | 1 |
+| Standing beat only | KodeKloud | not in top 50 | – (n50: 27) | not in top 50 | not in top 50 | N (good) | not in top 50 |
+| Trap | Endor Labs | – (n50: 17) | – (n50: 45) | – (n50: 30) | – (n50: 17) | N (good) | – (20) |
+
+| Summary (n=10) | Words | Meaning | ELSER | Blended |
+|---|---|---|---|---|
+| Assignment companies in the top 10 (3 must-finds + gem, of 4) | 1 (Momentic) | 2 (Faros, mirrord) | 2 (Momentic, mirrord) | **3 (Coder, Momentic, mirrord)** |
+| Hidden gem's rank | – (26) | 4 | 2 | 3 |
+| Standing-beat-only or trap above an assignment company? | no | no | no | no |
+| Pass | – | – | – | **Fail: Faros 13th** (gem 3rd, KodeKloud and Endor Labs well below) |
+
+Came up in the top 10, not expected: **ELSER:** Syntasso (Silver) 4, Chainguard (Platinum) 5, ControlTheory (Gold)
+6, Temporal (Gold) 7, Traversal (Platinum) 8, ActiveState (Silver) 9, Testkube (Start-Up) 10. **Blended:**
+ControlTheory 2, Syntasso 6, Temporal 7, Sentry 9, Resolve AI 10. (Words and meaning unexpected lists are
+unchanged from the second set.) The blended top ten is now: Docker, ControlTheory, mirrord, Momentic, JetBrains,
+Syntasso, Temporal, Coder, Sentry, Resolve AI. Paper Compute Company (Start-Up), 5th in the second set's
+blended, has left the top ten.
+
+## The Breach Chronicle — still FAIL: no must-find, no gem in the blended top 10; ELSER adds Akamai at 9th
+
+| Group | Company | Words | Meaning | ELSER | Blended | In blended top 10 | 2nd set blended |
+|---|---|---|---|---|---|---|---|
+| Must find: helps security teams | Maze (Start-Up) | not in top 50 | 4 | – (n50: 30) | – (n50: 23) | N | – (26) |
+| Must find: helps security teams | Emphere (Start-Up) | not in top 50 | not in top 50 | not in top 50 | not in top 50 | N | not in top 50 |
+| Must find: helps security teams | Endor Labs | not in top 50 | – (n50: 43) | not in top 50 | **not in top 50** | N | – (27) |
+| Must find: keeping agents safe | Edera | not in top 50 | not in top 50 | – (n50: 40) | not in top 50 | N | not in top 50 |
+| Must find: keeping agents safe | Cosmonic | not in top 50 | – (n50: 36) | not in top 50 | not in top 50 | N | not in top 50 |
+| Must find: keeping agents safe | Teleport | not in top 50 | not in top 50 | not in top 50 | not in top 50 | N | not in top 50 |
+| Must find: keeping agents safe | Archestra AI (Start-Up) | not in top 50 | not in top 50 | not in top 50 | **not in top 50** | N | – (49) |
+| **Hidden gem** | **Vijil (Start-Up)** | not in top 50 | – (n50: 23) | not in top 50 | not in top 50 | **N** | not in top 50 |
+| Standing beat only | Akamai | not in top 50 | – (n50: 40) | **9** | – (n50: 31) | N | not in top 50 |
+| Standing beat only | RapidFort, Echo | not in top 50 | not in top 50 | not in top 50 | not in top 50 | N (good) | not in top 50 |
+| Partial word trap | Orca Security | not in top 50 | not in top 50 | not in top 50 | not in top 50 | N | not in top 50 |
+
+| Summary (n=10) | Words | Meaning | ELSER | Blended |
+|---|---|---|---|---|
+| Assignment companies in the top 10 (7 must-finds + gem, of 8) | 0 | 1 (Maze 4th) | **0** | 0 |
+| "Helps security teams" half found in top 10 (of 3) | 0 | 1 | 0 | 0 |
+| "Keeping agents safe" half found in top 10 (of 4) | 0 | 0 | 0 | 0 |
+| Hidden gem's rank | not in top 50 | 23 | not in top 50 | not in top 50 |
+| Standing-beat-only above an assignment company? | none present | Akamai (40) above Endor Labs (43) | **Akamai 9th, with no assignment company in ELSER's top 10; above every must-find** | Akamai (31) is below Maze (23), above every other must-find (none in the top 50) |
+| Pass | – | – | – | **Fail** |
+
+**Where each Breach Chronicle must-find lands by ELSER at n=50:** Maze 30th; Edera 40th; Emphere, Endor Labs,
+Cosmonic, Teleport, Archestra AI: not in ELSER's top 50. Vijil (gem): not in ELSER's top 50. (Meaning, for
+comparison: Maze 4, Cosmonic 36, Endor Labs 43, Vijil 23. Blended at n=50: Maze 23rd, and **Endor Labs and
+Archestra AI have fallen out of the top 50**, where the second set had them at 27th and 49th.)
+
+Came up in the top 10, not expected: **ELSER:** Sysdig (Gold) 1, Palo Alto Networks (Gold) 2, Plural (Silver) 3,
+Kubex (Silver) 4, Twingate (Silver) 5, Resolve AI (Gold) 6, Tigera (Gold) 7, Chainguard (Platinum) 8,
+Temporal (Gold) 10 (and Akamai 9, a beat-only company). **Blended:** Sysdig 1, Plural 2, Resolve AI 3, Jozu 4,
+Kubex 5, Radar (Start-Up) 6, Docker 7, Nirmata 8, Twingate 9, Edge Delta 10. Words: Sysdig (Gold) 1, PagerDuty
+2, Wiz (Gold) 3, Northflank 4, Uber 5, Linux Foundation Education 6, Jozu 7, Tigris Data 8, VAST Data 9, Docker
+10. All ordinary security, observability or platform companies; I read the passages' first lines only.
+
+## What the third set shows, in one place
+
+- **Gazette:** ELSER helps. Momentic goes from 8th to 4th in blended, mirrord from 4th to 3rd, Docker to 1st;
+  Coder 9th to 8th. Faros slipped from 11th to 13th, so the Gazette still misses the pass by the one company.
+- **Breach Chronicle:** ELSER does not find the assignment: no must-find in its top ten, Maze only 30th, and it
+  puts Akamai (a company the key says should rank lower) 9th. In blended, Maze improves (26th to 23rd) but
+  Endor Labs and Archestra AI drop out of the top 50, so on the key's own test (all must-finds in the top 10,
+  the gem in the top 10) the Breach Chronicle is no nearer than before.
+
+---
+
+# Read-only look (12:20): the Breach Chronicle's wording against its must-finds' own text
+
+Read from `data/outlets.csv` (The Breach Chronicle row) and `data/sponsors.csv` (the eight must-finds as the
+answer key names them). No searches run, nothing changed, and nothing suggested for the answer key. Word
+counts below are my own counts over every text column of the sponsor's row (so "agent" includes "agents"),
+done once; they show which words are present, not how a search weighs them.
+
+**What the outlet says.** Beat: "Security breaches as they happen; How attackers got in; What companies and
+security teams did in response; The threats security teams are dealing with right now." What they cover:
+"News about security breaches as they happen: who was hit, how it happened, and what is being done about it."
+Audience: "People who work in cybersecurity". Assignment: "how AI agents are being built, either to help
+people working in cybersecurity, or to keep AI agents themselves safe inside the companies using them."
+Its own words are about attacks and response: breach, attackers, threats, response, cybersecurity, security
+teams; and, in the assignment, AI agents, help, safe, inside the companies using them.
+
+**What each must-find's own text is about**
+- **Maze (Start-Up), helps security teams:** AI agents that investigate vulnerabilities, work out which are
+  really exploitable (it says 90% are not), and send a fix to the developer. Words: vulnerabilit- (11),
+  exploit- (6), CVE (3), security (5), agent (7).
+- **Emphere (Start-Up), helps security teams:** AI agents that patch every known vulnerability in container
+  images, with signed, tested images and proof. Words: vulnerabilit- (4), CVE (2), container, SLSA, compliance.
+- **Endor Labs, helps security teams:** an application-security platform; AI agents find, prioritise and fix
+  vulnerabilities in code and packages, and it also checks coding agents' actions against policy. Words:
+  security (5), agent (7), vulnerabilit- (5), policy, SLSA, FedRAMP.
+- **Edera, keeps agents safe:** a hypervisor that runs each container or AI agent in its own isolated zone so
+  one compromised workload cannot reach the others. Topic "Platform Engineering". Words: isolat- (4),
+  agent (2), attacker (1), safe (1), security (1).
+- **Cosmonic, keeps agents safe:** a WebAssembly sandbox for each AI agent or tool, with no access except
+  what is granted; limits what a prompt injection can do. Topic "Artificial Intelligence". Words: sandbox (8),
+  agent (8), safe (1); **"security" does not appear in its text.**
+- **Teleport, keeps agents safe:** identity and access: cryptographic identities and short-lived access for
+  people, machines and AI agents, instead of passwords and standing access. Topics "Platform Engineering;
+  Security". Words: identity (12), access (11), attack (3), security (3), agent (3).
+- **Archestra AI (Start-Up), keeps agents safe:** open-source gateway that controls which data, tools and
+  actions a company's AI agents can reach, with audit and spending budgets. No conference topic. Words: agent
+  (6), MCP, access, policy, identity, audit; **"security" does not appear in its text.**
+- **Vijil (Start-Up, the gem), keeps agents safe in the wider sense:** finds, tests, guards and monitors a
+  company's agents and gives a trust score and audit evidence. Topic "Artificial Intelligence". Words: agent
+  (23), trust (2), audit, govern, prompt injection (2), security (3).
+
+**Where the outlet's wording points somewhere else**
+1. **The outlet's own news-and-attack words are in none of the eight.** "Breach", "cybersecurity", "threat",
+   "incident" and "response/respond" appear in none of the eight texts (all zero). "Attacker" is in one
+   (Edera) and "attack" in two more (Teleport, three times; Edera once). The beat, which is the part that is
+   all about breaches and response, therefore has almost nothing to hold on to in these companies.
+2. **What the eight share is vocabulary the outlet never uses.** The three that help security teams talk in
+   vulnerabilities, CVEs, exploitability, patches and fixes (the outlet never says "vulnerability", "fix" or
+   "patch"). The five that keep agents safe talk in isolation, sandboxes, identity, access, policy, audit,
+   trust and governance (the outlet says only "safe" and "inside the companies using them").
+3. **The word "agents" is the main thing in common**, and the outlet says it once. Counts of "agent" in the
+   eight: Vijil 23, Cosmonic 8, Maze 7, Endor Labs 7, Archestra 6, Teleport 3, Edera 2, Emphere 2.
+4. **Two of the eight never use "security" at all** (Cosmonic and Archestra AI), and two more are filed under
+   "Artificial Intelligence" (Cosmonic, Vijil) or "Platform Engineering" (Edera) rather than "Security". An
+   outlet worded around cybersecurity does not meet them on that word.
+5. **Companies that do use the outlet's words are the ones ranking above them.** For comparison, counts in
+   those companies' own text: Sysdig ("detect and respond to attacks": attack 5, threat 2, respond 3,
+   security 11, agent 10), PagerDuty (incident 7), Resolve AI (incident 6), Palo Alto Networks
+   ("cybersecurity company", incident 3), Akamai ("cybersecurity", 2). Those are detection, response and
+   incident companies; their text matches the beat's breach-and-response language more directly than the
+   eight's matches the assignment's "agents" language.
+6. **The outlet's two halves are worded at different levels.** "Help people working in cybersecurity" reads
+   as the job of the security team, and the three that fit it describe it in vulnerability terms; "keep AI
+   agents themselves safe inside the companies" reads as a trust or security idea, and the five that fit it
+   describe mechanisms (isolation, sandbox, identity, gateway, testing). The outlet states neither the
+   problems nor the mechanisms.
+
+---
+
+# Read-only look (12:25): the Hello World Gazette's wording against Faros, KodeKloud and Endor Labs
+
+Asked in place of the Breach Chronicle look above (which stays). Read from `data/outlets.csv` (the Gazette row)
+and `data/sponsors.csv`. No searches run now; the ranks are from the third column set (12:13, n=50, cloud, with
+ELSER). Nothing suggested for the answer key. Word counts are mine, over every text column of the sponsor's
+row, done once.
+
+**A note on the three companies.** Only **Faros** is a must-find that misses. In the answer key KodeKloud is
+"standing beat only: should rank lower" and Endor Labs is "trap", so for those two a low rank is the outcome
+the key expects, not a miss.
+
+**What the outlet says.** Covers: "a newsletter for developers about the new tools coming out for programming:
+what has just been released, what is worth trying, and how it changes the way software gets written, tested and
+shipped." Beat: "New developer tools and releases; Programming languages and frameworks; How developers write,
+test and ship code; Open-source tools developers rely on". Audience: developers who want to stay up to date with
+new tools. Assignment: "AI agents built for developers: agents that help you write code."
+
+| Company | Words | Meaning | ELSER | Blended | Landed |
+|---|---|---|---|---|---|
+| Faros (must-find) | 38 | 7 | 37 | 13 | misses the blended top 10 |
+| Endor Labs (trap) | 17 | 45 | 30 | 17 | low, as the key expects |
+| KodeKloud (beat only) | not in top 50 | 27 | not in top 50 | not in top 50 | low, as the key expects |
+
+**Faros** (Silver, topic "Artificial Intelligence"): "tracks what an organisation spends on AI coding agents,
+links that spend to the work actually shipped, routes tasks to the best-value model, and enforces budgets and
+model policies." Its customers are "engineering leaders", "developer enablement teams" and "enterprises", not
+individual developers. Its words: token (10), model (6), spend (4), budget (3), productivity (3), coding agent
+(3), ship- (3), code (3), agent (6). It has none of the outlet's "write", "test", "release", "language",
+"framework", "programming" or "open source", and says "developer" once and "tool" once. **Why it lands low:** it
+is about what AI coding agents *cost*, not about helping a developer write code, and its vocabulary is money,
+models and governance. **Does the wording point away?** Partly. It shares "AI coding agents", "code" and
+"shipped" with the outlet, which is how meaning finds it (7th, from the passage "Wasted spend on retry loops and
+agent work that never ships"); it does not share the words, so words (38th) and ELSER (37th) put it low, and
+blending averages that into 13th. The outlet's "agents that help you write code" reads as a tool a developer
+uses; Faros is a tool a manager uses about those agents.
+
+**KodeKloud** (Silver, topics "Kubernetes Certified Service Providers + Kubernetes Training Partners"): "an
+online training platform that teaches DevOps, cloud and AI skills through video courses and hands-on labs",
+with certification preparation and an AI playground for comparing models. Its words: learn (5), course (3),
+video (2), train (5), lab/certification terms, "language" (1, as in large language models), agent (0), "AI" (4).
+**Why it lands low:** it teaches people; it neither releases a tool nor builds an agent. **Does the wording point
+away?** Yes on both parts: the outlet never says learning, courses, training or certification, and the
+assignment is about agents, which KodeKloud's text never mentions. Its only meeting point is the audience
+(developers, DevOps engineers) and the general territory of developer tooling, which is why meaning has it 27th
+and the other ways drop it out of the top 50.
+
+**Endor Labs** (Silver, topic "Security"): "an application security platform that uses AI agents to find,
+prioritise and fix vulnerabilities in human-written and AI-generated code, open-source dependencies and
+container images", and it checks coding agents' actions against policy. Its words: code (13), agent (7),
+secur- (6), vulnerab- (5), coding agent (4), open-source (2/1). **Why it lands low:** its subject is security
+and compliance; the outlet never says security, vulnerability, risk or compliance. **Does the wording point
+away?** Yes on the subject, but not on the vocabulary: it shares "AI coding agents", "code", "agents" and
+"open source" with the outlet, so it does not fall far: it is 17th in words and in blended, 30th in ELSER, and
+only meaning (45th) puts it near the bottom. In blended it is 17th, four places below Faros (13th) and
+seven below the top 10; it is the one of the two trap-like companies that sits closest to the must-finds.

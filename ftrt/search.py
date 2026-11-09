@@ -59,13 +59,13 @@ def _group(hits: list[dict], n: int) -> list[dict]:
         seen.add(s["record_id"])
         out.append({"record_id": s["record_id"], "kind": s["kind"], "name": s["name"], "score": h["_score"],
                     "passage": s["text"], "tier": s.get("tier"), "startup": s.get("startup"), "track": s.get("track"),
-                    "companies": s.get("companies"), "part": s.get("part")})
+                    "companies": s.get("companies"), "part": s.get("part"), "sample": s.get("sample")})
         if len(out) >= n:
             break
     return out
 
 
-_FIELDS = ["record_id", "kind", "name", "text", "tier", "startup", "track", "companies", "part"]
+_FIELDS = ["record_id", "kind", "name", "text", "tier", "startup", "track", "companies", "part", "sample"]
 
 
 def search_words(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:

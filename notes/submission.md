@@ -23,3 +23,5 @@ fails]. [Elastic's own models: only if built.]
   Foundation, CC BY 3.0.
 - Built on the day, after 11:00; the commit history starts at 11:00. Claude Code wrote the code.
 - Nothing is called "the judge"; the AI feature, if built, is the "fit check".
+- Demo outlet: the Hello World Gazette (Aaron, 12:16). The Breach Chronicle, the other test outlet, is
+  set aside, stays in the data, and is reported honestly as a miss (no must-find in its top ten).

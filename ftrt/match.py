@@ -62,16 +62,22 @@ def stored_parts(client, outlet_id: str) -> tuple[str, dict]:
     return name, parts
 
 
-def typed_parts(beat: str, assignment: str = "") -> dict:
-    """The same parts from typed text (the page's two boxes), cut and turned into numbers as the
-    loader does it. The text is used for this one match and not kept anywhere."""
+def parts_from_text(texts: dict[str, str]) -> dict:
+    """Parts from plain text ({"beat": ..., "assignment": ...}, or the flip's {"does": ..., "showing": ...}),
+    cut and turned into numbers as the loader does it. Empty parts are left out. The text is used for
+    this one search and not kept anywhere."""
     parts = {}
-    for part, text in (("beat", passages._sentence("", beat)),
-                       ("assignment", passages._sentence("KubeCon assignment", assignment))):
+    for part, text in texts.items():
         if text:
             cut = passages.cut(passages._tidy(text))
             parts[part] = {"text": " ".join(cut), "vector": _mean([embed(p) for p in cut])}
     return parts
+
+
+def typed_parts(beat: str, assignment: str = "") -> dict:
+    """The match's parts from the page's two press boxes."""
+    return parts_from_text({"beat": passages._sentence("", beat),
+                            "assignment": passages._sentence("KubeCon assignment", assignment)})
 
 
 def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: bool = False,
@@ -91,13 +97,15 @@ def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: b
         for way, run in ways.items():
             results = run(p)
             if results is not None:   # ELSER is skipped on the laptop engine
-                lists[way].append(([{**r, "via": f"the {part}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
+                lists[way].append(([{**r, "via": f"{PART_NAMES[part]}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
     out = {way: fuse(ls, n) for way, ls in lists.items() if ls}
     out["blended"] = fuse([l for ls in lists.values() for l in ls], n)
     return out
 
 
 WAY_NAMES = {"words": "words", "meaning": "meaning", "elser": "Elastic's ELSER"}
+PART_NAMES = {"beat": "what it always covers", "assignment": "its KubeCon assignment",
+              "does": "what it does", "showing": "what it shows at KubeCon"}
 
 
 def search_words_loose(client, text: str, n: int, index: str, filt: list) -> list[dict]:

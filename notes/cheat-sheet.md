@@ -78,12 +78,12 @@ Words are Aaron's, kept as written. Square brackets are what is on screen, not w
    sit in the press room, but you also can't read the whole schedule. So I built the thing I
    wanted in that moment: KubeCon's own programme, public data with credit, made searchable by
    meaning in Elastic Cloud, today."
-2. [Pick The Breach Chronicle, press Go]
-   "I'm press. This outlet covers breaches, and it came with one assignment: AI agents, helping
-   security teams or being kept safe. The match reads that brief and ranks the whole programme
-   against it, in a second. Every result shows the passage that made it fit, so you can check my
-   working. And start-ups are flagged: this one you'd never find by booth size." [Point at a
-   flagged start-up.]
+2. [Pick The Hello World Gazette, press Go]
+   [AARON'S WORDS FOR THE GAZETTE TO BE WRITTEN: the lines here were about the Breach Chronicle's
+   beat and assignment, and the Chronicle is set aside as the demo outlet (12:16).]
+   "...The match reads that brief and ranks the whole programme against it, in a second. Every
+   result shows the passage that made it fit, so you can check my working. And start-ups are
+   flagged: this one you'd never find by booth size." [Point at a flagged start-up.]
 3. [Vendor door, pick a start-up sponsor, Go]
    "Same engine, turned round. I'm a vendor whose press meeting just cancelled: which outlets
    should I be talking to instead, and which talks are near my story?"
@@ -106,9 +106,11 @@ sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said on
 voice is built (it is, since 12:12, in the cloud only; the laptop leaves it out, so demo from the
 cloud); if it does not answer, say "searched three ways" and stop.
 
-**Not true yet, as of 11:56 (do not rehearse as if it were):** the page is built (11:55) but nobody has
-tried it; the match does not yet pass its answer-key scoring, and the Breach Chronicle, the outlet in beat 2,
-is the one that fails; "in a second" has not been timed; the flip (beat 3) is not built.
+**Not true yet, as of 12:17 (do not rehearse as if it were):** you have not tried the page yourself
+(Titan has seen it work in a browser, 12:14); the Hello World Gazette, the demo outlet since 12:16,
+still fails its answer key by one place (Faros 13th) after the last re-score; "in a second" has not
+been timed; the flip (beat 3) is not built. The Breach Chronicle is set aside: it stays in the data
+and is reported honestly as a miss.
 
 ## Built on the day, one line per piece
 

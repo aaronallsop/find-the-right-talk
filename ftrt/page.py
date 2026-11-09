@@ -11,7 +11,7 @@ from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 from pathlib import Path
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
-from . import config, engine, match, search
+from . import config, engine, flip, match, search
 
 PAGE_FILE = Path(__file__).with_name("page.html")
 app = Flask(__name__)
@@ -29,7 +29,8 @@ def _plain(results: list[dict]) -> list[dict]:
     for r in results:
         prefix = f"{r['name']}. "
         passage = r["passage"][len(prefix):] if r["passage"].startswith(prefix) else r["passage"]
-        out.append({"name": r["name"], "kind": r["kind"], "tier": r.get("tier"), "startup": bool(r.get("startup")),
+        out.append({"name": r["name"], "kind": r["kind"], "tier": "sample" if r.get("sample") else r.get("tier"),
+                    "startup": bool(r.get("startup")),
                     "track": r.get("track"), "score": r["score"], "passage": passage,
                     "via": r.get("via"), "found_by": r.get("found_by")})
     return out
@@ -67,13 +68,34 @@ def run_match():
         return jsonify(error="Pick an outlet, or say what you always cover."), 400
     results = {kind: {way: _plain(rs) for way, rs in match.match(client, parts, config.PAGE_RESULTS, kind).items()}
                for kind in match.MATCH_KINDS}
-    return jsonify(name=name, parts=list(parts), results=results)
+    on = ("what it always covers and what it came to find (counting double)" if len(parts) == 2
+          else "what it always covers")
+    return jsonify(title=f"Matches for {name}, on {on}", results=results,
+                   kinds=[["sponsor", "Sponsors"], ["talk", "Talks"], ["speaker", "Speakers"]])
 
 
 @app.post("/api/flip")
 def run_flip():
-    """The vendor door. The flip (a sponsor finds its outlets) is the next piece to be built."""
-    return jsonify(pending=True, message="The flip, outlets that fit your company, is the next piece to be built.")
+    """The vendor door: a picked sponsor, or the two typed boxes, finds the outlets that fit it and the nearest talks."""
+    body = request.get_json(silent=True) or {}
+    sponsor_id, does, showing = _text(body, "sponsor_id"), _text(body, "does"), _text(body, "showing")
+    if sponsor_id:
+        try:
+            row = flip.find_sponsor(sponsor_id)
+        except SystemExit as e:   # no such sponsor
+            return jsonify(error=str(e)), 404
+        name, texts = row["name"], flip.sponsor_texts(row)
+    elif does:
+        name, texts = "Your company", flip.typed_texts(does, showing)
+    else:
+        return jsonify(error="Pick a sponsor, or say what your company does."), 400
+    parts = match.parts_from_text(texts)
+    found = flip.flip(client, parts, config.PAGE_RESULTS)
+    results = {kind: {way: _plain(rs) for way, rs in ways.items()} for kind, ways in found.items()}
+    on = ("what it does and what it is showing at KubeCon (counting double)" if "showing" in parts
+          else "what it does")
+    return jsonify(title=f"Outlets and talks for {name}, on {on}", results=results,
+                   kinds=[["outlet", "Outlets"], ["talk", "Talks"]])
 
 
 @app.post("/api/search")

@@ -51,7 +51,9 @@ ELSER_FIELD = "text_elser"  # the passage's text again, which Elastic turns into
 ELSER_TIMEOUT = 300         # seconds a load or search may wait on it (waking up included)
 
 # The match (M2): an outlet's profile searches the programme.
-MATCH_WEIGHTS = {"assignment": 2.0, "beat": 1.0}   # the assignment's votes count double (Aaron, 8 November)
+MATCH_WEIGHTS = {"assignment": 2.0, "beat": 1.0,   # the assignment's votes count double (Aaron, 8 November)
+                 "showing": 2.0, "does": 1.0}      # the flip mirrors it: what a sponsor shows at KubeCon counts double
+                                                   # (Titan's default, 9 November; not yet Aaron's decision)
 MATCH_WORDS_TERMS = 25      # words search by profile: how many of its most telling words to search for
 
 # The page (M3). Port 5000 is taken by macOS itself (AirPlay Receiver); 5055-5057 may be in use too; and browsers
