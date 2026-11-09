@@ -80,7 +80,7 @@ def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: b
     filt = filters(kind, startups)
     if not kind:
         filt.append({"terms": {"kind": list(MATCH_KINDS)}})
-    depth = max(n * 2, config.MATCH_DEPTH)
+    depth = max(n, config.BLEND_DEPTH)   # fixed, so the order does not change with how many are shown
     lists = {"words": [], "meaning": []}
     for part, p in parts.items():
         for way, results in (("words", search_words_loose(client, p["text"], depth, index, filt)),

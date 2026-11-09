@@ -399,3 +399,78 @@ Kedify first, then Ascendra Networks, pgEdge, Radar, FluidCloud. Cloud engine na
 **Not tested:** the page; the match from the fresh copy (the main folder's match was scored above);
 creating an Elastic Cloud project and its settings file from nothing; installing the model on a
 machine with no cache. The second key was accepted for loading: no refusal.
+
+---
+
+# M3 the page (commit fba8720), http://127.0.0.1:5060, checked 11:55 to 11:56
+
+**How:** the browser pane was tried first and **refused**: `navigate` to http://127.0.0.1:5060 returned
+"navigation ... was denied or failed" and the pane stayed on a blank page. So this is **a check through
+the page's own web requests (curl and a small Python script), not through a browser**: the screen was
+never rendered, buttons and tabs were not clicked, and the page's JavaScript was not run. What it proves
+is that every request the page's JavaScript makes (`/api/lists`, `/api/match`, `/api/flip`, `/api/search`)
+answers correctly; it does not prove the buttons, tabs, layout or how the results look on screen. The
+page served (HTTP 200). Engine named by `/api/lists`: "cloud". I did not start or stop the page.
+
+## The 14 outlets (`/api/match` with each outlet's id, as the picker sends it)
+
+All 14 answered HTTP 200 in 0.5 to 1.4 s, no error. Each returns 10 sponsors, 10 talks and 10 speakers
+in blended and in meaning. Words came back with fewer in some cases (words can legitimately find
+less; this is the one thing to know when looking at the Words switch):
+
+| Outlet | Parts used | Blended and meaning (sponsors / talks / speakers) | Words (sponsors / talks / speakers) |
+|---|---|---|---|
+| Futurum Group | beat | 10 / 10 / 10 | 2 / 0 / 2 |
+| Greenstack | beat + assignment | 10 / 10 / 10 | 10 / 10 / 10 |
+| Hello World Gazette | beat + assignment | 10 / 10 / 10 | 10 / 10 / 10 |
+| LearnKube | beat | 10 / 10 / 10 | 10 / 8 / 1 |
+| Open Source Sustainability Weekly | beat + assignment | 10 / 10 / 10 | 10 / 10 / 10 |
+| OpsMatters | beat | 10 / 10 / 10 | 3 / 0 / 0 |
+| SDxCentral | beat | 10 / 10 / 10 | 5 / 1 / 0 |
+| TechRevolt News | beat | 10 / 10 / 10 | **0 / 0 / 0** (the Words switch would show nothing for all three tabs) |
+| Techstrong | beat | 10 / 10 / 10 | 10 / 5 / 10 |
+| TFIR | beat | 10 / 10 / 10 | 10 / 10 / 10 |
+| The Breach Chronicle | beat + assignment | 10 / 10 / 10 | 10 / 10 / 10 |
+| The New Stack | beat | 10 / 10 / 10 | 10 / 5 / 10 |
+| The Regulated Cloud | beat + assignment | 10 / 10 / 10 | 10 / 10 / 9 |
+| Women in Infrastructure | beat + assignment | 10 / 10 / 10 | 10 / 10 / 10 |
+
+Blended top three sponsors for the outlets, as the page returns them: Gazette JetBrains, ControlTheory,
+Cosmonic; Breach Chronicle Sysdig, Plural, Northflank (the same top three as the Terminal run at `-n 10`
+before; I did not re-score the match: Titan has a fix coming); TFIR Stacklok, IBM, Komodor; The New Stack
+Red Hat, Better Stack, New Relic; Women in Infrastructure Tigera, Radar, KodeKloud. (All 14 lists are in
+the run output; I judged none of them for sense.) The pickers: 14 outlets and 226 sponsors load.
+
+## Press door, typed
+
+- **Both boxes** (the Breach Chronicle's beat and assignment wording, typed in my own words from the answer
+  key, not the stored text): HTTP 200, "Your outlet", parts beat + assignment. 10 each; blended sponsors
+  Sysdig, Jozu, Radar (Start-Up), Plural, Northflank; meaning Twingate, Maze (Start-Up), Jozu, Sysdig, Palo
+  Alto Networks; blended talks Pods Are Not Enough for AI Agents, Meet Agent-substrate; Agentic Ops: Building
+  Guardrails for Autonomous AI with Policy-as-Code; …
+- **First box only:** HTTP 200, parts beat only; 10 each; blended sponsors Crash Override, Wiz, Maze (Start-Up),
+  Black Duck, Sysdig; talks Five Stages of Kubernetes Security Grief; AI-DDoS: …
+- **Second box only, or both empty:** HTTP 400 "Pick an outlet, or say what you always cover."
+  (readable, not a crash). Unknown outlet id: HTTP 404 "No outlet 'nope' in ftrt-outlets. Run the loader first."
+
+## Vendor door
+
+`/api/flip` answers HTTP 200 with `pending: true` and the message "The flip, outlets that fit your company,
+is the next piece to be built." (the page's JavaScript shows it in a note under the vendor form; I did not
+see it on screen). That is correct for now: M5 is not built.
+
+## The plain search for "SLSA Level 3", page against Terminal
+
+Page (`/api/search`, three modes) against `.venv/bin/python -m ftrt.search --mode compare "SLSA Level 3"`
+in the main folder: **identical in all three ways**: the same names, order and scores (blended: ActiveState,
+OpenSSF, Docker, Priyanka Saggu, Baruch Sadogursky, …; words: ActiveState 12.9189, Docker 10.0805, Baruch
+Sadogursky 6.8636; meaning: OpenSSF first). Empty search: HTTP 400 "Type something to search for."; unknown
+mode: HTTP 400 "Unknown search."
+
+**To note:** the plain search (unlike the match) includes **events** in its results: "Distributed SQL
+Summit Hosted by YugabyteDB | SEPARATE REGISTRATION REQUIRED" and "Project Pavilion Kiosks | Tuesday Morning"
+are in the top 10 for "SLSA Level 3". They are not talks, speakers or sponsors; this is the same as the
+Terminal, not a page bug.
+
+**Not checked (needs a browser):** how the page looks, that the door buttons, switches and tabs work, that
+the page's JavaScript handles every answer above, narrow or phone widths, and the Start-Up marking on screen.

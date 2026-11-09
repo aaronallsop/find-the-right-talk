@@ -102,8 +102,9 @@ def fuse(ranked_lists: list[tuple[list[dict], float]], n: int = 10, k: int = con
 
 
 def search_blended(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
-    words = search_words(client, query, n * 2, index, filt)
-    meaning = search_meaning(client, query, n * 2, index, filt)
+    depth = max(n, config.BLEND_DEPTH)   # fixed, so the blend does not change with how many are shown
+    words = search_words(client, query, depth, index, filt)
+    meaning = search_meaning(client, query, depth, index, filt)
     return fuse([(words, 1.0), (meaning, 1.0)], n)
 
 
@@ -127,11 +128,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("query")
     ap.add_argument("--mode", choices=["words", "meaning", "blended", "compare"], default="blended")
-    ap.add_argument("-n", type=int, default=10, help="how many results (1 to 200)")
+    ap.add_argument("-n", type=int, default=10, help=f"how many results (1 to {config.BLEND_DEPTH})")
     ap.add_argument("--kind", choices=["talk", "event", "speaker", "sponsor"])
     ap.add_argument("--startups", action="store_true", help="Start-Up tier sponsors only")
     a = ap.parse_args()
-    a.n = min(max(a.n, 1), 200)
+    a.n = min(max(a.n, 1), config.BLEND_DEPTH)
     client = connect()
     filt = filters(a.kind, a.startups)
     if a.mode == "compare":

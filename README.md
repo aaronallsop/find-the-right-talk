@@ -29,9 +29,10 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
    about a minute to Elastic Cloud (measured 9 November; 68 seconds on a fresh copy). It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into passages (2,225 for the programme and 25 for the outlets), turns each into
    384 numbers with the meaning model, and fills two new catalogues, `ftrt-programme` and
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
-5. Start the page: [command], and open [address].
+5. Start the page: `.venv/bin/python -m ftrt.page`, and open http://127.0.0.1:5060 (on this laptop
+   only; port 5060 because macOS holds 5000; Ctrl-C stops it).
 
-Until the page exists, search from Terminal: `.venv/bin/python -m ftrt.search --mode compare "SLSA Level 3"`
+You can also search from Terminal: `.venv/bin/python -m ftrt.search --mode compare "SLSA Level 3"`
 shows one search all three ways (words, meaning, blended) with the passage that made each result
 match; `--mode words`, `--mode meaning` or the default blended show one way; add `--kind sponsor`
 or `--startups` to narrow it.

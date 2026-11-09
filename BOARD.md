@@ -101,9 +101,10 @@ the demo searches before and after):**
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: the match fix and the model-download fault, then Elastic's model.
+- Titan: the match-order fix, the model-download fault, then Elastic's meaning model, then M5 the flip.
 - Rhea: the cloud wording in the README, cheat sheet and a first draft of the submission paragraph.
-- Cassini: re-scores after Titan's next save.
+- Cassini: re-scores after Titan's next save, and checks the page in a browser.
+- Aaron: looks at the page. M3, the two-door page, is saved and pushed (fba8720, 11:55) and runs on this laptop at http://127.0.0.1:5060; the press door works, the vendor door says "the flip comes next". Not yet seen in a browser, so not Done.
 - Dione: standing by.
 
 Watch: 11:52 Cassini scored the match against the answer keys, and both test outlets FAIL. The Hello
@@ -156,6 +157,7 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 11:12, Aaron: Elastic's own model or re-ranker only after M3, in M5's slot, if time.
 - 11:17, Aaron: helpers sparingly until 13:20.
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
+- Aaron (relayed by Neptune, 12:05 by Neptune's clock): approved a rewritten 90-second demo script and three new judge answers (why Elastic Cloud, why no geo, why Elastic's own models). Rhea put them in the cheat sheet; the day plan's demo is superseded.
 - 11:55, Aaron: Elastic's own meaning model moves forward, before the page.
 - 11:47, Aaron: the 12:00 hand-over rule is phased out; Titan is the only builder and the only one
   who saves, from now.

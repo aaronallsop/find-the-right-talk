@@ -102,8 +102,8 @@ Words are Aaron's, kept as written. Square brackets are what is on screen, not w
 sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said only once the fourth
 voice is built; until then say "searched three ways" and stop.
 
-**Not true yet, as of 11:54 (do not rehearse as if it were):** the page and both doors are not built;
-the match does not yet pass its answer-key scoring, and the Breach Chronicle, the outlet in beat 2,
+**Not true yet, as of 11:56 (do not rehearse as if it were):** the page is built (11:55) but nobody has
+tried it; the match does not yet pass its answer-key scoring, and the Breach Chronicle, the outlet in beat 2,
 is the one that fails; "in a second" has not been timed; the flip (beat 3) is not built.
 
 ## Built on the day, one line per piece
@@ -134,3 +134,4 @@ is the one that fails; "in a second" has not been timed; the flip (beat 3) is no
   it came to KubeCon to find, searches the programme with each part by meaning and by its most
   telling words, and merges the rankings with the KubeCon part's votes counting double, so each
   talk, speaker or sponsor it lists comes with the passage that matched and the part that found it.
+- **The page (M3, 11:55):** The page has two doors: press pick an outlet, or type what they always cover and what they came to KubeCon to find, and get the talks, speakers and sponsors that fit, each with the passage that matched; vendors pick their company or describe it (the flip, which finds the outlets that fit them, comes next); and the plain three-way search sits underneath.
