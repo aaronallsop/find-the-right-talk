@@ -27,8 +27,9 @@ and you have a plan, and a second list for the backup plan.
 Turn the same engine round and a vendor finds the outlets, and the talks, that fit its story. Start-ups
 can be shown on their own, so a small company with the right story surfaces beside the big names.
 
-What is built, said plainly: you pick one of 14 outlet profiles, or type what an outlet covers and what
-it came to find; nothing typed is stored, and the tool does not save plans.
+What is built, said plainly: you pick one of 14 outlet profiles, which fills in what that outlet
+always covers, and you type what it came to KubeCon to find (or leave it empty); nothing typed is
+stored, and the tool does not save plans.
 
 It runs on Elastic Cloud serverless, searches the programme by words and by meaning, and in the
 cloud adds Elastic's own ELSER model, Jina's embedding model and Elastic's hosted re-ranker as
@@ -39,12 +40,14 @@ Aaron Allsop.
 
 ## What you can see
 
-- **Two doors on one page.** "I'm press": pick an outlet, or type what it always covers and what
-  it came to KubeCon to find, and get the talks, speakers and sponsors that fit, each with the
-  passage that matched and the part of the outlet's profile that found it. "I'm a vendor" (the
-  flip): pick a sponsor, or describe your company, and get the outlets whose beat and KubeCon
-  assignment fit it, each with the outlet's own passage, and the talks nearest to what you do.
-  What a sponsor is showing at KubeCon, like an outlet's assignment, counts double.
+- **Two doors on one page.** "I'm press": pick an outlet and its beat ("What we always cover") is
+  filled in for you; "What we came to KubeCon to find" is the visitor's own to type (or leave empty,
+  and it matches on the beat alone). Go returns the talks, speakers and sponsors that fit, each with the
+  passage that matched and the part of the profile that found it. "I'm a vendor" (the flip): pick a
+  sponsor and "what my company does" is filled in for you, or describe your company, and get the
+  outlets whose beat and KubeCon assignment fit it, each with the outlet's own passage, and the
+  talks nearest to what you do. What a sponsor is showing at KubeCon, like an outlet's assignment,
+  counts double. Nothing typed is stored.
 - **The start-up flag.** A "Start-ups only" switch narrows every sponsor list to the 32 start-ups
   among the 226 sponsors, and switching it off brings the full lists back.
 - **Words, meaning, and Elastic's voice.** On the page, "Compare all" shows six

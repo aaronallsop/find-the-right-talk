@@ -106,8 +106,10 @@
     </form>
 
     <form id="vendor" autocomplete="off" hidden>
-      <label for="sponsor">Pick a sponsor</label>
-      <select id="sponsor"><option value="">Choose one of the sponsors…</option></select>
+      <label for="sponsor-find">Find a sponsor</label>
+      <input type="text" id="sponsor-find" list="sponsor-list" placeholder="Start typing a sponsor's name…" autocomplete="off">
+      <datalist id="sponsor-list"></datalist>
+      <input type="hidden" id="sponsor">
       <p class="or">picking one fills in what it does; edit it, or write your own</p>
       <label for="does">What my company does</label>
       <textarea id="does" placeholder="We make an autoscaler that adds servers when traffic spikes and removes them afterwards."></textarea>
@@ -314,7 +316,17 @@ async function fillFrom(kind, id, box) {
   } catch (x) { /* the box stays as it was; Go still works from the pick */ }
 }
 $("outlet").onchange = () => { const id = $("outlet").value; $("beat").value = ""; $("assignment").value = ""; fillFrom("outlet", id, "beat"); };
-$("sponsor").onchange = () => { const id = $("sponsor").value; $("does").value = ""; $("showing").value = ""; fillFrom("sponsor", id, "does"); };
+// the sponsor is found by typing: the browser suggests matching names; a name typed or chosen in full selects it
+function sponsorTyped() {
+  const typed = $("sponsor-find").value.trim().toLowerCase();
+  const hit = sponsorsShown().find(s => s.name.toLowerCase() === typed);
+  const id = hit ? hit.record_id : "";
+  if (id === $("sponsor").value) return;
+  $("sponsor").value = id;
+  if (id) { $("does").value = ""; $("showing").value = ""; fillFrom("sponsor", id, "does"); }
+}
+$("sponsor-find").oninput = sponsorTyped;
+$("sponsor-find").onchange = sponsorTyped;
 
 $("press").onsubmit = async e => {
   e.preventDefault();
@@ -374,11 +386,12 @@ $("search").onsubmit = async e => {
 };
 
 // the start-ups toggle: fewer sponsors everywhere, and back again
+const sponsorsShown = () => sponsorsAll.filter(s => !startupsOnly() || s.startup);
 function fillSponsors() {
-  const keep = $("sponsor").value, shown = sponsorsAll.filter(s => !startupsOnly() || s.startup);
-  $("sponsor").replaceChildren(new Option(startupsOnly() ? "Choose one of the start-up sponsors…" : "Choose one of the sponsors…", ""),
-    ...shown.map(s => new Option(s.name + "  (" + s.tier + ")", s.record_id)));
-  if (shown.some(s => s.record_id === keep)) $("sponsor").value = keep;
+  const shown = sponsorsShown();
+  $("sponsor-list").replaceChildren(...shown.map(s => { const o = new Option(s.tier, s.name); o.label = s.tier; return o; }));
+  $("sponsor-find").placeholder = startupsOnly() ? "Start typing a start-up sponsor's name…" : "Start typing a sponsor's name…";
+  if (!shown.some(s => s.record_id === $("sponsor").value)) { $("sponsor").value = ""; $("sponsor-find").value = ""; }
   const startups = sponsorsAll.filter(s => s.startup).length;
   $("pool").textContent = startupsOnly() ? "Sponsors: the " + startups + " start-ups of " + sponsorsAll.length
                                          : "Sponsors: all " + sponsorsAll.length + " (" + startups + " of them start-ups)";

@@ -124,7 +124,7 @@ Aaron's words, kept as written. Square brackets are what is on screen, not words
    room, but you can't read the whole schedule either. So I built the thing I wanted in that moment.
    This is KubeCon's own programme, public data with credit, searchable by meaning in Elastic Cloud
    serverless, built today from an empty folder."
-2. [Pick Hello World Gazette, Go. 0:30]
+2. [Pick Hello World Gazette; its beat fills in. Type "AI agents that help developers write code" in "What we came to KubeCon to find"; Go. 0:30] (Titan, 14:57: the result is JetBrains, Momentic, mirrord, Docker, Coder. With nothing typed it matches on the beat alone: JetBrains, Black Duck, Spotify, Aikido Security, HeroDevs. Read what is on screen before you name the companies.)
    "I'm press. This outlet covers developer tools, and it came with one assignment: AI agents that
    help developers write code. The match reads that brief and ranks the whole programme against it
    in about two seconds. Docker, JetBrains, Momentic, Coder: the companies you'd expect. And every
