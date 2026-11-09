@@ -4,9 +4,9 @@
 > outlet its next story in seconds: the talks, speakers and companies that fit what it covers.**
 
 It is a tool for media outlets covering a conference. An outlet's profile is matched against the
-whole programme, and the same engine turned round lets a company on the show floor find the
+whole program, and the same engine turned round lets a company on the show floor find the
 outlets that would want its story. This build uses KubeCon + CloudNativeCon North America 2026 as
-its example; any conference with a programme and a sponsor list would work the same way.
+its example; any conference with a program and a sponsor list would work the same way.
 
 **Try it:** https://caiv.cnh.radarhq.io (hosted on Radar's cluster until 13 November).
 
@@ -28,14 +28,14 @@ building could be two aisles over and you would never know.
 - **How these were found.** One link shows the same search six ways, side by side: words, meaning,
   Elastic's ELSER, Jina's embeddings, blended and re-ranked.
 
-It is loaded with the KubeCon programme: 501 talks, 715 speakers, 226 sponsors and 14 outlet
-profiles (8 real media partners and 6 labelled samples). Another conference means another four
+It is loaded with the KubeCon program: 501 talks, 715 speakers, 226 sponsors and 14 outlet
+profiles (8 real media partners and 6 labeled samples). Another conference means another four
 spreadsheets in the same layout.
 
 ## Where Elastic is used
 
-- **Elastic Cloud serverless** holds the programme and the outlets as short passages, in two
-  catalogues.
+- **Elastic Cloud serverless** holds the program and the outlets as short passages, in two
+  catalogs.
 - **Elasticsearch** runs the keyword search, the vector search and the filters in one place. This
   project's own code blends the ranked lists (reciprocal rank fusion).
 - **Elastic's ELSER model and Jina's embedding model**, both through Elastic, read every passage
@@ -43,7 +43,7 @@ spreadsheets in the same layout.
 - **Elastic's hosted re-ranker** re-orders the blended top 20 in the "Re-ranked" view.
 - **An Elastic inference connector** reaches OpenAI's gpt-4.1 for the fit check and the agent.
 - **An Elastic Agent Builder agent** with three custom read-only tools answers questions over the
-  same two catalogues.
+  same two catalogs.
 
 Of the five things Elastic asked entrants to use, four are done: serverless, ingesting data, Jina
 embeddings, and an Agent Builder agent with custom tools. Workflows is not used.
@@ -76,12 +76,12 @@ in `ftrt/config.py`. Without one the page works as before and the fit check box 
 - **Aaron Allsop:** the idea, the two test outlets, every product decision, and the checks.
 - **Claude Code (Anthropic)** wrote all of the code, under Aaron's direction, on 9 November 2026,
   after the hackathon's 11:00 start. Every commit says so, and the commit history starts with no
-  code in it. Before the day there were only data and notes: the public programme, and the sponsor
-  and outlet profiles in `data/`, which Claude drafted from public pages (each labelled; six of
+  code in it. Before the day there were only data and notes: the public program, and the sponsor
+  and outlet profiles in `data/`, which Claude drafted from public pages (each labeled; six of
   the outlets are invented samples).
 - **In the product,** the search models (all-MiniLM-L6-v2, Elastic's ELSER, Jina) rank text and
   write none. The only AI-written words are the fit check and the Agent Builder agent's answers,
-  both from OpenAI's gpt-4.1 through Elastic, and both labelled as AI-written.
+  both from OpenAI's gpt-4.1 through Elastic, and both labeled as AI-written.
 - **What leaves the Elastic project.** The words, meaning and ELSER searches stay inside it. Jina's
   embeddings (every passage once at load, and each search's question) and the re-ranker (the
   question and the top 20 passages) go to Elastic's hosted inference service. The agent (its
@@ -91,8 +91,8 @@ in `ftrt/config.py`. Without one the page works as before and the fit check box 
 
 What was measured on the day, including the misses, is in `notes/evidence.md`.
 
-## Data and licence
+## Data and license
 
-KubeCon + CloudNativeCon North America 2026 programme, The Linux Foundation, CC BY 3.0, as of
-4 November 2026. See `data/CREDITS.md`. Logos and photos are not included. The code's licence is in
+KubeCon + CloudNativeCon North America 2026 program, The Linux Foundation, CC BY 3.0, as of
+4 November 2026. See `data/CREDITS.md`. Logos and photos are not included. The code's license is in
 `LICENSE`.

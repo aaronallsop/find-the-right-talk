@@ -300,25 +300,29 @@ function renderMatch() {
   showResults($("match-results"), rs, empty);
 }
 
-// The fit check: after the press door's results are on the page, the top three sponsors are sent to be read by
-// an AI model, which writes why each may suit this outlet. If it is slow or does not answer, nothing is shown.
-let fitAsked = 0;
-async function askFit(answer, sent) {
-  const top = ((answer.results.sponsor || {}).blended || []).slice(0, 3).map(r => r.name);
-  const mine = ++fitAsked;
-  answer.fit = top.length ? {waiting: true} : null;
+// The fit check: after the press door's results are on the page, the top three of the tab being looked at
+// (sponsors, talks or speakers) are sent, by id, to be read by an AI model, which writes why each may suit this
+// outlet. Each tab asks the first time it is shown for an answer, then keeps it. Slow or no answer: nothing shown.
+const FIT_KINDS = {sponsor: "sponsors", talk: "talks", speaker: "speakers"};
+async function askFit(answer, kind) {
+  answer.fit = answer.fit || {};
+  if (answer.fit[kind] !== undefined) return;   // asked once per tab per answer
+  const top = ((answer.results[kind] || {}).blended || []).slice(0, 3).map(r => r.id);
+  answer.fit[kind] = top.length ? {waiting: true} : null;
   renderFit();
   if (!top.length) return;
   let d = {};
-  try { d = await post("/api/fitcheck", {...sent, sponsors: top}); } catch (x) { /* no fit check this time */ }
-  if (mine !== fitAsked || answers.press !== answer) return;   // a newer Go has taken over
-  answer.fit = d.items && d.items.length ? d : null;
-  renderFit();
+  try { d = await post("/api/fitcheck", {...answer.sent, kind, items: top}); } catch (x) { /* no fit check this time */ }
+  answer.fit[kind] = d.items && d.items.length ? d : null;
+  if (answers.press === answer) renderFit();   // a newer Go keeps its own
 }
-// shown only with the press door's best sponsor matches: the list it was written from
+// shown only with the press door's best matches, above the tab's list it was written from
 function renderFit() {
-  const box = $("fitcheck"), fit = door === "press" && matchData && matchData === answers.press ? matchData.fit : null;
-  const here = !!fit && matchKind === "sponsor" && matchWay === "blended";
+  const box = $("fitcheck"), answer = door === "press" && matchData && matchData === answers.press ? matchData : null;
+  const kind = matchKind, wanted = !!answer && kind in FIT_KINDS && matchWay === "blended";
+  if (wanted && (!answer.fit || answer.fit[kind] === undefined)) { askFit(answer, kind); return; }
+  const fit = wanted ? answer.fit[kind] : null;
+  const here = !!fit;
   box.hidden = !here;
   if (!here) return;
   const head = el("p", "fit-head");
@@ -330,13 +334,13 @@ function renderFit() {
   fit.items.forEach((it, i) => {
     const item = el("div", "fit-item"), h = el("div", "r-head"), read = el("details");
     h.append(el("span", "r-pos", (i + 1) + "."), el("span", "r-name", it.name));
-    if (it.startup) h.append(el("span", "tag gem", "Start-Up"));
+    if (kind === "sponsor" && it.startup) h.append(el("span", "tag gem", "Start-Up"));
     read.append(el("summary", null, "The passage it read"), el("p", null, it.passage));
     item.append(h, el("p", "fit-why", it.why), read);
     items.append(item);
   });
   box.append(items, el("p", "fit-foot", "Written by " + fit.model + ", reached through Elastic's inference service, from what this outlet covers, " +
-    "what it came to find, and each of these three sponsors' own passage. Nothing else is sent, and the order above is the search's, not the AI's."));
+    "what it came to find, and each of these three " + FIT_KINDS[kind] + "' own passage. Nothing else is sent, and the order above is the search's, not the AI's."));
 }
 
 // one results panel for both doors; each door keeps its own last answer
@@ -411,7 +415,7 @@ $("press").onsubmit = async e => {
   try {
     const sent = {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value, startups: startupsOnly()};
     answers.press = await post("/api/match", sent);
-    askFit(answers.press, sent);   // not waited for: the results show now, the fit check when it comes
+    answers.press.sent = sent;   // the fit check sends the same two texts; each tab asks for its own when shown
     if (door === "press") { showAnswer(answers.press); $("match-panel").scrollIntoView({behavior: "smooth", block: "start"}); }
     ok = true;
   } catch (x) { err.textContent = x.message; err.hidden = false; }

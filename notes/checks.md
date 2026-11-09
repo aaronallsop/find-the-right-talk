@@ -1391,3 +1391,52 @@ Dash0 are not. It did not pick mirrord by MetalBear (the hidden gem), Faros (the
 **Against the 14:19 gpt-4.1 answer (before the tightening):** then two sponsors (Coder, Dash0) and three talks mixed in one numbered list, 11 of 13 quoted
 pieces verbatim (two quotes altered: a dropped word, and a stitched joint with no gap mark); now five sponsors and five talks under two headings, 10 of 10
 quotations verbatim and in order, the talks dated (4 of 5 correct, 1 wrongly "no time listed"), 3 of 5 sponsors on the key (before: 1 of 2).
+
+---
+
+# The fit check (commit 8200739), real browser at http://127.0.0.1:8765, 15:37 to 15:40 (machine clock)
+
+Setup each run: the Hello World Gazette picked (the page then fills the first box with the outlet's beat), the second box typed "Start-ups building AI agents
+that help developers write and test code", Go. The request the page sent carried the outlet id, the beat text and the typed assignment. Engine label on screen
+as before. Model named in the box's footer: "Written by OpenAI's gpt-4.1, reached through Elastic's inference service ...".
+
+| Run | Results on screen after Go | Fit check box appears | The box's three names | Page's top three (blended sponsors) |
+|---|---|---|---|---|
+| 1 | 2.41 s | 5.76 s after Go (fit request 3.28 s) | mirrord by MetalBear [Start-Up], JetBrains, Momentic | the same three, same order |
+| 2 | 3.08 s | 4.60 s | same | same |
+| 3 | 2.70 s | 5.03 s | same | same |
+
+(1) **Names: the box's three are the list's top three, in order, in all three runs.** While waiting the box showed "Fit check: reading the top three for this outlet…"
+(seen in all three runs); results were on screen first, the box about 1.6 to 3.3 s later.
+(4) **Label: shown every time.** Heading "Fit check: AI-written from the passages below. Check before you rely on it." and footer "Written by OpenAI's gpt-4.1,
+reached through Elastic's inference service, from what this outlet covers, what it came to find, and each of these three sponsors' own passage. Nothing else is
+sent, and the order above is the search's, not the AI's." Each item has a "The passage it read" fold-out; the three passages were identical across the runs.
+
+(2) **Claims, checked sentence by sentence against "The passage it read":** each sentence has two parts: what the sponsor does (checkable) and a hedged "may ..."
+fit remark about the outlet (a judgment, not in the passage). Counting the checkable claims about the sponsor (a claim = one fact; my split):
+- Run 1: mirrord "gives AI coding agents and developers a live connection to real infrastructure" (in the passage), "for testing code changes" (in it); JetBrains
+  "Air is an agentic development environment for teams building software with AI agents" (in it, under Products); Momentic "AI QA agent explores and tests apps across
+  browsers and mobile emulators" (in it), "turning plain-English test descriptions into end-to-end tests" (in it): **5 claims, 5 supported, 0 not.**
+- Run 2: the same, plus Momentic "self-healing" (in it): **6 claims, 6 supported.**
+- Run 3: mirrord "...letting agents and developers verify code against real APIs and services without deploying" (in it); JetBrains as before; Momentic as in run 2:
+  **7 claims, 7 supported.** (Its JetBrains fit remark "AI-assisted coding environments" is a judgment; the passage lists "Using AI coding assistance".)
+Nine fit remarks in all (three per run) are hedged ("may interest you", "may fit", "may be relevant"), none states a fact about the sponsor. The wording varied from run to
+run, as expected; the sponsor claims did not drift beyond the passages.
+(3) **No non-start-up called a start-up:** only mirrord carries the Start-Up tag (correct per `data/sponsors.csv`); JetBrains and Momentic (Silver) are not tagged, and the
+word "start-up" appears in none of the nine sentences.
+
+**One run with start-ups on** (switching the switch on re-ran the match, then the box): results 2.06 s, box 3.67 s after the click (fit request 1.56 s). Top three of the
+"Start-up sponsors" list: mirrord, Vijil, Paper Compute Company (all Start-Up in the data); the box named the same three in order, tagged [Start-Up], label present.
+Claims: mirrord "live connection to real infrastructure for testing code changes instantly" (instant feedback: in the passage) and "open-source mirrord" (in it): 3 claims;
+Vijil "manages the lifecycle of AI agents with tools for discovering, evaluating, and monitoring agents, including open-source in-agent guards" (all in it): 2-3 claims;
+Paper Compute "records every coding agent session, generates reusable skills, and routes jobs to the best-performing AI models ... open-source telemetry layers": 4 claims,
+all in the passage; one slightly loose: the passage says "records every agent session", the answer says "every coding agent session" (the passage elsewhere says it captures Claude
+Code sessions). **About 9 to 10 claims, none unsupported, one loosely worded.**
+
+**The box is absent where it should be.** Checked with start-ups on: Talks tab, Speakers tab, and the Meaning, Words, Elastic ELSER, Jina, Re-ranked and Compare all views:
+box hidden in all; it showed only on the Sponsors (or "Start-up sponsors") tab with Blended. Vendor door, Kedify (fresh page): the box hidden, no fit request, the
+flip answered in 1.87 s with the Outlets and Talks tabs, no error. Plain search, GPU sentence among sponsors, Blended: 10 results, first five Edera, vCluster, Cast AI,
+Rafay Systems, Lablup (the same as at 13:46), no fit request, box hidden; Compare all search: six columns, no fit request, box hidden. (The vendor door's picker now takes a
+typed sponsor name in a box, not a drop-down.)
+**One change to flag:** Kedify's outlets now read Greenstack, TFIR, LearnKube, The Regulated Cloud, SDxCentral (at 14:06: Greenstack, Open Source Sustainability Weekly, TFIR,
+LearnKube, The New Stack; at 12:18: Greenstack, LearnKube, TFIR, Women in Infrastructure, The Regulated Cloud): the order moves with each version.
