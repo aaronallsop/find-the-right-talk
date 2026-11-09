@@ -1082,3 +1082,88 @@ It did not name KodeKloud or Endor Labs.
 3. Its one-line reasons are the model's own words (for example "Perfect match for the assignment", "Novel
    approach to letting AI agents test against real environments") and are not checked against anything: only the
    quotations were.
+
+---
+
+# "Before Breach/Jina reload" set: baseline on 44b75dc, cloud, 13:28 to 13:30 (machine clock)
+
+Three runs of each, all identical (names, order and scores). Agent not asked anything. Sponsors only. Five ways now:
+words, meaning, ELSER, blended, re-ranked (Elastic's hosted re-ranker over the blended top 20). At n=10 and n=50 the
+first ten are identical in every way for both outlets (compared by program), re-ranked included.
+**Compared with the third set (2e26f1b, 12:13): words, meaning, ELSER and blended are identical for both outlets;
+only re-ranked is new.**
+
+## The three demo searches (compare, sponsors, three runs: 13:28:48 to :59, 13:29:06 to :17, 13:29:23 to :34)
+
+| Search | Words | Meaning | ELSER | Blended | Re-ranked |
+|---|---|---|---|---|---|
+| "SLSA Level 3" | ActiveState 12.92, Docker 10.08 | OpenSSF, HeroDevs, Akeyless Security, AEnix, Nebius | ActiveState, OpenSSF, Emphere (Start-Up), Docker, Chainguard | ActiveState 0.0442, Docker 0.0400, OpenSSF, HeroDevs, Nebius | ActiveState, Docker, OpenSSF (three only) |
+| "scale up for a traffic spike and back down afterwards" | nothing | Kedify (Start-Up), ScaleOps, DataAgent, Better Stack, Ascendra Networks | Kedify, PlanetScale, DevZero, ScaleOps, Zesty | Kedify, ScaleOps, Ascendra Networks, Zesty, DevZero | Kedify, Zesty (two only) |
+| GPU sentence | Edera | vCluster, Edera, Rafay Systems, AEnix, Cast AI | Edera, vCluster, Cast AI, AEnix, Runpod | Edera 0.0489, vCluster, Cast AI, AEnix, Rafay Systems | vCluster 0.4794, Edera, AEnix (three only) |
+
+Changes since the "after" check (11:48, 174effd): the SLSA tie is gone in blended (ActiveState 0.0442, Docker
+0.0400, OpenSSF 0.0325: ActiveState first on a clear margin); in the traffic-spike search Kedify is still first
+everywhere it appears (pgEdge and Better Stack no longer both in the blended top five); GPU blended still Edera first.
+The re-ranked column lists only the sponsors among the blended top 20 it re-ordered, which is why it has two or three.
+
+## Hello World Gazette (n=10 and n=50; runs at 13:29:44, :47, :50; n=50 at 13:29:52)
+
+| Company | Words | Meaning | ELSER | Blended | Re-ranked |
+|---|---|---|---|---|---|
+| Coder (must) | – (n50: 29) | – (11) | – (13) | **8** | – (12) |
+| Momentic (must) | 8 | – (21) | 3 | **4** | 6 |
+| Faros (must) | – (38) | 7 | – (37) | – (13) | – (not in the 48 shown) |
+| mirrord by MetalBear (gem) | – (26) | 4 | 2 | **3** | 1 |
+| Docker (also) | 3 | – (14) | 1 | 1 | 2 |
+| JetBrains (also) | 1 | 3 | not in top 50 | 5 | – (13) |
+| KodeKloud (beat only) | not in top 50 | – (27) | not in top 50 | not in top 50 | not in top 50 |
+| Endor Labs (trap) | – (17) | – (45) | – (30) | – (17) | not in top 50 |
+
+Assignment companies (3 must + gem) in the top 10: words 1, meaning 2, ELSER 2, **blended 3**, re-ranked 2 (mirrord, Momentic).
+Blended top ten: Docker, ControlTheory, mirrord by MetalBear, Momentic, JetBrains, Syntasso, Temporal, Coder,
+Sentry, Resolve AI (as in the third set). Key's pass test (all three must-finds in the blended top 10): **fails,
+Faros 13th**. Re-ranked top ten: mirrord, Docker, Diagrid, Temporal, Tigera, Momentic, Cosmonic, Resolve AI, Sentry,
+Depot: the gem and Docker rise to 1 and 2, Coder and Faros leave the top 10.
+
+## The Breach Chronicle (n=10 and n=50; runs at 13:29:54, :57, :59; n=50 at 13:30:01)
+
+No must-find and no gem in the top 10 of any way except Maze 4th by meaning. Ranks at n=50 of each must-find:
+
+| Company | Words | Meaning | ELSER | Blended | Re-ranked |
+|---|---|---|---|---|---|
+| Maze (Start-Up, must) | not in top 50 | 4 | 30 | 23 | 23 |
+| Emphere (must) | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 |
+| Endor Labs (must) | not in top 50 | 43 | not in top 50 | not in top 50 | not in top 50 |
+| Edera (must) | not in top 50 | not in top 50 | 40 | not in top 50 | not in top 50 |
+| Cosmonic (must) | not in top 50 | 36 | not in top 50 | not in top 50 | not in top 50 |
+| Teleport (must) | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 |
+| Archestra AI (must) | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 |
+| Vijil (gem, Start-Up) | not in top 50 | 23 | not in top 50 | not in top 50 | not in top 50 |
+| Akamai (beat only) | not in top 50 | 40 | **9** | 31 | 31 |
+| RapidFort, Echo, Orca Security | not in top 50 | not in top 50 | not in top 50 | not in top 50 | not in top 50 |
+
+Top ten, blended: Sysdig, Plural, Resolve AI, Jozu, Kubex, Radar (Start-Up), Docker, Nirmata, Twingate, Edge Delta;
+re-ranked: Plural, Sysdig, Resolve AI, Twingate, Tigera, Jozu, PagerDuty, Docker, Edge Delta, Radar; ELSER: Sysdig, Palo Alto
+Networks, Plural, Kubex, Twingate, Resolve AI, Tigera, Chainguard, Akamai, Temporal. (The re-ranked list at n=50 holds
+40 sponsors, Maze and Akamai at the same places and scores as in blended.) Pass test: **fails, none of the 7 must-finds
+or the gem in any way's top 10 except Maze 4th by meaning.**
+
+---
+
+# The Agent Builder agent, third try at 13:38 (machine clock), after the default model was reported switched: REFUSED, still the Anthropic model
+
+Asked the same one question at 13:38:46: `ftrt.agent ask "Which sponsors and talks at KubeCon fit the Hello World Gazette?"`.
+**Refused after 43 seconds. Exact message: "The agent did not answer: 429 ... Received a rate limit status code for
+request from inference entity id [.anthropic-claude-4.5-sonnet-chat_completion] status [429]. Error message: [You
+have reached your trial limit for this model. Upgrade to continue building and enable full production capacity or
+wait 3m36s for your trial quota to be refilled. Visit ela.st/upgrade-now to learn more on how to upgrade.]"** Not retried.
+
+**Which model answered: the Anthropic one, not gpt-4.1.** The refusal names the inference entity
+`.anthropic-claude-4.5-sonnet-chat_completion`, and the saved conversation record of this attempt (read back, no
+model call) says the same: connector `.anthropic-claude-4.5-sonnet-chat_completion`, model anthropic-claude-4.5-sonnet,
+3 model calls, 23,792 input tokens and 517 output tokens, round "completed" but with an empty response
+message; its steps: the outlet's profile, then two searches whose parameters the record shows as empty. The agent's
+own saved definition has no model field (only instructions, tools, capabilities), so it uses whatever the project's
+default connector is when it runs; at 13:38:46 that was still the Anthropic one. The earlier refusals: 12:53:53 (wait
+8m44s), 13:06:40 (wait 6m7s); this one at 13:39:29 (wait 3m36s).
+Nothing to check: no answer, no companies, quotations or closing line. The checked answer remains the 12:42 one.

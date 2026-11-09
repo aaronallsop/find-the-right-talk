@@ -62,7 +62,8 @@ def _group(hits: list[dict], n: int) -> list[dict]:
             continue
         seen.add(s["record_id"])
         out.append({"record_id": s["record_id"], "kind": s["kind"], "name": s["name"], "score": h["_score"],
-                    "passage": s["text"], "tier": s.get("tier"), "startup": s.get("startup"), "track": s.get("track"),
+                    "passage": s.get("text"), "_id": h["_id"], "_index": h["_index"],
+                    "tier": s.get("tier"), "startup": s.get("startup"), "track": s.get("track"),
                     "companies": s.get("companies"), "part": s.get("part"), "sample": s.get("sample")})
         if len(out) >= n:
             break
@@ -70,27 +71,46 @@ def _group(hits: list[dict], n: int) -> list[dict]:
 
 
 _FIELDS = ["record_id", "kind", "name", "text", "tier", "startup", "track", "companies", "part", "sample"]
+_LIST_FIELDS = [f for f in _FIELDS if f != "text"]   # long lists come back without the passages' text (most of the weight)
 
 
-def search_words(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
+def _fields(passages: bool) -> list[str]:
+    return _FIELDS if passages else _LIST_FIELDS
+
+
+def with_passages(client, results: list[dict]) -> list[dict]:
+    """Fill in the passage text of results that came back without it, in one request. Only the results that are
+    shown, or handed to the re-ranker, need it; the long lists that are merged do not."""
+    missing = [r for r in results if r.get("passage") is None]
+    if missing:
+        got = client.mget(docs=[{"_index": r["_index"], "_id": r["_id"]} for r in missing], source_includes=["text"])["docs"]
+        for r, d in zip(missing, got):
+            r["passage"] = d["_source"]["text"]
+    return results
+
+
+def search_words(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None,
+                 passages: bool = True) -> list[dict]:
     body = {"bool": {"must": {"match": {"text": {"query": query, "minimum_should_match": config.WORDS_MIN_MATCH}}},
                      "filter": filt or []}}
-    r = client.search(index=index, query=body, size=_fetch_size(n), source_includes=_FIELDS)
+    r = client.search(index=index, query=body, size=_fetch_size(n), source_includes=_fields(passages))
     return _group(r["hits"]["hits"], n)
 
 
-def search_meaning_vector(client, vector: list[float], n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
-    """Meaning search from numbers already in hand (the match reuses this with an outlet's numbers)."""
+def search_meaning_vector(client, vector: list[float], n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None,
+                          field: str = "vector", passages: bool = True) -> list[dict]:
+    """Meaning search from numbers already in hand (the match reuses this with an outlet's numbers; Jina with its own)."""
     k = _fetch_size(n)
-    knn = {"field": "vector", "query_vector": vector, "k": k, "num_candidates": max(config.MEANING_CANDIDATES, k)}
+    knn = {"field": field, "query_vector": vector, "k": k, "num_candidates": max(config.MEANING_CANDIDATES, k)}
     if filt:
         knn["filter"] = {"bool": {"filter": filt}}
-    r = client.search(index=index, knn=knn, size=k, source_includes=_FIELDS)
+    r = client.search(index=index, knn=knn, size=k, source_includes=_fields(passages))
     return _group(r["hits"]["hits"], n)
 
 
-def search_meaning(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
-    return search_meaning_vector(client, embed(query), n, index, filt)
+def search_meaning(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None,
+                   passages: bool = True) -> list[dict]:
+    return search_meaning_vector(client, embed(query), n, index, filt, passages=passages)
 
 
 ELSER_MISSING = ("Elastic's own model, ELSER, did not answer or is not in this catalogue (it runs only in Elastic "
@@ -98,14 +118,53 @@ ELSER_MISSING = ("Elastic's own model, ELSER, did not answer or is not in this c
 _elser_resting_until = 0.0   # after a failure, searches leave ELSER alone until this time
 
 
-def has_elser(client, index: str = config.PROGRAMME_INDEX) -> bool:
-    """Whether this catalogue holds ELSER's reading of each passage (Elastic Cloud only; the laptop skips it).
-    Asked afresh each time (one small request), so a running page notices a reload."""
+def has_field(client, field: str, index: str = config.PROGRAMME_INDEX) -> bool:
+    """Whether this catalogue holds this field. Asked afresh each time (one small request), so a running page
+    notices a reload."""
     props = client.indices.get_mapping(index=index)[index]["mappings"].get("properties", {})
-    return config.ELSER_FIELD in props
+    return field in props
 
 
-def search_elser(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict] | None:
+def has_elser(client, index: str = config.PROGRAMME_INDEX) -> bool:
+    """Whether this catalogue holds ELSER's reading of each passage (Elastic Cloud only; the laptop skips it)."""
+    return has_field(client, config.ELSER_FIELD, index)
+
+
+JINA_MISSING = ("Jina embeddings are not in this catalogue or did not answer (they need Elastic Cloud and a load "
+                "there). Skipped.")
+_jina_resting_until = 0.0
+
+
+def jina_question(client, query: str) -> list[float] | None:
+    """The question's Jina numbers from Elastic's hosted service, or None if it is resting or does not answer in time."""
+    global _jina_resting_until
+    if time.time() < _jina_resting_until:
+        return None
+    try:
+        r = client.options(request_timeout=config.JINA_SEARCH_LIMIT, max_retries=0).inference.text_embedding(
+            inference_id=config.JINA_ENDPOINT, input=[query], timeout=f"{config.JINA_SEARCH_LIMIT}s")
+        return r.body["text_embedding"][0]["embedding"]
+    except (ApiError, TransportError) as e:
+        _jina_resting_until = time.time() + config.JINA_REST
+        print(f"Jina did not answer within {config.JINA_SEARCH_LIMIT} s ({type(e).__name__}); left out, and not asked "
+              f"again for {config.JINA_REST} s.", file=sys.stderr)
+        return None
+
+
+def search_jina(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None,
+                vector: list[float] | None = None, passages: bool = True) -> list[dict] | None:
+    """Search by the meaning Jina's model finds: the question's numbers come from Elastic's hosted service, then the
+    nearest passages by their stored Jina numbers. None on the laptop, or if it is slow, so callers skip this voice."""
+    if not has_field(client, config.JINA_FIELD, index):
+        return None
+    vector = vector or jina_question(client, query)
+    if vector is None:
+        return None
+    return search_meaning_vector(client, vector, n, index, filt, field=config.JINA_FIELD, passages=passages)
+
+
+def search_elser(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None,
+                 passages: bool = True) -> list[dict] | None:
     """Search by the meaning Elastic's own model, ELSER, finds. None where the catalogue has no ELSER field
     (the laptop engine) or ELSER does not answer (it may be waking up), so callers skip this voice rather than fail."""
     global _elser_resting_until
@@ -116,7 +175,7 @@ def search_elser(client, query: str, n: int = 10, index: str = config.PROGRAMME_
             return None
         body = {"bool": {"must": {"semantic": {"field": config.ELSER_FIELD, "query": query}}, "filter": filt or []}}
         r = client.options(request_timeout=config.ELSER_SEARCH_LIMIT, max_retries=0).search(
-            index=index, query=body, size=_fetch_size(n), source_includes=_FIELDS)
+            index=index, query=body, size=_fetch_size(n), source_includes=_fields(passages))
     except (ApiError, TransportError) as e:
         _elser_resting_until = time.time() + config.ELSER_REST
         print(f"ELSER did not answer within {config.ELSER_SEARCH_LIMIT} s ({type(e).__name__}); left out, and not "
@@ -151,14 +210,31 @@ def fuse(ranked_lists: list[tuple[list[dict], float]], n: int = 10, k: int = con
     return fused[:n]
 
 
-def search_blended(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
+def every_way(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> dict:
+    """Each way asked once, at the same time, ranked to the fixed depth: {"words": [...], "meaning": [...],
+    "elser": [...] or None, "jina": [...] or None}."""
     depth = max(n, config.BLEND_DEPTH)   # fixed, so the blend does not change with how many are shown
-    with ThreadPoolExecutor(max_workers=3) as pool:   # the three ways at once; merged in a fixed order below
-        words, meaning, elser = pool.map(lambda way: way(client, query, depth, index, filt), (search_words, search_meaning, search_elser))
-    lists = [(words, 1.0), (meaning, 1.0)]
-    if elser is not None:   # Elastic's model gets one vote like the others, where it exists
-        lists.append((elser, 1.0))
-    return fuse(lists, n)
+    ways = (("words", search_words), ("meaning", search_meaning), ("elser", search_elser), ("jina", search_jina))
+    with ThreadPoolExecutor(max_workers=len(ways)) as pool:
+        return dict(zip((w for w, _ in ways), pool.map(lambda way: way[1](client, query, depth, index, filt, passages=False), ways)))
+
+
+def blend(found: dict, n: int) -> list[dict]:
+    """Words and meaning, and Elastic's models where they answered, one vote each, merged in a fixed order."""
+    return fuse([(found[w], 1.0) for w in ("words", "meaning", "elser", "jina") if found.get(w) is not None], n)
+
+
+def search_blended(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
+    return with_passages(client, blend(every_way(client, query, n, index, filt), n))
+
+
+def compare_all(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> dict:
+    """Every way side by side, each asked once: the blended and re-ranked columns come from the same answers."""
+    found = every_way(client, query, n, index, filt)
+    blended = with_passages(client, blend(found, max(n, config.RERANK_TOP)))   # the re-ranker reads these passages
+    reordered = rerank(client, query, blended)
+    return {**{w: (None if rs is None else with_passages(client, rs[:n])) for w, rs in found.items()},
+            "blended": blended[:n], "reranked": None if reordered is None else reordered[:n]}
 
 
 RERANK_MISSING = ("Elastic's re-ranker runs only in Elastic Cloud, and only when it answers. Skipped.")
@@ -176,6 +252,7 @@ def left_out() -> list[str]:
     """Which of Elastic's models are sitting out right now because they did not answer in time."""
     now = time.time()
     return ([config.ELSER_NAME] if now < _elser_resting_until else []) + \
+           ([config.JINA_NAME] if now < _jina_resting_until else []) + \
            ([config.RERANK_NAME] if rerank_on() and now < _rerank_resting_until else [])
 
 
@@ -209,13 +286,16 @@ def rerank(client, question: str, results: list[dict], top: int = config.RERANK_
     return [{**head[o["index"]], "score": round(o["relevance_score"], 4)} for o in order] + results[top:]
 
 
+MISSING = {"elser": ELSER_MISSING, "jina": JINA_MISSING, "reranked": RERANK_MISSING}
+
+
 def search_reranked(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict] | None:
     """The blended results, with the top ones re-ordered by Elastic's re-ranker (Elastic Cloud only)."""
     reordered = rerank(client, query, search_blended(client, query, max(n, config.RERANK_TOP), index, filt))
     return None if reordered is None else reordered[:n]
 
 
-MODES = {"words": search_words, "meaning": search_meaning, "elser": search_elser, "blended": search_blended,
+MODES = {"words": search_words, "meaning": search_meaning, "elser": search_elser, "jina": search_jina, "blended": search_blended,
          "reranked": search_reranked}
 
 
@@ -235,7 +315,7 @@ def show(title: str, results: list[dict], width: int = 100):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("query")
-    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "reranked", "compare"], default="blended")
+    ap.add_argument("--mode", choices=["words", "meaning", "elser", "jina", "blended", "reranked", "compare"], default="blended")
     ap.add_argument("-n", type=int, default=10, help=f"how many results (1 to {config.BLEND_DEPTH})")
     ap.add_argument("--kind", choices=["talk", "event", "speaker", "sponsor"])
     ap.add_argument("--startups", action="store_true", help="Start-Up tier sponsors only")
@@ -244,14 +324,14 @@ def main():
     client = connect()
     filt = filters(a.kind, a.startups)
     if a.mode == "compare":
-        lists = {m: MODES[m](client, a.query, a.n, filt=filt) for m in ("words", "meaning", "elser", "blended", "reranked")}
+        lists = {m: MODES[m](client, a.query, a.n, filt=filt) for m in ("words", "meaning", "elser", "jina", "blended", "reranked")}
         for m, res in lists.items():
             if res is None:
-                print(f"\n=== {m.upper()} ===  ({ELSER_MISSING if m == 'elser' else RERANK_MISSING})")
+                print(f"\n=== {m.upper()} ===  ({MISSING[m]})")
             else:
                 show(f"=== {m.upper()} ===  {a.query!r}", res)
         tops = {m: (res[0]["name"] if res else ("skipped" if res is None else "nothing")) for m, res in lists.items()}
-        print(f"\nTop result: words → {tops['words']} | meaning → {tops['meaning']} | ELSER → {tops['elser']} | "
+        print(f"\nTop result: words → {tops['words']} | meaning → {tops['meaning']} | ELSER → {tops['elser']} | Jina → {tops['jina']} | "
               f"blended → {tops['blended']} | re-ranked → {tops['reranked']}")
         if not lists["words"] and not lists["meaning"]:
             print("Nothing matches: check the filters.")
@@ -262,7 +342,7 @@ def main():
     else:
         res = MODES[a.mode](client, a.query, a.n, filt=filt)
         if res is None:
-            raise SystemExit(ELSER_MISSING if a.mode == "elser" else RERANK_MISSING)
+            raise SystemExit(MISSING[a.mode])
         show(f"=== {a.mode.upper()} ===  {a.query!r}", res)
 
 

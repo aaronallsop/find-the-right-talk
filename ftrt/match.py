@@ -3,7 +3,7 @@
     python -m ftrt.match "Breach Chronicle"                          # blended: top sponsors, talks and speakers
     python -m ftrt.match --mode compare --kind sponsor -n 10 "Hello World Gazette"
     python -m ftrt.match --list                                      # the 14 outlets
-    options: --mode words|meaning|elser|blended|reranked|compare, -n 5 (how many of each kind), --kind sponsor|talk|speaker, --startups
+    options: --mode words|meaning|elser|jina|blended|reranked|compare, -n 5 (how many of each kind), --kind sponsor|talk|speaker, --startups
 
 An outlet has a standing beat (what it always covers) and, for six of them, a KubeCon assignment
 (what it came to find). Each part searches the programme on its own, by meaning with the part's
@@ -18,7 +18,7 @@ from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from . import config, passages
 from .engine import connect
-from .search import ELSER_MISSING, RERANK_MISSING, _FIELDS, _fetch_size, _group, embed, filters, fuse, rerank, search_elser, search_meaning_vector
+from .search import ELSER_MISSING, MISSING, RERANK_MISSING, _fetch_size, _fields, _group, embed, filters, fuse, jina_question, rerank, search_elser, search_jina, search_meaning_vector, with_passages
 
 MATCH_KINDS = ("sponsor", "talk", "speaker")
 
@@ -83,16 +83,18 @@ def typed_parts(beat: str, assignment: str = "") -> dict:
 
 def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: bool = False,
           index: str = config.PROGRAMME_INDEX) -> dict[str, list[dict]]:
-    """Rank the programme for these parts: {"words": [...], "meaning": [...], "elser": [...], "blended": [...]}.
-    "elser" (Elastic's own model, with the part's text as the question) is there only in Elastic Cloud.
+    """Rank the programme for these parts: {"words": [...], "meaning": [...], "elser": [...], "jina": [...], "blended": [...]}.
+    "elser" and "jina" (with the part's text as the question) are there only in Elastic Cloud.
     Each result carries `via`: which part, and which way, gave it its best position."""
     filt = filters(kind, startups)
     if not kind:
         filt.append({"terms": {"kind": list(MATCH_KINDS)}})
     depth = max(n, config.BLEND_DEPTH)   # fixed, so the order does not change with how many are shown
-    ways = {"words": lambda p: search_words_loose(client, p["text"], depth, index, filt),
-            "meaning": lambda p: search_meaning_vector(client, p["vector"], depth, index, filt),
-            "elser": lambda p: search_elser(client, p["text"], depth, index, filt)}
+    # the long lists come back without passage text; only the results kept get theirs (with_passages, below)
+    ways = {"words": lambda p: search_words_loose(client, p["text"], depth, index, filt, passages=False),
+            "meaning": lambda p: search_meaning_vector(client, p["vector"], depth, index, filt, passages=False),
+            "elser": lambda p: search_elser(client, p["text"], depth, index, filt, passages=False),
+            "jina": lambda p: search_jina(client, p["text"], depth, index, filt, vector=p.get("jina"), passages=False)}
     # every part asks every way at the same time (they do not depend on each other); the lists are then put
     # together in a fixed order, so the result is exactly what asking one after another gives, only sooner
     jobs = [(part, way) for part in parts for way in ways]
@@ -103,8 +105,8 @@ def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: b
         results = answers[(part, way)]
         if results is not None:   # ELSER is skipped on the laptop engine
             lists[way].append(([{**r, "via": f"{PART_NAMES[part]}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
-    out = {way: fuse(ls, n) for way, ls in lists.items() if ls}
-    blended = fuse([l for ls in lists.values() for l in ls], max(n, config.RERANK_TOP))
+    out = {way: with_passages(client, fuse(ls, n)) for way, ls in lists.items() if ls}
+    blended = with_passages(client, fuse([l for ls in lists.values() for l in ls], max(n, config.RERANK_TOP)))
     out["blended"] = blended[:n]
     # Elastic's re-ranker reads the profile (its KubeCon part first) against each of the blended top passages
     question = " ".join(parts[p]["text"] for p in sorted(parts, key=lambda p: -config.MATCH_WEIGHTS[p]))
@@ -114,19 +116,27 @@ def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: b
     return out
 
 
-WAY_NAMES = {"words": "words", "meaning": "meaning", "elser": "Elastic's ELSER"}
+WAY_NAMES = {"words": "words", "meaning": "meaning", "elser": "Elastic's ELSER", "jina": "Jina embeddings"}
+
+
+def with_jina(client, parts: dict) -> dict:
+    """The parts with each one's Jina numbers asked for once, so the several kinds of one match share them.
+    Kept only for this request; a part Jina does not answer for simply has none (Jina is then left out)."""
+    with ThreadPoolExecutor(max_workers=len(parts)) as pool:
+        vectors = dict(zip(parts, pool.map(lambda part: jina_question(client, parts[part]["text"]), parts)))
+    return {part: {**p, "jina": vectors[part]} for part, p in parts.items()}
 PART_NAMES = {"beat": "what it always covers", "assignment": "its KubeCon assignment",
               "does": "what it does", "showing": "what it shows at KubeCon"}
 
 
-def search_words_loose(client, text: str, n: int, index: str, filt: list) -> list[dict]:
+def search_words_loose(client, text: str, n: int, index: str, filt: list, passages: bool = True) -> list[dict]:
     """Words search with a whole profile as the question. A profile is long, so requiring most of
     its words (as the typed search does) would find nothing. Elasticsearch's "more like this" picks
     the profile's most telling words (frequent in it, rare in the programme) and searches for those."""
     like = {"more_like_this": {"fields": ["text"], "like": text, "min_term_freq": 1,
                                "max_query_terms": config.MATCH_WORDS_TERMS, "min_doc_freq": 2}}
     body = {"bool": {"must": like, "filter": filt}}
-    r = client.search(index=index, query=body, size=_fetch_size(n), source_includes=_FIELDS)
+    r = client.search(index=index, query=body, size=_fetch_size(n), source_includes=_fields(passages))
     return _group(r["hits"]["hits"], n)
 
 
@@ -146,7 +156,7 @@ def show(title: str, results: list[dict], lists: int, width: int = 100):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("outlet", nargs="?", help="an outlet's name (any part of it) or id")
-    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "reranked", "compare"], default="blended")
+    ap.add_argument("--mode", choices=["words", "meaning", "elser", "jina", "blended", "reranked", "compare"], default="blended")
     ap.add_argument("-n", type=int, default=5, help="how many of each kind (1 to 50)")
     ap.add_argument("--kind", choices=list(MATCH_KINDS))
     ap.add_argument("--startups", action="store_true", help="Start-Up tier sponsors only")
@@ -162,10 +172,10 @@ def main():
     print(f"\nMatching {name}, on its {' and '.join(parts)}" + (" (the assignment counting double)" if len(parts) == 2 else " alone (it has no KubeCon assignment)"))
     for kind in ([a.kind] if a.kind else (["sponsor"] if a.startups else list(MATCH_KINDS))):
         results = match(client, parts, a.n, kind, a.startups)
-        voices = len([w for w in ("words", "meaning", "elser") if w in results])
-        for mode in (("words", "meaning", "elser", "blended", "reranked") if a.mode == "compare" else (a.mode,)):
+        voices = len([w for w in ("words", "meaning", "elser", "jina") if w in results])
+        for mode in (("words", "meaning", "elser", "jina", "blended", "reranked") if a.mode == "compare" else (a.mode,)):
             if mode not in results:
-                print(f"\n=== {mode.upper()} === ({ELSER_MISSING if mode == 'elser' else RERANK_MISSING})")
+                print(f"\n=== {mode.upper()} === ({MISSING[mode]})")
                 continue
             lists = len(parts) * (voices if mode == "blended" else 1)
             show(f"=== {mode.upper()} === {kind}s for {name}", results[mode], lists)

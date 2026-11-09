@@ -32,6 +32,7 @@ CLOUD_SETTINGS_FILE = Path(os.environ.get("FTRT_CLOUD_ENV") or Path.home() / "el
 ENGINE_SETTINGS_FILE = Path.home() / "elastic-start-local" / ".env"  # ES_LOCAL_URL, ES_LOCAL_PASSWORD
 ENGINE_DEFAULT_URL = "http://localhost:9200"
 ENGINE_USER = "elastic"
+CONNECTIONS = 32            # requests to the engine at once; a page Go asks about two dozen side by side (the default is 10)
 
 # Search settings (used from B2 on).
 WORDS_MIN_MATCH = "2<75%"   # one or two words typed: all must be present; more: three quarters
@@ -53,6 +54,19 @@ ELSER_FIELD = "text_elser"  # the passage's text again, which Elastic turns into
 ELSER_TIMEOUT = 300         # seconds a load, or a deliberate wake-up, may wait on it
 ELSER_SEARCH_LIMIT = 4      # seconds a search waits for it; slower, and the results come without it (and say so)
 ELSER_REST = 60             # after it misses a search, seconds before searches ask it again (it is probably waking)
+
+# Jina embeddings (Aaron, 13:27): one more meaning voice, Elastic Cloud only. Every passage's 1,024 Jina numbers are
+# fetched from Elastic's hosted inference service at load (passages sent there, billed per use) BEFORE anything is
+# rebuilt, so a refusal changes nothing; each search's question is sent there too. 10 passages took 0.65-0.75 s,
+# one question 0.38 s (13:31).
+JINA_ENDPOINT = ".jina-embeddings-v3"
+JINA_NAME = "Jina embeddings"
+JINA_FIELD = "vector_jina"
+JINA_SIZE = 1024
+JINA_BATCH = 16             # passages per request at load (the service accepts at most 16)
+JINA_PARALLEL = 8           # requests at a time at load
+JINA_SEARCH_LIMIT = 4       # seconds a search waits for the question's numbers; slower, and it is left out (and says so)
+JINA_REST = 60              # after a miss, seconds before searches ask it again
 
 # Elastic's re-ranker (Aaron's item 6): reads the question and each of the blended top results' passages
 # together and puts them in a new order. Elastic Cloud only; left out if it does not answer. The in-project
