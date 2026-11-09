@@ -17,8 +17,8 @@ fails]. [Elastic's own models: only if built.]
 
 ## Facts to keep true (given by sessions that measured them today)
 
-- 601 sessions (501 talks and 100 events), 715 speakers, 226 sponsors, 14 outlets; 2,250 passages
-  in all (Titan, 11:38).
+- 601 sessions (501 talks and 100 events), 715 speakers, 226 sponsors, 14 outlets; 2,225 programme
+  passages and 25 outlet passages (Titan, 11:38; Cassini's fresh copy, 11:52).
 - Data: KubeCon + CloudNativeCon North America 2026 programme as of 4 November 2026, The Linux
   Foundation, CC BY 3.0.
 - Built on the day, after 11:00; the commit history starts at 11:00. Claude Code wrote the code.

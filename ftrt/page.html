@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find the Right Talk</title>
+<style>
+  :root {
+    --bg: #f7f6f2; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a64; --line: #dcdad2;
+    --accent: #1f5f8b; --accent-ink: #ffffff; --gem: #9a5b00; --gem-bg: #fff2d9; --soft: #eef3f7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161614; --panel: #201f1c; --ink: #ecebe6; --muted: #a09e96; --line: #3a3934;
+      --accent: #6aaee0; --accent-ink: #0d1a24; --gem: #f0b65a; --gem-bg: #3a2c12; --soft: #1d2a33;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 28px; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 20px; margin: 0 0 12px; }
+  .sub { color: var(--muted); margin: 4px 0 20px; }
+  .engine { font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+  .switch { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+  .switch button { border: 0; background: transparent; color: var(--ink); padding: 8px 16px; font: inherit; cursor: pointer; }
+  .switch button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .doors .switch button { font-size: 17px; padding: 10px 22px; }
+  label { display: block; font-weight: 600; margin: 14px 0 6px; }
+  .hint { font-weight: 400; color: var(--muted); }
+  select, textarea, input[type=text] { width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+         border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  textarea { min-height: 72px; resize: vertical; }
+  ::placeholder { color: var(--muted); opacity: 0.8; }
+  .or { text-align: center; color: var(--muted); margin: 14px 0 0; font-size: 14px; }
+  .go { margin-top: 16px; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 8px;
+        padding: 10px 28px; font: inherit; font-weight: 600; cursor: pointer; }
+  .go:disabled { opacity: 0.5; cursor: wait; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+  .row > .grow { flex: 1 1 260px; }
+  .row select { width: auto; }
+  .note { background: var(--soft); border-radius: 8px; padding: 12px 14px; margin-top: 12px; }
+  .error { color: #b3261e; }
+  .results-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 8px 0 4px; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 12px 0 0; }
+  .tabs button { border: 0; background: transparent; color: var(--muted); padding: 8px 14px; font: inherit; cursor: pointer;
+                 border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+  ol.results { list-style: none; padding: 0; margin: 0; }
+  ol.results li { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .r-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .r-pos { color: var(--muted); min-width: 1.6em; }
+  .r-name { font-weight: 600; }
+  .tag { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; }
+  .tag.gem { color: var(--gem); background: var(--gem-bg); border-color: transparent; font-weight: 600; }
+  .why { margin: 6px 0 0 2.2em; color: var(--ink); font-size: 15px; }
+  .why b { font-weight: 600; color: var(--muted); }
+  .via { margin: 4px 0 0 2.2em; color: var(--muted); font-size: 13px; }
+  .empty { color: var(--muted); padding: 14px 0; }
+  footer { color: var(--muted); font-size: 13px; margin-top: 28px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Find the Right Talk</h1>
+    <span class="engine" id="engine">connecting…</span>
+  </header>
+  <p class="sub">The KubeCon + CloudNativeCon North America 2026 programme: 501 talks, 715 speakers, 226 sponsors. Typed text is used once and never stored.</p>
+
+  <section class="panel doors">
+    <div class="switch" role="group" aria-label="Who are you">
+      <button type="button" id="door-press" aria-pressed="true">I'm press</button>
+      <button type="button" id="door-vendor" aria-pressed="false">I'm a vendor</button>
+    </div>
+
+    <form id="press" autocomplete="off">
+      <label for="outlet">Pick an outlet</label>
+      <select id="outlet"><option value="">Choose one of the outlets…</option></select>
+      <p class="or">or describe your own</p>
+      <label for="beat">What we always cover</label>
+      <textarea id="beat" placeholder="News about security breaches as they happen: who was hit, how it happened, and what was done about it."></textarea>
+      <label for="assignment">What we came to KubeCon to find <span class="hint">(optional; counts double)</span></label>
+      <textarea id="assignment" placeholder="AI agents built for developers: agents that help you write code."></textarea>
+      <button class="go" type="submit">Go</button>
+      <p class="error" id="press-error" hidden></p>
+    </form>
+
+    <form id="vendor" autocomplete="off" hidden>
+      <label for="sponsor">Pick a sponsor</label>
+      <select id="sponsor"><option value="">Choose one of the sponsors…</option></select>
+      <p class="or">or describe your own company</p>
+      <label for="does">What my company does</label>
+      <textarea id="does" placeholder="We make an autoscaler that adds servers when traffic spikes and removes them afterwards."></textarea>
+      <label for="showing">What we are showing at KubeCon <span class="hint">(optional)</span></label>
+      <textarea id="showing" placeholder="A live demo of scaling a shop's checkout to zero overnight."></textarea>
+      <button class="go" type="submit">Go</button>
+      <p class="note" id="vendor-note" hidden></p>
+    </form>
+  </section>
+
+  <section class="panel" id="match-panel" hidden>
+    <div class="results-head">
+      <h2 id="match-title"></h2>
+      <div class="switch" role="group" aria-label="Way of matching" id="match-ways">
+        <button type="button" data-way="blended" aria-pressed="true">Blended</button>
+        <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
+        <button type="button" data-way="words" aria-pressed="false">Words</button>
+      </div>
+    </div>
+    <div class="tabs" role="tablist" id="match-kinds">
+      <button type="button" role="tab" data-kind="sponsor" aria-selected="true">Sponsors</button>
+      <button type="button" role="tab" data-kind="talk" aria-selected="false">Talks</button>
+      <button type="button" role="tab" data-kind="speaker" aria-selected="false">Speakers</button>
+    </div>
+    <ol class="results" id="match-results"></ol>
+  </section>
+
+  <section class="panel">
+    <h2>Search the programme</h2>
+    <form id="search" class="row" autocomplete="off">
+      <div class="grow">
+        <label for="q">Search for</label>
+        <input type="text" id="q" placeholder="scale up for a traffic spike and back down afterwards">
+      </div>
+      <div>
+        <label for="kind">Among</label>
+        <select id="kind">
+          <option value="">Everything</option><option value="sponsor">Sponsors</option>
+          <option value="talk">Talks</option><option value="speaker">Speakers</option><option value="event">Events</option>
+        </select>
+      </div>
+      <div>
+        <div class="switch" role="group" aria-label="Way of searching" id="search-ways" style="margin:0">
+          <button type="button" data-way="blended" aria-pressed="true">Blended</button>
+          <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
+          <button type="button" data-way="words" aria-pressed="false">Words</button>
+        </div>
+      </div>
+      <div><button class="go" type="submit" style="margin:0">Search</button></div>
+    </form>
+    <p class="error" id="search-error" hidden></p>
+    <ol class="results" id="search-results"></ol>
+  </section>
+
+  <footer>Programme data: KubeCon + CloudNativeCon North America 2026, The Linux Foundation, CC BY 3.0. Sponsor summaries were drafted by AI (Claude) from each company's own homepage and About page; outlets marked "sample" are invented examples.</footer>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let matchData = null, matchWay = "blended", matchKind = "sponsor", searchWay = "blended";
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function press(group, attr, value) {
+  group.querySelectorAll("button").forEach(b => b.setAttribute(attr, String(b.dataset.way === value || b.dataset.kind === value)));
+}
+
+async function post(url, body) {
+  const r = await fetch(url, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+  const data = await r.json().catch(() => ({error: "The page's server did not answer properly."}));
+  if (!r.ok) throw new Error(data.error || "Something went wrong.");
+  return data;
+}
+
+function showResults(list, results, emptyText) {
+  list.replaceChildren();
+  if (!results.length) { list.append(el("li", "empty", emptyText)); return; }
+  results.forEach((r, i) => {
+    const li = el("li");
+    const head = el("div", "r-head");
+    head.append(el("span", "r-pos", (i + 1) + "."), el("span", "r-name", r.name));
+    head.append(el("span", "tag", r.kind + (r.tier ? ", " + r.tier : "")));
+    if (r.startup) head.append(el("span", "tag gem", "Start-Up"));
+    const why = el("p", "why");
+    why.append(el("b", null, "Found because: "), document.createTextNode(r.passage));
+    li.append(head, why);
+    if (r.via) li.append(el("p", "via", "Ranked best by " + r.via + "; found by " + r.found_by + (r.found_by === 1 ? " list" : " lists")));
+    list.append(li);
+  });
+}
+
+function renderMatch() {
+  if (!matchData) return;
+  const rs = matchData.results[matchKind][matchWay];
+  const empty = matchWay === "words" ? "No record shares enough telling words with this profile." : "Nothing found.";
+  showResults($("match-results"), rs, empty);
+}
+
+// the two doors
+function openDoor(which) {
+  $("door-press").setAttribute("aria-pressed", String(which === "press"));
+  $("door-vendor").setAttribute("aria-pressed", String(which === "vendor"));
+  $("press").hidden = which !== "press";
+  $("vendor").hidden = which !== "vendor";
+  $("match-panel").hidden = which !== "press" || !matchData;
+}
+$("door-press").onclick = () => openDoor("press");
+$("door-vendor").onclick = () => openDoor("vendor");
+
+// picking clears typing, and typing clears the pick, so it is always clear which one Go uses
+$("outlet").onchange = () => { if ($("outlet").value) { $("beat").value = ""; $("assignment").value = ""; } };
+["beat", "assignment"].forEach(id => $(id).oninput = () => { $("outlet").value = ""; });
+$("sponsor").onchange = () => { if ($("sponsor").value) { $("does").value = ""; $("showing").value = ""; } };
+["does", "showing"].forEach(id => $(id).oninput = () => { $("sponsor").value = ""; });
+
+$("press").onsubmit = async e => {
+  e.preventDefault();
+  const go = e.submitter || $("press").querySelector(".go"), err = $("press-error");
+  err.hidden = true; go.disabled = true; go.textContent = "Matching…";
+  try {
+    matchData = await post("/api/match", {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value});
+    const on = matchData.parts.length === 2 ? "on what it always covers and what it came to find (counting double)"
+                                            : "on what it always covers";
+    $("match-title").textContent = "Matches for " + matchData.name + ", " + on;
+    $("match-panel").hidden = false;
+    renderMatch();
+    $("match-panel").scrollIntoView({behavior: "smooth", block: "start"});
+  } catch (x) { err.textContent = x.message; err.hidden = false; }
+  go.disabled = false; go.textContent = "Go";
+};
+
+$("vendor").onsubmit = async e => {
+  e.preventDefault();
+  const note = $("vendor-note");
+  if (!$("sponsor").value && !$("does").value.trim()) { note.textContent = "Pick a sponsor, or say what your company does."; note.hidden = false; return; }
+  try {
+    const d = await post("/api/flip", {sponsor_id: $("sponsor").value, does: $("does").value, showing: $("showing").value});
+    note.textContent = d.message || "";
+  } catch (x) { note.textContent = x.message; }
+  note.hidden = false;
+};
+
+$("match-ways").onclick = e => { const b = e.target.closest("button"); if (!b) return; matchWay = b.dataset.way; press($("match-ways"), "aria-pressed", matchWay); renderMatch(); };
+$("match-kinds").onclick = e => { const b = e.target.closest("button"); if (!b) return; matchKind = b.dataset.kind; press($("match-kinds"), "aria-selected", matchKind); renderMatch(); };
+$("search-ways").onclick = e => { const b = e.target.closest("button"); if (!b) return; searchWay = b.dataset.way; press($("search-ways"), "aria-pressed", searchWay); };
+
+$("search").onsubmit = async e => {
+  e.preventDefault();
+  const err = $("search-error"); err.hidden = true;
+  try {
+    const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value});
+    const empty = d.mode === "words" ? "Words found nothing: no record has enough of these words. Try Meaning." : "Nothing matches.";
+    showResults($("search-results"), d.results, empty);
+  } catch (x) { err.textContent = x.message; err.hidden = false; }
+};
+
+// the pickers
+(async () => {
+  try {
+    const d = await (await fetch("/api/lists")).json();
+    $("engine").textContent = d.engine === "cloud" ? "Elastic Cloud serverless" : "Elasticsearch on this laptop";
+    d.outlets.forEach(o => $("outlet").append(new Option(o.name + (o.sample ? "  (sample)" : "") + (o.has_assignment ? "" : "  (standing beat only)"), o.record_id)));
+    d.sponsors.forEach(s => $("sponsor").append(new Option(s.name + "  (" + s.tier + ")", s.record_id)));
+  } catch (x) { $("engine").textContent = "engine not reachable"; }
+})();
+</script>
+</body>
+</html>

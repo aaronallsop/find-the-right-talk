@@ -56,28 +56,81 @@ it is built.
    alone where the website could not be read (six of them).
 8. *What did you do, and what did Claude do?* — I designed it, named and briefed the two test outlets, made
    every decision and checked the results. Claude wrote the code, and every commit says so.
+9. *Why Elastic Cloud?* — Judges and anyone else run it from the public repository on their own
+   laptop against their own free serverless project; my laptop engine is only the fallback if the
+   wifi dies. The data is public, so nothing private goes to the cloud.
+10. *Why no geo?* — My data has no coordinates: rooms in one building and a region word per outlet.
+    A map would be decoration, so I spent the time on your models and your cloud instead.
+11. *Why Elastic's own models?* — The blend is my own code and takes any number of voices, so
+    Elastic's meaning model is a fourth list beside words and my small local model, and the
+    compare mode shows where they disagree. The re-ranker then re-orders the top results.
+    [Say this only once the fourth voice and the re-ranker are built; until then: "that is the
+    next step on the board."]
+
+## The demo, in ninety seconds (Aaron's script, approved 12:05; replaces the day plan's version)
+
+Words are Aaron's, kept as written. Square brackets are what is on screen, not words to say.
+
+1. [The page, press door, nothing picked yet]
+   "I'm a video producer. I've covered a lot of conferences as media, and the plan never survives
+   the morning. An interview cancels, another one moves, and suddenly you've got ninety free
+   minutes, six hundred talks, two hundred booths, and no idea where to start. You don't want to
+   sit in the press room, but you also can't read the whole schedule. So I built the thing I
+   wanted in that moment: KubeCon's own programme, public data with credit, made searchable by
+   meaning in Elastic Cloud, today."
+2. [Pick The Breach Chronicle, press Go]
+   "I'm press. This outlet covers breaches, and it came with one assignment: AI agents, helping
+   security teams or being kept safe. The match reads that brief and ranks the whole programme
+   against it, in a second. Every result shows the passage that made it fit, so you can check my
+   working. And start-ups are flagged: this one you'd never find by booth size." [Point at a
+   flagged start-up.]
+3. [Vendor door, pick a start-up sponsor, Go]
+   "Same engine, turned round. I'm a vendor whose press meeting just cancelled: which outlets
+   should I be talking to instead, and which talks are near my story?"
+4. [Compare mode, "scale up for a traffic spike and back down afterwards"]
+   "Three searches underneath. Words finds nothing, because no sponsor uses those words. Meaning
+   finds the autoscaling start-up, Kedify. Blended lets each list vote."
+5. [Compare mode, "SLSA Level 3"]
+   "The other way round: an exact standard name. Words wins, meaning blurs. That's why there are
+   three, and why the page shows which one found what."
+6. [Back to the page]
+   "Elastic Cloud serverless, Elastic's own model as one voice, every AI-written line labelled,
+   all the code written today from an empty folder. Next time an interview cancels, I've got my
+   next three stories before I've finished my coffee."
+
+**Two conditions.** Beat 4 uses whatever sentence Cassini's three runs agree on (so far: that
+sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said only once the fourth
+voice is built; until then say "searched three ways" and stop.
+
+**Not true yet, as of 11:54 (do not rehearse as if it were):** the page and both doors are not built;
+the match does not yet pass its answer-key scoring, and the Breach Chronicle, the outlet in beat 2,
+is the one that fails; "in a second" has not been timed; the flip (beat 3) is not built.
 
 ## Built on the day, one line per piece
 
 - **Loading (B1, 11:03):** One command reads the spreadsheets, cuts every talk, speaker,
-  sponsor and outlet into passages of about 120 words (2,250 in all), turns each passage into 384
+  sponsor and outlet into passages of about 120 words (2,225 for the programme and 25 for the outlets), turns each passage into 384
   numbers with the small meaning model on the laptop, and loads them into two brand-new catalogues
   in about 12 seconds; a search of the loaded text for email addresses finds none.
 - **Three ways to search (B2, 11:07):** From Terminal, one command searches the programme by words
   (exact terms; it can come back empty, which is information), by meaning (the nearest idea in any
   wording; it always returns something), or blended (each list votes, a result gets more points the
   higher it ranks in each, and the totals decide), and shows the passage that made each result match;
-  a compare mode runs all three at once so you can watch them disagree. Measured 9 November, one run
-  each (Cassini's three-run check is still to come): "SLSA Level 3" is won by words (ActiveState
+  a compare mode runs all three at once so you can watch them disagree. Measured 9 November, three runs
+  each, identical every time (Cassini, after the reload): "SLSA Level 3" is won by words (ActiveState
   then Docker, the two sponsors whose own text says it), while meaning puts OpenSSF first; the
   traffic-spike sentence "scale up for a traffic spike and back down afterwards" gets nothing from
   words and the Start-Up Kedify first from meaning; the GPU-isolation sentence gets Edera from
   words and vCluster then Edera from meaning.
 - **Elastic Cloud (11:24):** The same two catalogues now live in an Elastic Cloud serverless
   project; the code uses the cloud when its settings file is filled in and the laptop engine
-  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud took about 30 seconds
+  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud takes about a minute
   and the three demo searches give the same top results there as on the laptop.
 - **Cleaner loading and searching (11:39):** The loader now cuts every passage to fit what the
   meaning model actually reads, drops placeholder bios like "TODO", puts the day and time into
   every session so the seven coffee breaks are told apart, and the searches no longer print
   library noise before their results.
+- **The match (M2, 11:48):** The match takes an outlet's two parts, what it always covers and what
+  it came to KubeCon to find, searches the programme with each part by meaning and by its most
+  telling words, and merges the rankings with the KubeCon part's votes counting double, so each
+  talk, speaker or sponsor it lists comes with the passage that matched and the part that found it.

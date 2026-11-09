@@ -44,3 +44,9 @@ RRF_K = 60                  # reciprocal rank fusion constant, from the original
 MATCH_WEIGHTS = {"assignment": 2.0, "beat": 1.0}   # the assignment's votes count double (Aaron, 8 November)
 MATCH_WORDS_TERMS = 25      # words search by profile: how many of its most telling words to search for
 MATCH_DEPTH = 30            # each part's ranked list is at least this long before the lists are merged
+
+# The page (M3). Port 5000 is taken by macOS itself (AirPlay Receiver); 5055-5057 may be in use too.
+PAGE_HOST = "127.0.0.1"     # this laptop only: the page has no login
+PAGE_PORT = 5060
+PAGE_RESULTS = 10           # results of each kind shown on the page
+PAGE_MAX_TYPED = 2000       # characters accepted in any one box

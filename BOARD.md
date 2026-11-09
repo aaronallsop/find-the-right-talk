@@ -101,29 +101,30 @@ the demo searches before and after):**
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: building the match (the first look is below). No cloud reloads while Cassini's test runs.
+- Titan: the match fix and the model-download fault, then Elastic's model.
 - Rhea: the cloud wording in the README, cheat sheet and a first draft of the submission paragraph.
-- Cassini: running the "after" demo-search check, then the fresh-copy test of the README (moved forward from 12:30).
+- Cassini: re-scores after Titan's next save.
 - Dione: standing by.
 
-Watch (Titan's first look at the match, not yet scored): the Hello World Gazette reads sensibly; the
-Breach Chronicle, the demo outlet, misses most of its must-finds. Waiting for Cassini's score before
-Aaron decides the fix.
+Watch: 11:52 Cassini scored the match against the answer keys, and both test outlets FAIL. The Hello
+World Gazette nearly passes: Coder and the hidden gem mirrord are in the top ten, and two must-finds
+are just outside. The Breach Chronicle, the demo outlet, has none of its must-finds in the top ten.
+Also found: the match's order changes with how many results are shown; Titan is fixing that.
 
 ## Next
 
-Aaron's build order, as he confirmed it to Saturn (this replaces the earlier list). Cut from the
-bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
+Aaron's build order as of 11:55 (Elastic's meaning model moved forward, before the page). Cut from
+the bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 
-1. The match (M2), scored against the answer keys, no later than 13:45.
-2. The page, with both doors from the start: press or vendor, each a picker plus two blank boxes,
-   nothing saved.
-3. The flip, as the vendor door's engine.
-4. Cloud wording in the README and the pitch.
-5. Elastic's own meaning model as a fourth voice in the blend (cloud only).
-6. Elastic's re-ranker (cloud only).
-7. The start-ups toggle.
-8. The fit check through Elastic's inference service, only if ahead at 15:00.
+1. Titan fixes the match order.
+2. Elastic's own meaning model as a fourth voice in the blend (cloud only).
+3. Cassini re-scores the two test outlets.
+4. The page (M3), the two-door demo.
+5. The flip (M5), as the vendor door's engine.
+6. Cloud wording in the README and the pitch.
+7. Elastic's re-ranker (cloud only).
+8. The start-ups toggle (M4).
+9. The fit check (S1), only if ahead at 15:00.
 
 ## Done
 
@@ -133,6 +134,9 @@ bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 - 11:09 passage-cutting fix (0560c9b)
 - 11:20 search fixes from review (42c36e0)
 - 11:21 Elastic Cloud connection (c346c70); 11:24 cloud catalogues loaded and demo searches proven there
+- 11:53 Fresh-copy test (Cassini): a clean clone, set up from the README's own steps with a second key, loads and searches the cloud. PASS, with fixes needed (details in the checks file, "fresh-copy"). Rhea fixed the passage count and the load time in the README; the page step, the model download step and the match command wait for Titan.
+- 11:49 Cassini's "after" check: all three demo searches hold after the reload, three runs each, identical.
+- 11:48 The match (M2) built, saved and pushed (552c262). Not yet scored against the answer keys; the Breach Chronicle's first look is below.
 - 11:47 Review fixes saved and pushed (174effd): passages fit what the meaning model reads, placeholder text dropped, quieter searches, and a switch to point at a second cloud settings file. Re-measured by Titan: 501 talks, 100 events, 715 speakers, 226 sponsors, 14 outlets, 2,250 passages, 0 email addresses. The README, board, cheat sheet, submission draft and Cassini's checks went in the same save.
 - 11:42 Cassini laid out the scoring sheet for the match (Gazette 8 items, Chronicle 12); nothing scored yet.
 - 11:41 Dione confirmed, read-only, that the cloud project offers Elastic's own meaning model (ELSER) and Elastic's re-ranker as ready-made services; nothing was called or changed.
@@ -152,6 +156,7 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 11:12, Aaron: Elastic's own model or re-ranker only after M3, in M5's slot, if time.
 - 11:17, Aaron: helpers sparingly until 13:20.
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
+- 11:55, Aaron: Elastic's own meaning model moves forward, before the page.
 - 11:47, Aaron: the 12:00 hand-over rule is phased out; Titan is the only builder and the only one
   who saves, from now.
 - 11:45, Aaron: the fresh-copy test uses a second key on the same cloud project, kept outside the
