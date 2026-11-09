@@ -6,7 +6,7 @@ the project's Elastic Cloud serverless engine unless a line says otherwise. A se
 repeated runs gave the identical list, scores included. Each result names the version of the code (the commit
 hash from the repository history) it was measured on; a result is a statement about that version only.
 
-**Draft stamp: first written 12:44 on 9 November. To be re-run and re-stamped after the 15:45 freeze;
+**Draft stamp: first written 12:44 on 9 November, section 3a added 13:48. To be re-run and re-stamped after the 15:45 freeze;
 until then each line stands for the version named on it.**
 
 ## 1. The data, loaded from a fresh copy of the public repository
@@ -108,6 +108,43 @@ Security Reports", "The Agent Has Entered the Cluster: AI Auth 101 for Kubernete
 At 11:50 the match gave different top tens when asked for 10 results and when asked for 50. After the fix
 (version 321b069) the top 10 at `-n 10` was exactly the first ten of the top 50, for both outlets and all ways,
 checked by program.
+
+## 3a. The latest version of the match and the demo searches (version 809ca91, with Jina; 13:45 to 13:48)
+
+A further embedding model (Jina) was added as one more voice, and the catalogues reloaded (13:35 to 13:37). Six ways now: words,
+meaning, ELSER, Jina, blended, re-ranked. Sponsors only; the demo searches were run three times each, the Gazette three times
+(then ten more, below), the Breach Chronicle once.
+
+**The demo searches (all three runs agreed on names and order in every way):**
+
+| Search | Words | Meaning | ELSER | Jina | Blended | Re-ranked |
+|---|---|---|---|---|---|---|
+| "SLSA Level 3" | ActiveState, Docker | OpenSSF, HeroDevs, Akeyless Security | ActiveState, Emphere (Start-Up), OpenSSF | OpenSSF, Sonrai Security, Akeyless Security | ActiveState, OpenSSF, Docker | ActiveState, Docker, OpenSSF |
+| "scale up for a traffic spike and back down afterwards" | nothing | Kedify (Start-Up), ScaleOps, DataAgent | Kedify, DevZero, PlanetScale | ScaleOps, Tailscale, Kedify | Kedify, ScaleOps, Ascendra Networks | Kedify, ScaleOps, Zesty |
+| GPU sentence | Edera | vCluster, Edera, Rafay Systems | Edera, vCluster, Cast AI | Edera, vCluster, CoreWeave | Edera, vCluster, Cast AI | vCluster, Edera |
+
+**Hello World Gazette, 13:46 (the demo outlet).** Top ten sponsors in each way (rank; "–" means outside the top 10, with the rank at n=50):
+
+| Company | Words | Meaning | ELSER | Jina | Blended | Re-ranked |
+|---|---|---|---|---|---|---|
+| Coder (must-find) | – (29) | – (11) | – (19) | 1 | 5 | – (17) |
+| Momentic (must-find) | 8 | – (21) | 2 | 4 | 3 | 4 |
+| Faros (must-find) | – (38) | 7 | – (39) | – (27) | – (18) | not shown |
+| mirrord by MetalBear (hidden gem, Start-Up) | – (26) | 4 | 3 | 8 | 4 | 2 |
+
+In blended, 3 of the 4 assignment companies are in the top ten (Coder 5th, Momentic 3rd, the gem 4th) and Faros is 18th, so the
+key's pass test (all three must-finds in the top ten) is still not met. The two companies the key says should rank low:
+KodeKloud is outside the top 50 in blended; Endor Labs (the trap) is 13th in blended but 6th in Jina's own list.
+
+**The Breach Chronicle, once, 13:47.** Still no must-find and no hidden gem in the blended top ten. Maze is 11th in blended (it was
+23rd before Jina) and 7th in Jina's own list; Endor Labs is 11th in Jina's list and 28th in blended; Vijil is 41st in blended. Edera,
+Teleport, Archestra AI and Emphere are not in the blended top 50.
+
+**Repeatability, measured.** The six-way match is not exactly repeatable. In 13 runs of the Gazette at the same settings, words,
+meaning and ELSER never changed, and Jina's list of names never changed, but Jina's scores differ in the fourth decimal in some runs.
+That reorders only near-ties: the blended top eight and the re-ranked top nine were identical in all 13 runs, and places 9 and 10
+flipped between two versions ("Cosmonic, Syntasso" in about 6 of 10 runs; "Syntasso, Dash0" in about 4 of 10). The three demo searches
+and the Breach Chronicle's top places did not vary across their three runs by name or order.
 
 ## 4. The flip: a sponsor finds the outlets that fit it
 
