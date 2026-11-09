@@ -46,7 +46,7 @@ it is built.
 3. *How do you know the results are right?* — I read them. [Monday's checks.] And the demo
    shows where each method is wrong.
 4. *Where does it fail?* — Meaning finds the topic, not the stance (the GPU search). And it never
-   says "nothing fits"; it just returns the nearest thing.
+   says "nothing fits"; it just returns the nearest thing. The honest limits are in "Honest limits" below.
 5. *What's the hidden-gem idea?* — Start-ups rarely get press. The match surfaces them by what
    they do, not by how big their booth is.
 6. *Would it work for another conference?* — Yes: any exhibitor spreadsheet and any list of
@@ -98,19 +98,36 @@ Words are Aaron's, kept as written. Square brackets are what is on screen, not w
    all the code written today from an empty folder. Next time an interview cancels, I've got my
    next three stories before I've finished my coffee."
 
-**Before presenting:** Elastic's own model sleeps when idle and took 81 seconds to wake once. Run one
-search a minute or two before the demo so it is awake. Warm the Elastic models before the
-16:15 recording, again before the 16:30 submission, and again in the 17:15 screen check (Titan sends the command).
+**Before presenting:** Elastic's own model sleeps when idle and took 81 seconds to wake once. Run
+`.venv/bin/python -m ftrt.warm` a few minutes before the demo (it says how long each model took;
+"awake (0 s)" means it was already awake). Starting the page does it too, in the background. Do it
+before the 16:15 recording, again before the 16:30 submission, and again in the 17:15 screen check.
 
 **Two conditions.** Beat 4 uses whatever sentence Cassini's three runs agree on (so far: that
 sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said only once the fourth
 voice is built (it is, since 12:12, in the cloud only; the laptop leaves it out, so demo from the
 cloud); if it does not answer, say "searched three ways" and stop.
 
-**Not true yet, as of 12:22 (do not rehearse as if it were):** the Hello World Gazette, the demo outlet since 12:16,
-still fails its answer key by one place (Faros 13th) after the last re-score; "in a second" has not
-been timed; the flip (beat 3) is built (12:17) but nobody has checked that its outlet list makes sense for a sponsor. The Breach Chronicle is set aside: it stays in the data
-and is reported honestly as a miss.
+**Not true yet, as of 12:31 (do not rehearse as if it were):** the Hello World Gazette, the demo
+outlet since 12:16, still fails its answer key by one place (Faros 13th); "in a second" is not true
+right now, because the page has slowed to about 8 to 10 seconds per answer (Titan is fixing it); with
+start-ups on, the plain search's Talks tab shows sponsors (Titan is fixing it). Cassini's check of the
+flip (12:20) found its talks on target but its outlet scores bunched close together. The Breach
+Chronicle is set aside: it stays in the data and is reported honestly as a miss.
+
+## Honest limits (measured today; say them before a judge finds them)
+
+- **The Hello World Gazette** (the demo outlet) finds every must-find but one: Coder and Momentic
+  and the hidden gem, mirrord, are in its top ten, but Faros is 13th. Faros is a cost-of-agents tool
+  for managers; the outlet's readers are developers, so it is a weak fit by wording, and no honest
+  rewording lifts it without adding an idea the outlet never had.
+- **The Breach Chronicle** (set aside) misses: its wording is about attacks and breaches, while its
+  companies talk about vulnerabilities and sandboxes. It stays in the data and is reported as a
+  miss. With the start-ups switch on, it does show Maze and Archestra AI, two of its must-finds.
+- **The flip:** the order of the outlets it returns is a weak signal, because their scores bunch
+  close together; the talks it finds are strong.
+- **Not built:** the fit check (an AI judgement of the top results), and geo queries (the data has
+  no coordinates). Elastic's hosted re-ranker is built but switched off.
 
 ## Built on the day, one line per piece
 
@@ -145,3 +162,4 @@ and is reported honestly as a miss.
 - **Elastic's own model (12:12):** In Elastic Cloud a second, larger meaning model, Elastic's own ELSER, reads every passage too and gets one vote in the blend, beside the words search and the small model on the laptop; on the laptop it is simply left out.
 - **The flip (M5, 12:17):** The flip turns the match round: a sponsor, picked or typed in, finds the outlets whose beat and KubeCon assignment fit it, each with the outlet's own passage that matched, and the talks nearest to what it does, with what it is showing at KubeCon counting double.
 - **Start-ups toggle (M4, 12:27):** One 'Start-ups only' switch narrows every sponsor list on the page, the press door's matches, the vendor door's picker and the plain search, to the 32 start-ups among the 226 sponsors, and switching it off brings the full lists back unchanged; for the Breach Chronicle it brings up Maze and Archestra AI, small companies doing exactly what the outlet came to find.
+- **Warming Elastic's models (12:29):** Elastic's models sleep when nobody uses them, so one command wakes them before a demo, and if one is still slow a search answers without it in a few seconds and says so, rather than leaving the page blank.

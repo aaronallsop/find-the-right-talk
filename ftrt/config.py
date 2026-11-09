@@ -55,9 +55,12 @@ ELSER_SEARCH_LIMIT = 4      # seconds a search waits for it; slower, and the res
 ELSER_REST = 60             # after it misses a search, seconds before searches ask it again (it is probably waking)
 
 # Elastic's re-ranker (Aaron's item 6): reads the question and each of the blended top results' passages
-# together and puts them in a new order. Elastic Cloud only; left out if it does not answer. At 12:18-12:21 the
-# in-project one would not start ("no ML nodes with sufficient capacity"); which endpoint to use is Aaron's call.
-RERANK_ENDPOINT = None      # off: the in-project ".rerank-v1-elasticsearch" has no room to start; set an endpoint to switch it on
+# together and puts them in a new order. Elastic Cloud only; left out if it does not answer. The in-project
+# ".rerank-v1-elasticsearch" would not start (12:18-12:21, "no ML nodes with sufficient capacity"), so, on Aaron's
+# yes (12:30), this is Elastic's HOSTED Jina re-ranker: for the re-ranked view, the search text and the top
+# passages go to Elastic's inference service, outside the project, billed per use. 0.32-0.53 s a call (12:30).
+# Set to None to switch it off.
+RERANK_ENDPOINT = ".jina-reranker-v3"
 RERANK_TOP = 20             # how many of the blended results it re-orders; the rest keep the blended order
 RERANK_SEARCH_LIMIT = 4     # seconds a search waits for it; slower, and the blended order stands (and says so)
 RERANK_REST = 60            # after it misses, seconds before it is asked again (so the page does not wait on it)

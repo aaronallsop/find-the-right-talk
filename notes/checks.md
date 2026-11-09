@@ -843,3 +843,49 @@ a drop to the last four. Where the flip is most useful as a ranking, then, is th
 the top handful and which are at the bottom), not the order of neighbours. The outlets each sponsor puts in the
 top two or three differ by way (words, meaning and ELSER each lead with different outlets for Kedify and
 Docker), and the blended order is a compromise of the three.
+
+---
+
+# M4 the start-ups toggle (commit 9ab6782), checked 12:25 to 12:30 at http://127.0.0.1:8765
+
+**How:** this time the browser pane opened the page (the earlier refusal was for port 5060), so the match,
+the plain search and the vendor picker were driven in the real page (clicks on the checkbox, "Go" and
+"Search"; the answers read back from what the page itself displayed), with the page's own web requests
+(Python) for the extra combinations. The page shows "Start-ups only" as a checkbox under the two door
+buttons, with a line "Sponsors: all 226 (32 of them start-ups)".
+
+**Does the count drop and come back exactly?** Yes, with one thing to know about what "count" means.
+- **The pool:** the line under the checkbox goes "Sponsors: all 226 (32 of them start-ups)" → "Sponsors: the 32
+  start-ups of 226" → back to "all 226 (32 of them start-ups)". The vendor picker goes 226 sponsors → 32
+  → 226 (its first line also changes to "Choose one of the start-up sponsors…"). The 226-name list after
+  switching off is **identical, name for name and in order,** to the list before. The 32 names with the switch
+  on are exactly the 32 rows whose tier is Start-Up in `data/sponsors.csv` (compared as sets: none missing, none extra).
+- **The match (Hello World Gazette, picked from the outlet picker, Go):** with the switch off the Sponsors tab
+  shows 10 sponsors per way (blended Docker, ControlTheory, mirrord, Momentic, JetBrains, Syntasso, Temporal,
+  Coder, Sentry, Resolve AI). Switching it on re-runs the match by itself (no second Go): the tab is renamed
+  "Start-up sponsors" and shows 10 per way, all start-ups (blended mirrord by MetalBear, Paper Compute Company,
+  pgEdge, Radar, Vijil, CodeVisionary, Testkube, Maze, StackGuardian, PatapscoAI). **Each shown start-up carries
+  a "Start-Up" tag. Talks and speakers are identical to the switch-off lists in all four ways.** Switching off
+  again: all four ways' lists (sponsors, talks, speakers) are **identical to the first switch-off lists**
+  (compared programmatically across Blended, Meaning, Words, Elastic ELSER). Because each list is capped at 10, the
+  sponsor *count* stays 10 before and after; what changes is who is in it, plus the pool line and the picker above.
+- **The plain search, "scale up for a traffic spike and back down afterwards" (Everything, Blended):** off: 10
+  results, nine talks and one sponsor (Kedify); on: 10 results, **all sponsors, all start-ups** (Kedify,
+  Ascendra Networks, Cloudchipr, pgEdge, KubeDB, Causal Dynamics Lab, mirrord, Actualyze AI, Radar,
+  CodeVisionary); off again: **identical to the first off list**.
+- **Every sponsor shown with start-ups on is Start-Up tier in `sponsors.csv`:** checked for the four match
+  ways (40 sponsor rows), the plain search (10), and the picker (32): zero non-start-ups. By request, for the plain
+  search in blended, meaning and ELSER, with Everything, Sponsors or Talks chosen, on and off: every on-list was all
+  Start-Up (none outside it), and off-on-off gave the same off list each time.
+
+**Things to know (not failures of the check):**
+1. **With the switch on, "Talks" in the plain search returns start-up sponsors, not talks.** `kind=talk` plus the
+   switch on gave 10 sponsors (blended, meaning and ELSER), because only sponsors have a tier (the code says
+   so). A viewer who picks "Talks" and turns the switch on sees sponsors under that choice.
+2. **Words search for that sentence finds nothing** (0 results, switch on or off, any kind), as before.
+3. **Speed:** a match, and each re-run when the switch is flipped, took roughly 8 to 10 seconds in the page
+   (the button shows "Matching…"), where the match took about 1 second in the page check at 11:55 (before ELSER). A
+   curl of `/api/match` took 7.6 seconds at 12:27. Not investigated; Titan may have load running at the same time.
+4. The page's way-buttons include a fifth, "Re-ranked", in its markup. Clicking it by script gave no result list
+   (one empty row per tab), and the screenshot afterwards showed only Blended, Meaning, Words and Elastic ELSER, so
+   it appears to be hidden until used. I did not test it.
