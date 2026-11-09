@@ -39,9 +39,9 @@ spreadsheets in the same layout.
 - **Elasticsearch** runs the keyword search, the vector search and the filters in one place. This
   project's own code blends the ranked lists (reciprocal rank fusion).
 - **Elastic's ELSER model and Jina's embedding model**, both through Elastic, read every passage
-  and each get a vote in the blend.
+  and each get a vote in the blend. Jina and the re-ranker run on Elastic's hosted service.
 - **Elastic's hosted re-ranker** re-orders the blended top 20 in the "Re-ranked" view.
-- **An Elastic inference connector** reaches OpenAI's gpt-4.1 for the fit check.
+- **An Elastic inference connector** reaches OpenAI's gpt-4.1 for the fit check and the agent.
 - **An Elastic Agent Builder agent** with three custom read-only tools answers questions over the
   same two catalogues.
 
@@ -50,7 +50,8 @@ embeddings, and an Agent Builder agent with custom tools. Workflows is not used.
 
 ## The other sponsor tools
 
-- **Radar** hosts the live page above, deployed by Argo CD.
+- **Radar** hosts the live page above, deployed by Argo CD. On it, each Go sends the fit check's text
+  to OpenAI, billed to the author, so it is capped at 30 requests a minute.
 - **Dash0** traces each search on the laptop page with OpenTelemetry: step names and timings only,
   never the text anyone typed.
 - **Gitar**, an AI code reviewer, reviewed the code. Its one finding was fixed; nothing it wrote
@@ -80,10 +81,17 @@ in `ftrt/config.py`. Without one the page works as before and the fit check box 
   the outlets are invented samples).
 - **In the product,** the search models (all-MiniLM-L6-v2, Elastic's ELSER, Jina) rank text and
   write none. The only AI-written words are the fit check and the Agent Builder agent's answers,
-  both from OpenAI's gpt-4.1 through Elastic, and both labelled as AI-written. The fit check is sent
-  the outlet's two texts and the three sponsors' own text, nothing else.
+  both from OpenAI's gpt-4.1 through Elastic, and both labelled as AI-written.
+- **What leaves the Elastic project.** The words, meaning and ELSER searches stay inside it. Jina's
+  embeddings (every passage once at load, and each search's question) and the re-ranker (the
+  question and the top 20 passages) go to Elastic's hosted inference service. The agent (its
+  questions and the passages it reads) and the fit check (the outlet's two texts and the three
+  sponsors' own text, nothing else) go to OpenAI through Elastic, billed to the project's owner.
+  Typed text is used once and never stored by this page.
 
-What was measured on the day, including the misses, is in `notes/evidence.md`.
+Nothing anyone types is stored. What was measured on the day, including the misses (a test outlet,
+the Breach Chronicle, misses its must-finds, and the AI-written fit check and agent can be wrong, so
+each shows the passage it read), is in `notes/evidence.md`.
 
 ## Data and licence
 
