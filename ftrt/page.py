@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
-from . import config, engine, flip, match, search, tracing, warm
+from . import config, engine, fitcheck, flip, match, search, tracing, warm
 
 PAGE_FILE = Path(__file__).with_name("page.html")
 THEME_FILE = Path(__file__).with_name("page-theme.css")   # the page's look, kept apart from its workings
@@ -119,6 +119,26 @@ def _run_match(root, outlet_id, beat, assignment, startups):
           else "what it always covers")
     return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups, left_out=sat_out,
                    kinds=[["sponsor", "Start-up sponsors" if startups else "Sponsors"], ["talk", "Talks"], ["speaker", "Speakers"]])
+
+
+@app.post("/api/fitcheck")
+def run_fitcheck():
+    """The fit check for the press door's top sponsors, asked for after the results are already on the page.
+    Any trouble at all (no model, too slow, an odd answer) comes back as nothing to show, never as an error."""
+    body = request.get_json(silent=True) or {}
+    outlet_id, beat, assignment = _text(body, "outlet_id"), _text(body, "beat"), _text(body, "assignment")
+    sponsors = body.get("sponsors") if isinstance(body.get("sponsors"), list) else []
+    names = [str(n).strip()[:200] for n in sponsors[:config.FITCHECK_TOP]]
+    with tracing.span("fit check", sponsors=len(names)) as step:   # how many and how long; never what was typed
+        try:
+            if outlet_id and not beat:   # the box was emptied: the outlet's own beat, as the match used
+                beat = match.stored_parts(client, outlet_id)[1]["beat"]["text"]
+            items = fitcheck.check(client, beat, assignment, names)
+        except (Exception, SystemExit) as e:
+            step.set_attribute("failed", type(e).__name__)
+            items = None
+        step.set_attribute("shown", bool(items))
+    return jsonify(items=items or [], model=config.FITCHECK_MODEL_NAME)
 
 
 @app.post("/api/flip")

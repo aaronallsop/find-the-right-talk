@@ -78,6 +78,22 @@
   footer { color: var(--muted); font-size: 13px; margin-top: 28px; }
 </style>
 <link rel="stylesheet" href="/page-theme.css">
+<style>
+  /* the fit check box; and "Found because" cut to three lines, with a click for the rest */
+  .fitcheck { border: 1px solid var(--accent-line, var(--line)); border-radius: 14px; background: var(--soft); padding: 14px 18px 16px; margin: 16px 0 0; }
+  .fit-head { margin: 0; font-size: 14px; color: var(--ink-soft, var(--muted)); }
+  .fit-head b { color: var(--ink); font-size: 16px; }
+  .fit-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 12px; }
+  .fit-item { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; }
+  .fit-why { margin: 8px 0 8px; font-size: 15px; line-height: 1.5; }
+  .fit-item details { font-size: 13px; color: var(--muted); }
+  .fit-item summary { cursor: pointer; color: var(--accent-2, var(--accent)); font-weight: 600; }
+  .fit-item details p { margin: 6px 0 0; color: var(--ink-soft, var(--ink)); }
+  .fit-foot { margin: 12px 0 0; font-size: 12px; color: var(--muted); }
+  .why { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+  .why.open { display: block; -webkit-line-clamp: unset; line-clamp: unset; overflow: visible; }
+  .more { align-self: flex-start; margin: 6px 0 0; font-size: 13px; }
+</style>
 <style>[hidden] { display: none !important; }</style>  <!-- after the theme too: hidden always wins -->
 </head>
 <body>
@@ -86,7 +102,7 @@
     <h1>Find the Right Talk</h1>
     <span class="engine" id="engine">connecting…</span>
   </header>
-  <p class="sub">The KubeCon + CloudNativeCon North America 2026 programme: 501 talks, 715 speakers, 226 sponsors. Typed text is used once and never stored.</p>
+  <p class="sub">The KubeCon + CloudNativeCon North America 2026 programme: 501 talks, 715 speakers, 226 sponsors. Typed text is used once and never stored by this page.</p>
 
   <section class="panel doors">
     <div class="switch" role="group" aria-label="Who are you">
@@ -141,6 +157,7 @@
     <p class="view"><b id="match-view">Best matches</b> · <button type="button" class="linky" id="match-how">How these were found</button></p>
     <div class="tabs" role="tablist" id="match-kinds"></div>
     <p class="note" id="match-left-out" hidden></p>
+    <section class="fitcheck" id="fitcheck" hidden></section>
     <div class="compare" id="match-compare" hidden></div>
     <ol class="results" id="match-results"></ol>
   </section>
@@ -206,6 +223,7 @@ async function post(url, body) {
   return data;
 }
 
+const WHY_LONG = 160;   // characters: a "Found because" longer than this gets a "Show all"
 function showResults(list, results, emptyText) {
   list.replaceChildren();
   if (!results.length) { list.append(el("li", "empty", emptyText)); return; }
@@ -218,6 +236,12 @@ function showResults(list, results, emptyText) {
     const why = el("p", "why");
     why.append(el("b", null, "Found because: "), document.createTextNode(r.passage));
     li.append(head, why);
+    if (r.passage.length > WHY_LONG) {   // a long passage shows its first three lines; a click shows the rest
+      const more = el("button", "linky more", "Show all");
+      more.type = "button";
+      more.onclick = () => { more.textContent = why.classList.toggle("open") ? "Show less" : "Show all"; };
+      li.append(more);
+    }
     // how it was ranked: shown only once "How these were found" is open
     if (r.via && !$("match-ways").hidden) li.append(el("p", "via", "Ranked best by " + r.via + "; found by " + r.found_by + (r.found_by === 1 ? " list" : " lists")));
     list.append(li);
@@ -263,6 +287,7 @@ function renderCompare(box, byWay, emptyWords) {
 function renderMatch() {
   if (!matchData) return;
   leftOut($("match-left-out"), matchData.left_out);
+  renderFit();
   const comparing = matchWay === "compare";
   $("match-compare").hidden = !comparing; $("match-results").hidden = comparing;
   if (comparing) { renderCompare($("match-compare"), matchData.results[matchKind], "No record shares enough telling words with this profile."); return; }
@@ -273,6 +298,45 @@ function renderMatch() {
               : matchWay === "jina" && !matchData.results[matchKind].jina ? "Jina did not answer for this match, or is not in this catalogue; the blend went ahead without it."
               : "Nothing found.";
   showResults($("match-results"), rs, empty);
+}
+
+// The fit check: after the press door's results are on the page, the top three sponsors are sent to be read by
+// an AI model, which writes why each may suit this outlet. If it is slow or does not answer, nothing is shown.
+let fitAsked = 0;
+async function askFit(answer, sent) {
+  const top = ((answer.results.sponsor || {}).blended || []).slice(0, 3).map(r => r.name);
+  const mine = ++fitAsked;
+  answer.fit = top.length ? {waiting: true} : null;
+  renderFit();
+  if (!top.length) return;
+  let d = {};
+  try { d = await post("/api/fitcheck", {...sent, sponsors: top}); } catch (x) { /* no fit check this time */ }
+  if (mine !== fitAsked || answers.press !== answer) return;   // a newer Go has taken over
+  answer.fit = d.items && d.items.length ? d : null;
+  renderFit();
+}
+// shown only with the press door's best sponsor matches: the list it was written from
+function renderFit() {
+  const box = $("fitcheck"), fit = door === "press" && matchData && matchData === answers.press ? matchData.fit : null;
+  const here = !!fit && matchKind === "sponsor" && matchWay === "blended";
+  box.hidden = !here;
+  if (!here) return;
+  const head = el("p", "fit-head");
+  head.append(el("b", null, "Fit check"), document.createTextNode(fit.waiting ? ": reading the top three for this outlet…"
+    : ": AI-written from the passages below. Check before you rely on it."));
+  box.replaceChildren(head);
+  if (fit.waiting) return;
+  const items = el("div", "fit-items");
+  fit.items.forEach((it, i) => {
+    const item = el("div", "fit-item"), h = el("div", "r-head"), read = el("details");
+    h.append(el("span", "r-pos", (i + 1) + "."), el("span", "r-name", it.name));
+    if (it.startup) h.append(el("span", "tag gem", "Start-Up"));
+    read.append(el("summary", null, "The passage it read"), el("p", null, it.passage));
+    item.append(h, el("p", "fit-why", it.why), read);
+    items.append(item);
+  });
+  box.append(items, el("p", "fit-foot", "Written by " + fit.model + ", reached through Elastic's inference service, from what this outlet covers, " +
+    "what it came to find, and each of these three sponsors' own passage. Nothing else is sent, and the order above is the search's, not the AI's."));
 }
 
 // one results panel for both doors; each door keeps its own last answer
@@ -345,7 +409,9 @@ $("press").onsubmit = async e => {
   internalRun = false;
   err.hidden = true; go.disabled = true; go.textContent = "Matching…";
   try {
-    answers.press = await post("/api/match", {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value, startups: startupsOnly()});
+    const sent = {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value, startups: startupsOnly()};
+    answers.press = await post("/api/match", sent);
+    askFit(answers.press, sent);   // not waited for: the results show now, the fit check when it comes
     if (door === "press") { showAnswer(answers.press); $("match-panel").scrollIntoView({behavior: "smooth", block: "start"}); }
     ok = true;
   } catch (x) { err.textContent = x.message; err.hidden = false; }

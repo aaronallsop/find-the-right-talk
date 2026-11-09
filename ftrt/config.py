@@ -91,3 +91,12 @@ PAGE_HOST = "127.0.0.1"     # this laptop only: the page has no login
 PAGE_PORT = 8765
 PAGE_RESULTS = 10           # results of each kind shown on the page
 PAGE_MAX_TYPED = 4000       # characters accepted in any one box (a picked sponsor's own text runs to 3,678)
+
+# The fit check: AI-written sentences on why the top sponsors may suit the outlet, asked for after the results show.
+FITCHECK_ENDPOINT = "openai-chat_completion-k563qy9gg9"   # a chat model already set up in the Elastic project's inference service
+FITCHECK_MODEL_NAME = "OpenAI's gpt-4.1"   # said on the page beside what it wrote
+FITCHECK_TOP = 3                # how many of the top sponsors it writes about
+FITCHECK_LIMIT = 12             # seconds it may take; slower, and the page simply shows no fit check
+FITCHECK_PASSAGE_CHARS = 4000   # of each sponsor's own text sent to it (the longest runs to 3,678)
+FITCHECK_MAX_TOKENS = 400       # the most it may write in all
+FITCHECK_MAX_WORDS = 70         # a longer piece about any one sponsor is not shown
