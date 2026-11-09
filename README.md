@@ -23,6 +23,11 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
 5. Start the page: [command], and open [address].
 
+Until the page exists, search from Terminal: `.venv/bin/python -m ftrt.search --mode compare "SLSA Level 3"`
+shows one search all three ways (words, meaning, blended) with the passage that made each result
+match; `--mode words`, `--mode meaning` or the default blended show one way; add `--kind sponsor`
+or `--startups` to narrow it.
+
 Needs no internet once set up, and no API key [unless the fit check is built].
 
 ## How it works
