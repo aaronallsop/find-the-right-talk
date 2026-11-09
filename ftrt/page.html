@@ -174,7 +174,7 @@
 <script>
 const $ = id => document.getElementById(id);
 let matchData = null, matchWay = "blended", matchKind = "sponsor", searchWay = "blended";
-let sponsorsAll = [], searchShown = false;
+let sponsorsAll = [], searchShown = false, searchStartups = false;
 const startupsOnly = () => $("startups").checked;
 
 function el(tag, cls, text) {
@@ -289,6 +289,12 @@ function openDoor(which) {
   $("press").hidden = which !== "press";
   $("vendor").hidden = which !== "vendor";
   showAnswer(answers[which]);
+  pressUpToDate();
+}
+
+// the press answer must match the start-ups switch; if not, ask again (vendor answers do not depend on it)
+function pressUpToDate() {
+  if (door === "press" && answers.press && answers.press.startups !== startupsOnly()) $("press").requestSubmit();
 }
 $("door-press").onclick = () => openDoor("press");
 $("door-vendor").onclick = () => openDoor("vendor");
@@ -302,13 +308,16 @@ $("sponsor").onchange = () => { if ($("sponsor").value) { $("does").value = ""; 
 $("press").onsubmit = async e => {
   e.preventDefault();
   const go = $("press").querySelector(".go"), err = $("press-error");
+  let ok = false;
   if (go.disabled) return;
   err.hidden = true; go.disabled = true; go.textContent = "Matching…";
   try {
     answers.press = await post("/api/match", {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value, startups: startupsOnly()});
     if (door === "press") { showAnswer(answers.press); $("match-panel").scrollIntoView({behavior: "smooth", block: "start"}); }
+    ok = true;
   } catch (x) { err.textContent = x.message; err.hidden = false; }
   go.disabled = false; go.textContent = "Go";
+  if (ok) pressUpToDate();   // the switch moved while this was running (only after a good answer, so a failure cannot loop)
 };
 
 $("vendor").onsubmit = async e => {
@@ -334,11 +343,12 @@ $("search-ways").onclick = e => {
 $("search").onsubmit = async e => {
   e.preventDefault();
   const err = $("search-error"), go = $("search").querySelector(".go");
+  let ok = false;
   if (go.disabled) return;
   err.hidden = true; go.disabled = true; go.textContent = "Searching…";
   try {
     const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value, startups: startupsOnly()});
-    searchShown = true;
+    searchShown = true; searchStartups = d.startups; ok = true;
     leftOut($("search-left-out"), d.left_out);
     const comparing = d.mode === "compare";
     $("search-compare").hidden = !comparing; $("search-results").hidden = comparing;
@@ -349,6 +359,7 @@ $("search").onsubmit = async e => {
     }
   } catch (x) { err.textContent = x.message; err.hidden = false; }
   go.disabled = false; go.textContent = "Search";
+  if (ok && searchStartups !== startupsOnly()) $("search").requestSubmit();   // the switch moved while this was running
 };
 
 // the start-ups toggle: fewer sponsors everywhere, and back again
@@ -369,7 +380,7 @@ $("startups").onchange = () => {
   if (startupsOnly()) { kindBeforeStartups = kind.value; kind.value = "sponsor"; kind.disabled = true; kind.title = "Start-ups only: sponsors"; }
   else { kind.value = kindBeforeStartups; kind.disabled = false; kind.title = ""; }
   // whatever is on screen is asked again, so the change shows at once
-  if (door === "press" && answers.press) $("press").requestSubmit();
+  pressUpToDate();
   if (searchShown && $("q").value.trim()) $("search").requestSubmit();
 };
 

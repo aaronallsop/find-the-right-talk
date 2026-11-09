@@ -57,6 +57,31 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
 - **Geo queries are not used:** the data has no coordinates (rooms in one building and a region
   word per outlet), so a map would be decoration.
 
+## What Elastic asked entrants to use
+
+Status at 13:30 on 9 November, one line each:
+
+1. **Elastic Cloud serverless:** done. Everything runs on a serverless Elasticsearch project.
+2. **Ingesting data:** done. The programme, speakers, sponsors and outlets are loaded as 2,250
+   passages into two catalogues.
+3. **Jina models for embeddings:** half done. Elastic's hosted Jina re-ranker is used to re-order the
+   blended top 20 (the "Re-ranked" view). Jina embeddings as a further voice are being tried and are
+   not in yet.
+4. **An Agent Builder agent with custom tools:** done. "Find the Right Talk" has three tools of our
+   own over the two catalogues.
+5. **Elastic Workflows:** not used.
+
+**The five main code files, so you can see Elasticsearch is the core** (each is in `ftrt/`):
+
+- `engine.py`: the one way the code reaches Elasticsearch, in Elastic Cloud or on a laptop.
+- `load.py`: loads the spreadsheets into two new catalogues, one document per passage, each holding
+  the words, 384 numbers for its meaning, and (in the cloud) Elastic's ELSER reading of it.
+- `search.py`: the searches: words, meaning, Elastic's ELSER, the blend (reciprocal rank fusion, in
+  this project's own code) and the re-ranked view.
+- `match.py`: an outlet's own profile searches the programme (the press door); `flip.py` does the
+  same the other way round (the vendor door).
+- `agent.py`: sets up the Agent Builder agent and its three tools in Elastic Cloud from a script.
+
 ## Where it falls short
 
 Measured on 9 November against two test outlets whose answer keys were written beforehand

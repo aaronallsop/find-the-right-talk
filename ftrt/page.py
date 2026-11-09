@@ -124,11 +124,11 @@ def run_search():
         with ThreadPoolExecutor(max_workers=len(COMPARE_WAYS)) as pool:
             found = dict(zip(COMPARE_WAYS, pool.map(lambda way: search.MODES[way](client, q, config.PAGE_RESULTS, filt=filt), COMPARE_WAYS)))
         return jsonify(ways={way: (None if rs is None else _plain(rs)) for way, rs in found.items()},
-                       mode=mode, left_out=search.left_out())
+                       mode=mode, startups=startups, left_out=search.left_out())
     results = search.MODES[mode](client, q, config.PAGE_RESULTS, filt=search.filters(kind, startups))
     if results is None:   # ELSER or the re-ranker asked for where it is missing or not answering
         return jsonify(error=search.ELSER_MISSING if mode == "elser" else search.RERANK_MISSING), 503
-    return jsonify(results=_plain(results), mode=mode, left_out=search.left_out())
+    return jsonify(results=_plain(results), mode=mode, startups=startups, left_out=search.left_out())
 
 
 @app.errorhandler(Exception)
