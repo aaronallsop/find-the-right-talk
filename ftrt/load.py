@@ -7,9 +7,7 @@ Each record is cut into passages; each passage becomes one document holding the 
 words and its 384 meaning numbers, plus the record's details, so a search can report the
 record and the passage that made it match.
 """
-import os
-os.environ.setdefault("HF_HUB_OFFLINE", "1")          # read the model from the local cache; never wait on the wifi
-os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse, csv, re, sys, time
 from collections import Counter
 from elasticsearch import helpers

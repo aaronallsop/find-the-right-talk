@@ -5,6 +5,7 @@ Two settings files live OUTSIDE this folder and are never copied into it:
   ~/elastic-start-local/.env    ES_LOCAL_URL and ES_LOCAL_PASSWORD, written by Elastic's start-local installer
 If the cloud file is filled in, the cloud is used; otherwise the local engine. FTRT_ENGINE=local or
 FTRT_ENGINE=cloud in the environment forces one or the other (the laptop is the demo's fallback).
+FTRT_CLOUD_ENV=/path/to/.env reads another cloud project's settings file instead of ~/elastic-cloud/.env.
 """
 import os, sys
 from elasticsearch import Elasticsearch

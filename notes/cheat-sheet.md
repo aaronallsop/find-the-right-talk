@@ -7,7 +7,8 @@ it is built.
 
 1. **The data.** The public KubeCon programme and sponsor list, copied once with credit, plus a
    short profile of each media outlet. Plain spreadsheets, the kind any organiser hands over.
-2. **The catalogue.** Elasticsearch holds every talk, speaker, sponsor and outlet. Long text is
+2. **The catalogue.** Elasticsearch, running in Elastic Cloud serverless, holds every talk,
+   speaker, sponsor and outlet. Long text is
    cut into short passages, and each passage is stored twice: as words, and as a list of 384
    numbers that capture its meaning.
 3. **Three ways to search.** Words finds exact terms. Meaning finds the right idea in different
@@ -15,7 +16,8 @@ it is built.
 4. **The match.** An outlet's KubeCon assignment and its standing beat become those same
    meaning numbers and search the programme, the assignment counting more: the talks and
    sponsors it would want to cover, with the passage that made each one match.
-5. **The page.** One simple web page on this laptop. No login, no internet needed.
+5. **The page.** One simple web page on this laptop. It talks to the search engine: your own
+   Elastic Cloud project, or the copy on the laptop, which needs no internet.
 
 ## Why each choice
 
@@ -23,11 +25,14 @@ it is built.
   "survive a traffic spike" means autoscaling; meaning blurs exact names like "SLSA Level 3".
 - **How they are merged:** each list votes; a result gets more points the higher it ranks in
   each, and the totals decide the order. A standard method, reciprocal rank fusion.
-- **Short passages:** the meaning model only reads about 180 words, and a sponsor's material
+- **Short passages:** the meaning model only reads about 250 word-pieces, roughly 170 words, and a sponsor's material
   is far longer. Cutting it up also lets the page show *which* passage matched.
 - **A small model on the laptop:** free, private, fast, works offline. It finds meaning; it
   doesn't write anything.
 - **Elasticsearch:** it does words, meaning and filters in one place, and it is the track.
+- **Elastic Cloud serverless:** the programme lives in a cloud project, so anyone can run this
+  from the public repository with their own project. A copy on the laptop is the fallback if the
+  wifi fails.
 - **An outlet has a standing beat and an assignment:** what it always covers, and what it was
   sent to find at this event. The match uses both, and the assignment counts more, because
   that is how an editor actually briefs a reporter.
@@ -55,18 +60,24 @@ it is built.
 ## Built on the day, one line per piece
 
 - **Loading (B1, 11:03):** One command reads the spreadsheets, cuts every talk, speaker,
-  sponsor and outlet into passages of about 120 words (2,209 in all), turns each passage into 384
+  sponsor and outlet into passages of about 120 words (2,250 in all), turns each passage into 384
   numbers with the small meaning model on the laptop, and loads them into two brand-new catalogues
   in about 12 seconds; a search of the loaded text for email addresses finds none.
 - **Three ways to search (B2, 11:07):** From Terminal, one command searches the programme by words
   (exact terms; it can come back empty, which is information), by meaning (the nearest idea in any
   wording; it always returns something), or blended (each list votes, a result gets more points the
   higher it ranks in each, and the totals decide), and shows the passage that made each result match;
-  a compare mode runs all three at once so you can watch them disagree. Measured 9 November: "SLSA
-  Level 3" is won by words (Docker and ActiveState, the two sponsors whose own text says it); the Black Friday sentence gets nothing from
-  words and cloud-cost and autoscaling companies from meaning (North first, the Start-Up Kedify fifth); the GPU-isolation sentence gets Edera from words and vCluster from
-  meaning, with the next four close behind.
+  a compare mode runs all three at once so you can watch them disagree. Measured 9 November, one run
+  each (Cassini's three-run check is still to come): "SLSA Level 3" is won by words (ActiveState
+  then Docker, the two sponsors whose own text says it), while meaning puts OpenSSF first; the
+  traffic-spike sentence "scale up for a traffic spike and back down afterwards" gets nothing from
+  words and the Start-Up Kedify first from meaning; the GPU-isolation sentence gets Edera from
+  words and vCluster then Edera from meaning.
 - **Elastic Cloud (11:24):** The same two catalogues now live in an Elastic Cloud serverless
   project; the code uses the cloud when its settings file is filled in and the laptop engine
-  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud took 25 seconds
+  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud took about 30 seconds
   and the three demo searches give the same top results there as on the laptop.
+- **Cleaner loading and searching (11:39):** The loader now cuts every passage to fit what the
+  meaning model actually reads, drops placeholder bios like "TODO", puts the day and time into
+  every session so the seven coffee breaks are told apart, and the searches no longer print
+  library noise before their results.

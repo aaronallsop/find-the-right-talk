@@ -1,4 +1,5 @@
 """Every constant in one place. Change a number here, nowhere else."""
+import os
 from pathlib import Path
 
 # The two catalogues this project owns. Names are new on purpose: anything else on the
@@ -15,13 +16,19 @@ LIST_SEPARATOR = "; "
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 VECTOR_SIZE = 384
 
-# The model reads only about the first 180 words of anything, so long text is cut into passages.
-PASSAGE_WORDS = 120      # aim for passages of about this many words
-MIN_TAIL_WORDS = 40      # a leftover shorter than this is folded into the passage before it
+# The model reads only its first 256 word-pieces (its own tokeniser's units; technical text runs about
+# 1.5 per word) and ignores the rest, so long text is cut into passages, measured in those pieces.
+MODEL_MAX_PIECES = 254   # 256 less the two markers the model adds; no passage, name included, may be longer
+PASSAGE_PIECES = 180     # aim for passages of about this many pieces (about 120 words), before the name
+MIN_TAIL_PIECES = 60     # a leftover shorter than this is folded into the passage before it, if that still fits
+
+# Speaker cells that hold no information: dropped, not loaded as text.
+PLACEHOLDERS = {"todo", "tbd", "tba", "none", "n/a", "na", "-", "--", ".", "null"}
 
 # Where the engine is and how to get in. Both files live outside this folder; nothing in them is
 # ever written anywhere else. The cloud file wins when it is filled in (see engine.py).
-CLOUD_SETTINGS_FILE = Path.home() / "elastic-cloud" / ".env"         # ES_CLOUD_URL, ES_CLOUD_API_KEY
+# FTRT_CLOUD_ENV=/path/to/.env in front of a command uses another cloud project's settings file instead.
+CLOUD_SETTINGS_FILE = Path(os.environ.get("FTRT_CLOUD_ENV") or Path.home() / "elastic-cloud" / ".env").expanduser()  # ES_CLOUD_URL, ES_CLOUD_API_KEY
 ENGINE_SETTINGS_FILE = Path.home() / "elastic-start-local" / ".env"  # ES_LOCAL_URL, ES_LOCAL_PASSWORD
 ENGINE_DEFAULT_URL = "http://localhost:9200"
 ENGINE_USER = "elastic"

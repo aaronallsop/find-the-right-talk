@@ -10,9 +10,7 @@ Every result is a record (a talk, speaker or sponsor) with the passage that made
 Words search can come back empty, which is information; meaning search always returns the
 nearest thing. Blended merges the two ranked lists by reciprocal rank fusion, in our own code.
 """
-import os
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
-os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse, textwrap
 from . import config
 from .engine import connect

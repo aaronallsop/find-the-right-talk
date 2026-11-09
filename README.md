@@ -3,7 +3,7 @@
 **Which talks and sponsors at KubeCon should a given media outlet cover?** Pick an outlet and
 this ranks the programme — talks, speakers and sponsors — by how well each fits what that outlet
 covers, and says why each one matched. Search the programme three ways: by words, by meaning,
-or both.
+or both. It runs on Elastic Cloud serverless; a local Elasticsearch in Docker is the alternative.
 
 Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake City,
 9 November 2026, by Aaron Allsop.
@@ -11,19 +11,22 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
 ## Set it up
 
 [Exact steps, tested on the day from a fresh copy of this repository into an empty folder:]
-1. Install Docker Desktop and start it.
-2. Install Elasticsearch and Kibana locally with Elastic's start-local script, **run from your home
+1. Create your own Elastic Cloud serverless Elasticsearch project at cloud.elastic.co. The author's
+   project and key are not in this repository and cannot be used; you need your own.
+2. Make a file `~/elastic-cloud/.env` with two lines, `ES_CLOUD_URL=` the project's endpoint and
+   `ES_CLOUD_API_KEY=` an API key for it. When that file is filled in, every command below uses
+   Elastic Cloud. It is never copied into this repository. To use a settings file kept somewhere
+   else, put `FTRT_CLOUD_ENV=/path/to/.env` in front of a command.
+   **Alternative, on your laptop only:** install Docker Desktop and start it, then install
+   Elasticsearch and Kibana locally with Elastic's start-local script, **run from your home
    folder**: `cd ~ && curl -fsSL https://elastic.co/start-local | sh` (it creates `~/elastic-start-local`
    with the password in its `.env` file; this project reads the password from there and never stores it).
-   **Or use Elastic Cloud instead:** create a serverless Elasticsearch project at cloud.elastic.co,
-   make a file `~/elastic-cloud/.env` with two lines, `ES_CLOUD_URL=` the project's endpoint and
-   `ES_CLOUD_API_KEY=` an API key for it, and skip the local install. When that file is filled in,
-   every command below uses the cloud; `FTRT_ENGINE=local` in front of a command uses the laptop
-   engine instead. Neither file is ever copied into this repository.
+   Without the cloud file, every command uses that local engine; with it, `FTRT_ENGINE=local` in
+   front of a command uses the local engine instead.
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on the laptop engine and
-   about 25 seconds to Elastic Cloud (both measured 9 November). It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into 2,209 passages, turns each into
+   about 30 seconds to Elastic Cloud (both measured 9 November). It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into 2,250 passages, turns each into
    384 numbers with the meaning model, and fills two new catalogues, `ftrt-programme` and
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
 5. Start the page: [command], and open [address].
@@ -33,8 +36,8 @@ shows one search all three ways (words, meaning, blended) with the passage that 
 match; `--mode words`, `--mode meaning` or the default blended show one way; add `--kind sponsor`
 or `--startups` to narrow it.
 
-On the laptop engine it needs no internet once set up; on Elastic Cloud it needs the internet and the
-project's own key. No other key [unless the fit check is built].
+On Elastic Cloud it needs the internet and your project's own key; the local alternative needs no
+internet once set up. No other key [unless the fit check is built].
 
 ## How it works
 
@@ -79,8 +82,8 @@ project's own key. No other key [unless the fit check is built].
 
 ## Tools and data
 
-- Elasticsearch and Kibana (Elastic), Docker, Python, Flask, sentence-transformers,
-  all-MiniLM-L6-v2.
+- Elasticsearch and Kibana (Elastic), Elastic Cloud serverless (or the same engine locally in
+  Docker), Python, Flask, sentence-transformers, all-MiniLM-L6-v2.
 - **Data:** KubeCon + CloudNativeCon North America 2026 programme, The Linux Foundation,
   CC BY 3.0, as of 4 November 2026. See `data/CREDITS.md`. Logos and photos are not included.
 

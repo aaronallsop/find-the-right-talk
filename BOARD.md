@@ -96,14 +96,30 @@ the demo searches before and after):**
 
 (messages Aaron left with Rhea, each with the time, until Saturn has them)
 
+(none)
+
 ## Now
 
-- Neptune: finished at 11:25. Waiting for Saturn at 12:00.
+- Neptune: finished at 11:25.
+- Titan: saving the review-fix reload, then the match.
+- Rhea: the cloud wording in the README, cheat sheet and a first draft of the submission paragraph.
+- Cassini: waiting for the 12:00 save and Aaron's second key, to run the fresh-copy test at about 12:30.
+- Dione: standing by.
 
 ## Next
 
-B3 (demo searches re-proved), M2 (the match), M3 (the page), M4 (start-ups toggle), M5 (the flip),
-S1 only if well ahead. Freeze 15:45, submit 16:30.
+Aaron's build order, as he confirmed it to Saturn (this replaces the earlier list). Cut from the
+bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
+
+1. The match (M2), scored against the answer keys, no later than 13:45.
+2. The page, with both doors from the start: press or vendor, each a picker plus two blank boxes,
+   nothing saved.
+3. The flip, as the vendor door's engine.
+4. Cloud wording in the README and the pitch.
+5. Elastic's own meaning model as a fourth voice in the blend (cloud only).
+6. Elastic's re-ranker (cloud only).
+7. The start-ups toggle.
+8. The fit check through Elastic's inference service, only if ahead at 15:00.
 
 ## Done
 
@@ -113,11 +129,44 @@ S1 only if well ahead. Freeze 15:45, submit 16:30.
 - 11:09 passage-cutting fix (0560c9b)
 - 11:20 search fixes from review (42c36e0)
 - 11:21 Elastic Cloud connection (c346c70); 11:24 cloud catalogues loaded and demo searches proven there
+- 11:42 Cassini laid out the scoring sheet for the match (Gazette 8 items, Chronicle 12); nothing scored yet.
+- 11:41 Dione confirmed, read-only, that the cloud project offers Elastic's own meaning model (ELSER) and Elastic's re-ranker as ready-made services; nothing was called or changed.
+- 11:36 Relay test passed (Aaron to Rhea to Saturn): Saturn confirmed it had the message.
+- 11:33 B3, the three demo searches re-proved in the cloud by Cassini: three runs each, all
+  identical, and the laptop agrees. Not yet saved to the repository; Titan saves it next.
 
 ## Blocked
 
-Nothing.
+- The fresh-copy test waits on Aaron's second key for the same cloud project (Aaron to create it himself and keep it outside the folder).
 
 ## Decided today
 
-See "Decided today" in the handoff above; Rhea adds from 12:00.
+The decisions up to 11:25 are listed in the handoff above. Added since, per Neptune's report:
+
+- 11:12, Aaron: geo queries are out; the data has no coordinates, and we say so plainly.
+- 11:12, Aaron: Elastic's own model or re-ranker only after M3, in M5's slot, if time.
+- 11:17, Aaron: helpers sparingly until 13:20.
+- About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
+- 11:47, Aaron: the 12:00 hand-over rule is phased out; Titan is the only builder and the only one
+  who saves, from now.
+- 11:45, Aaron: the fresh-copy test uses a second key on the same cloud project, kept outside the
+  folder.
+- About 11:41, Aaron (confirmed to Saturn; Neptune stays on as architect, plan advice comes through
+  Aaron): the page is the two-door demo, the flip moves up to right after the page, Elastic's
+  meaning model and re-ranker come after both and are cloud only.
+- 11:30 to 11:42, Aaron (confirmed to Saturn): cloud by default, laptop as demo fallback only;
+  geo no, the data has no locations; the build order above; the page is a two-door demo ("I'm
+  press" / "I'm a vendor"); text typed into it is used once and never stored.
+- 11:33, Cassini and Saturn: the Black Friday demo search is now "scale up for a traffic spike and
+  back down afterwards". Words find nothing; meaning puts Kedify, a Start-Up, first.
+- 11:30, Aaron (relayed by Neptune at 11:36): the product runs on Elastic Cloud by default; the
+  laptop engine is the demo fallback only. Judges will run it from the public repository with
+  their own Elastic Cloud project, so the README setup is written that way (Rhea, 11:40).
+- 11:36, Aaron: approved the new wording for the "nothing is sent anywhere" line: "Your programme
+  data and searches live in your own Elastic Cloud project and nowhere else, every AI-written line
+  is labelled, and a copy on this laptop runs offline as the fallback." Rhea has changed the cheat
+  sheet and will use it in the submission paragraph. The same line in the day plan, the Jules
+  task and Neptune's prompt is not Rhea's to change; Saturn to decide. Still to confirm by Titan
+  or Cassini: that nothing but Elastic Cloud is contacted.
+
+Rhea adds new ones from 12:00.
