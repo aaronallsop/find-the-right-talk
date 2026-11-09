@@ -112,7 +112,7 @@ the demo searches before and after):**
 
 - Neptune: finished at 11:25.
 - Titan: fixing the two faults under Blocked. No new features.
-- Rhea: the words are drafted; waiting for the page-speed and Talks-tab fixes, then redoes the numbers after the freeze.
+- Rhea: README rewritten at 12:36 as the product's face, for a judge who reads and watches (setup moved lower); the words are drafted; waiting for the page-speed and Talks-tab fixes, then redoes the numbers after the freeze.
 - Cassini: checking the start-ups toggle. Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
 - Dione: standing by.
 
@@ -129,18 +129,17 @@ as a miss.
 
 ## Next
 
-Aaron's build order as of 11:55 (Elastic's meaning model moved forward, before the page). Cut from
-the bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
+Aaron's plan as of 12:40 (after the organiser and the info message): no live presentation. Judging is
+the GitHub repository plus a 3-minute video on the WeMakeDevs platform by 17:30, and judges are
+unlikely to run it. The freeze at 15:45 holds.
 
-1. Titan fixes the match order.
-2. Elastic's own meaning model as a fourth voice in the blend (cloud only).
-3. Cassini re-scores the two test outlets.
-4. The page (M3), the two-door demo.
-5. The flip (M5), as the vendor door's engine.
-6. Cloud wording in the README and the pitch.
-7. Elastic's re-ranker (cloud only).
-8. The start-ups toggle (M4).
-9. The fit check (S1), only if ahead at 15:00.
+1. Titan's page-speed and Talks-tab fixes.
+2. A side-by-side compare view on the page.
+3. An Agent Builder agent, scoped first, only if we get there.
+4. From 15:45: the README as the product's face (Rhea), the evidence page of measured results
+   (Cassini), screenshots, Aaron's recording.
+5. Aaron submits at 16:30 with take one; 16:30 to 17:30 a better take, if the platform allows edits.
+   Warming the Elastic models before recording is Aaron's job.
 
 ## Done
 
@@ -188,6 +187,7 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
 - Aaron (relayed by Neptune, 12:05 by Neptune's clock): approved a rewritten 90-second demo script and three new judge answers (why Elastic Cloud, why no geo, why Elastic's own models). Rhea put them in the cheat sheet; the day plan's demo is superseded.
 - 12:32, Aaron (said in Titan's session): yes to the hosted Jina re-ranker; it is kept.
+- 12:40, Aaron (after the organiser and the info message): no live presentation. Judging is the GitHub repository plus a 3-minute video on the WeMakeDevs platform by 17:30; judges are unlikely to run it. Build to work and be shown; no more effort on hosting, packaging, cold starts or edge cases; the own-project setup stays in the README with the one fresh-copy test already done (11:53). What is on screen is real and measured by Cassini; nothing staged. Aaron submits at 16:30 with take one; a better take 16:30 to 17:30 if the platform allows edits.
 - 12:35, Aaron: the submission form is one shot, so no early submission. Submit once, after the freeze, the fresh-copy test and a rehearsal, by 16:30 at the latest. Rhea has the submission paragraph ready for Aaron to read by 15:30.
 - 12:31, Titan and Saturn: the Hello World Gazette's wording stays as it was. No true short phrase would lift Faros; it would mean adding an idea the outlet never had.
 - 12:27, Aaron: try Elastic's hosted Jina re-ranker once, ten minutes; keep it if it answers fast, else skip; no raising capacity. A slow Elastic model must never blank the page (fallback). Warm the Elastic models before the 16:15 recording and the 16:30 submission. Fix the Gazette's wording (Faros 13th) only if cheap, otherwise leave it.

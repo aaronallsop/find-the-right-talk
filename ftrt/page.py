@@ -104,9 +104,12 @@ def run_flip():
                    kinds=[["outlet", "Outlets"], ["talk", "Talks"]])
 
 
+COMPARE_WAYS = ("words", "meaning", "elser", "blended", "reranked")
+
+
 @app.post("/api/search")
 def run_search():
-    """The plain search: words, meaning or blended, over the programme."""
+    """The plain search over the programme: one way, or "compare", every way at once side by side."""
     body = request.get_json(silent=True) or {}
     q, mode, kind = _text(body, "q"), _text(body, "mode") or "blended", _text(body, "kind") or None
     startups = bool(body.get("startups"))
@@ -114,8 +117,14 @@ def run_search():
         kind = "sponsor"
     if not q:
         return jsonify(error="Type something to search for."), 400
-    if mode not in search.MODES or kind not in (None, "talk", "event", "speaker", "sponsor"):
+    if (mode not in search.MODES and mode != "compare") or kind not in (None, "talk", "event", "speaker", "sponsor"):
         return jsonify(error="Unknown search."), 400
+    if mode == "compare":   # every way at once; a way that is not here (laptop) or did not answer comes back empty
+        filt = search.filters(kind, startups)
+        with ThreadPoolExecutor(max_workers=len(COMPARE_WAYS)) as pool:
+            found = dict(zip(COMPARE_WAYS, pool.map(lambda way: search.MODES[way](client, q, config.PAGE_RESULTS, filt=filt), COMPARE_WAYS)))
+        return jsonify(ways={way: (None if rs is None else _plain(rs)) for way, rs in found.items()},
+                       mode=mode, left_out=search.left_out())
     results = search.MODES[mode](client, q, config.PAGE_RESULTS, filt=search.filters(kind, startups))
     if results is None:   # ELSER or the re-ranker asked for where it is missing or not answering
         return jsonify(error=search.ELSER_MISSING if mode == "elser" else search.RERANK_MISSING), 503

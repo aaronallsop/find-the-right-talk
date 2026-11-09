@@ -64,6 +64,14 @@
   .why b { font-weight: 600; color: var(--muted); }
   .via { margin: 4px 0 0 2.2em; color: var(--muted); font-size: 13px; }
   .empty { color: var(--muted); padding: 14px 0; }
+  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 14px; margin-top: 14px; }
+  .compare section { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; min-width: 0; }
+  .compare h3 { font-size: 14px; margin: 0 0 8px; }
+  .compare ol { margin: 0; padding-left: 1.4em; font-size: 14px; }
+  .compare li { padding: 3px 0; overflow-wrap: anywhere; }
+  .compare .in { font-size: 11px; color: var(--accent); margin-left: 4px; white-space: nowrap; }
+  .compare .gone { color: var(--muted); font-size: 13px; }
+  .compare .tag { font-size: 11px; padding: 0 6px; margin-left: 4px; }
   footer { color: var(--muted); font-size: 13px; margin-top: 28px; }
 </style>
 </head>
@@ -119,10 +127,12 @@
         <button type="button" data-way="words" aria-pressed="false">Words</button>
           <button type="button" data-way="elser" aria-pressed="false" class="elser-only" hidden>Elastic ELSER</button>
           <button type="button" data-way="reranked" aria-pressed="false" class="rerank-only" hidden>Re-ranked</button>
+          <button type="button" data-way="compare" aria-pressed="false">Compare all</button>
       </div>
     </div>
     <div class="tabs" role="tablist" id="match-kinds"></div>
     <p class="note" id="match-left-out" hidden></p>
+    <div class="compare" id="match-compare" hidden></div>
     <ol class="results" id="match-results"></ol>
   </section>
 
@@ -147,12 +157,14 @@
           <button type="button" data-way="words" aria-pressed="false">Words</button>
           <button type="button" data-way="elser" aria-pressed="false" class="elser-only" hidden>Elastic ELSER</button>
           <button type="button" data-way="reranked" aria-pressed="false" class="rerank-only" hidden>Re-ranked</button>
+          <button type="button" data-way="compare" aria-pressed="false">Compare all</button>
         </div>
       </div>
       <div><button class="go" type="submit" style="margin:0">Search</button></div>
     </form>
     <p class="error" id="search-error" hidden></p>
     <p class="note" id="search-left-out" hidden></p>
+    <div class="compare" id="search-compare" hidden></div>
     <ol class="results" id="search-results"></ol>
   </section>
 
@@ -208,9 +220,39 @@ function leftOut(box, names) {
     ". Ask again in a minute to include " + (n.length > 1 ? "them" : "it") + "." : "";
 }
 
+// "Compare all": the same question every way at once, one column each
+const WAYS = [["words", "Words"], ["meaning", "Meaning"], ["elser", "Elastic ELSER"], ["blended", "Blended"], ["reranked", "Re-ranked"]];
+function renderCompare(box, byWay, emptyWords) {
+  const lists = WAYS.map(([w]) => byWay[w]);
+  const seen = {};
+  lists.forEach(rs => (rs || []).forEach(r => { seen[r.name] = (seen[r.name] || 0) + 1; }));
+  box.replaceChildren(...WAYS.map(([w, label], i) => {
+    const col = el("section"), rs = lists[i];
+    col.append(el("h3", null, label));
+    if (rs == null) col.append(el("p", "gone", w === "elser" ? "Not here: needs Elastic Cloud, or still waking up."
+                                                              : w === "reranked" ? "Not here: needs Elastic Cloud, or did not answer." : "Not here."));
+    else if (!rs.length) col.append(el("p", "gone", w === "words" ? emptyWords : "Nothing found."));
+    else {
+      const ol = el("ol");
+      rs.forEach(r => {
+        const li = el("li", null, r.name);
+        li.title = r.passage;   // hover: the passage that made it match
+        if (r.startup) li.append(el("span", "tag gem", "Start-Up"));
+        if (seen[r.name] > 1) li.append(el("span", "in", "in " + seen[r.name]));
+        ol.append(li);
+      });
+      col.append(ol);
+    }
+    return col;
+  }));
+}
+
 function renderMatch() {
   if (!matchData) return;
   leftOut($("match-left-out"), matchData.left_out);
+  const comparing = matchWay === "compare";
+  $("match-compare").hidden = !comparing; $("match-results").hidden = comparing;
+  if (comparing) { renderCompare($("match-compare"), matchData.results[matchKind], "No record shares enough telling words with this profile."); return; }
   const rs = matchData.results[matchKind][matchWay] || [];
   const empty = matchWay === "words" ? "No record shares enough telling words with this profile."
               : matchWay === "elser" && !matchData.results[matchKind].elser ? "Elastic's ELSER did not answer for this match; the blend went ahead without it."
@@ -283,7 +325,11 @@ $("vendor").onsubmit = async e => {
 
 $("match-ways").onclick = e => { const b = e.target.closest("button"); if (!b) return; matchWay = b.dataset.way; press($("match-ways"), "aria-pressed", matchWay); renderMatch(); };
 $("match-kinds").onclick = e => { const b = e.target.closest("button"); if (!b) return; matchKind = b.dataset.kind; press($("match-kinds"), "aria-selected", matchKind); renderMatch(); };
-$("search-ways").onclick = e => { const b = e.target.closest("button"); if (!b) return; searchWay = b.dataset.way; press($("search-ways"), "aria-pressed", searchWay); };
+$("search-ways").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  searchWay = b.dataset.way; press($("search-ways"), "aria-pressed", searchWay);
+  if (searchShown && $("q").value.trim()) $("search").requestSubmit();   // switching way shows that way at once
+};
 
 $("search").onsubmit = async e => {
   e.preventDefault();
@@ -294,8 +340,13 @@ $("search").onsubmit = async e => {
     const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value, startups: startupsOnly()});
     searchShown = true;
     leftOut($("search-left-out"), d.left_out);
-    const empty = d.mode === "words" ? "Words found nothing: no record has enough of these words. Try Meaning." : "Nothing matches.";
-    showResults($("search-results"), d.results, empty);
+    const comparing = d.mode === "compare";
+    $("search-compare").hidden = !comparing; $("search-results").hidden = comparing;
+    if (comparing) renderCompare($("search-compare"), d.ways, "Words found nothing: no record has enough of these words.");
+    else {
+      const empty = d.mode === "words" ? "Words found nothing: no record has enough of these words. Try Meaning." : "Nothing matches.";
+      showResults($("search-results"), d.results, empty);
+    }
   } catch (x) { err.textContent = x.message; err.hidden = false; }
   go.disabled = false; go.textContent = "Search";
 };
