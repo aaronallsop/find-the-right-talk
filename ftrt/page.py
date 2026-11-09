@@ -16,6 +16,7 @@ from werkzeug.exceptions import HTTPException
 from . import config, engine, flip, match, search, tracing, warm
 
 PAGE_FILE = Path(__file__).with_name("page.html")
+THEME_FILE = Path(__file__).with_name("page-theme.css")   # the page's look, kept apart from its workings
 app = Flask(__name__)
 client = None
 
@@ -41,6 +42,14 @@ def _plain(results: list[dict]) -> list[dict]:
 @app.get("/")
 def page():
     return PAGE_FILE.read_text(encoding="utf-8")   # read on every request, so an edit shows on reload
+
+
+@app.get("/page-theme.css")
+def theme():
+    """The page's look. If the file is not there, the page keeps its own built-in look."""
+    if not THEME_FILE.exists():
+        return "", 404
+    return THEME_FILE.read_text(encoding="utf-8"), 200, {"Content-Type": "text/css; charset=utf-8"}
 
 
 @app.get("/api/lists")

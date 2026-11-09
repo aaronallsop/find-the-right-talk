@@ -1,0 +1,185 @@
+/* page-theme.css: the page's look, layered over the plain styles inside page.html.
+   Style only: it changes colour, type, spacing and shape, never what is shown or hidden.
+   Link it AFTER page.html's own <style> block so its rules win.
+   It never sets "display" on anything the page hides, and never uses !important,
+   so page.html's "[hidden] { display: none !important; }" always wins. */
+
+/* ---- colours: light first, then dark (the laptop is in dark mode) ---- */
+:root {
+  --bg: #f5f6f8; --panel: #ffffff; --field: #f9fafb; --card: #ffffff; --card-hover: #f7f9fb;
+  --ink: #18202a; --ink-soft: #3c4652; --muted: #5f6b78; --line: #e2e6eb; --line-strong: #cdd4dc;
+  --accent: #1f63a8; --accent-ink: #ffffff; --accent-soft: #e8f1fa;
+  --gem: #8a5800; --gem-bg: #fdf0d5; --soft: #eef4fa;
+  --danger: #b3261e; --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 4px 16px rgba(16, 24, 40, .04);
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1116; --panel: #151a21; --field: #0f1318; --card: #181e26; --card-hover: #1c232c;
+    --ink: #e7eaee; --ink-soft: #c1c8d1; --muted: #8e99a6; --line: #262e38; --line-strong: #344050;
+    --accent: #79b8ec; --accent-ink: #0a1622; --accent-soft: #16263a;
+    --gem: #f2c46d; --gem-bg: #33270f; --soft: #142131;
+    --danger: #ff8f86; --shadow: 0 1px 2px rgba(0, 0, 0, .3);
+  }
+}
+
+/* ---- type and page ---- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: var(--accent); color: var(--accent-ink); }
+main { max-width: 1000px; padding: 36px 20px 72px; }
+
+header { align-items: center; padding-bottom: 4px; }
+h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+h2 { font-size: 19px; font-weight: 650; letter-spacing: -0.01em; }
+.sub { font-size: 15px; max-width: 72ch; margin: 6px 0 24px; }
+
+/* the engine line: a quiet pill, top right */
+.engine {
+  font-size: 12.5px; line-height: 1.4; color: var(--ink-soft);
+  background: var(--panel); border-color: var(--line); padding: 4px 12px;
+}
+
+/* ---- panels ---- */
+.panel {
+  border-radius: var(--radius); border-color: var(--line);
+  padding: 24px 26px; margin-bottom: 22px; box-shadow: var(--shadow);
+}
+
+/* ---- segmented switches (the doors, and the ways of matching) ---- */
+.switch {
+  background: var(--field); border-color: var(--line); border-radius: 11px;
+  padding: 3px; gap: 2px;
+}
+.switch button {
+  border-radius: 8px; color: var(--muted); font-weight: 500; padding: 7px 14px;
+  transition: background-color .15s ease, color .15s ease;
+}
+.switch button:hover { color: var(--ink); }
+.switch button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.doors .switch button { font-size: 16px; padding: 9px 22px; }
+.results-head .switch { margin-bottom: 0; }
+
+/* ---- forms ---- */
+label { font-size: 14px; font-weight: 600; color: var(--ink); margin: 18px 0 7px; letter-spacing: .005em; }
+.hint { font-size: 13px; }
+select, textarea, input[type=text] {
+  background: var(--field); border-color: var(--line-strong); border-radius: 10px;
+  padding: 11px 13px; line-height: 1.5;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+select:hover, textarea:hover, input[type=text]:hover { border-color: var(--muted); }
+select:focus, textarea:focus, input[type=text]:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+select:disabled { opacity: .6; cursor: not-allowed; }
+textarea { min-height: 76px; }
+.or { font-size: 13px; margin: 10px 0 0; text-align: left; }
+
+.go {
+  border-radius: 10px; padding: 11px 30px; font-weight: 600; letter-spacing: .01em; margin-top: 20px;
+  transition: filter .15s ease, transform .05s ease;
+}
+.go:hover:not(:disabled) { filter: brightness(1.08); }
+.go:active:not(:disabled) { transform: translateY(1px); }
+
+button:focus-visible, .linky:focus-visible, input[type=checkbox]:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+.toggle { margin: 2px 0 6px; }
+.toggle label { font-size: 15px; font-weight: 500; }
+.pool { font-size: 13px; }
+
+.error { color: var(--danger); font-size: 14px; }
+
+/* ---- the results header ---- */
+.results-head { margin: 0 0 6px; }
+.results-head h2 { margin: 0; }
+.view { font-size: 14px; color: var(--muted); margin: 8px 0 0; }
+.view b { color: var(--ink); font-weight: 600; }
+.linky { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.linky:hover { text-decoration-thickness: 2px; }
+.note { background: var(--soft); border-left: 3px solid var(--accent); border-radius: 8px; font-size: 14px; color: var(--ink-soft); }
+
+/* ---- the Sponsors / Talks / Speakers tabs ---- */
+.tabs { gap: 6px; margin: 16px 0 4px; border-bottom-color: var(--line); }
+.tabs button { padding: 9px 14px; font-size: 15px; font-weight: 500; transition: color .15s ease; }
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* ---- result cards ---- */
+ol.results { margin-top: 10px; }
+ol.results li {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; margin-top: 10px;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+ol.results li:hover { border-color: var(--line-strong); background: var(--card-hover); }
+ol.results li.empty { background: transparent; border-style: dashed; color: var(--muted); text-align: center; }
+
+.r-head { gap: 10px; align-items: center; }
+.r-pos {
+  min-width: 28px; height: 24px; padding: 0 6px; border-radius: 7px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: 13px; font-weight: 600; line-height: 24px; text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.r-name { font-size: 17px; font-weight: 650; letter-spacing: -0.005em; color: var(--ink); }
+
+.tag {
+  font-size: 12px; line-height: 20px; color: var(--muted);
+  background: var(--field); border-color: var(--line); padding: 0 9px;
+}
+/* the Start-Up tag: warm, small, unmistakable */
+.tag.gem {
+  color: var(--gem); background: var(--gem-bg); border-color: transparent;
+  font-weight: 650; letter-spacing: .02em;
+}
+
+/* "Found because": the passage that matched, readable but quieter than the name */
+.why {
+  margin: 10px 0 0 38px; padding-left: 12px; border-left: 2px solid var(--line-strong);
+  font-size: 14.5px; line-height: 1.6; color: var(--ink-soft);
+}
+.why b {
+  font-size: 11px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--muted); margin-right: 4px;
+}
+.via { margin: 8px 0 0 52px; font-size: 12.5px; }
+
+/* ---- Compare all ---- */
+.compare { gap: 12px; margin-top: 16px; }
+.compare section { background: var(--card); border-color: var(--line); border-radius: 12px; padding: 12px 14px; }
+.compare h3 {
+  font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 10px;
+}
+.compare ol { font-size: 13.5px; line-height: 1.45; }
+.compare li { padding: 4px 0; }
+.compare li::marker { color: var(--muted); }
+.compare .in {
+  font-size: 10.5px; font-weight: 600; color: var(--accent);
+  background: var(--accent-soft); border-radius: 999px; padding: 0 6px;
+}
+.compare .tag { font-size: 10.5px; line-height: 17px; }
+
+/* ---- footer ---- */
+footer { font-size: 12.5px; line-height: 1.6; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 32px; }
+
+/* ---- narrow windows ---- */
+@media (max-width: 640px) {
+  main { padding: 24px 16px 56px; }
+  .panel { padding: 18px 16px; }
+  .why { margin-left: 0; }
+  .via { margin-left: 14px; }
+  h1 { font-size: 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none; }
+}
