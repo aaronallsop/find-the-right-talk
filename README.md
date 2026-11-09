@@ -18,7 +18,7 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on a laptop (measured
-   9 November). It reads the five spreadsheets, cuts the text into 2,307 passages, turns each into
+   9 November). It reads the five spreadsheets, cuts the text into 2,209 passages, turns each into
    384 numbers with the meaning model, and fills two new catalogues, `ftrt-programme` and
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
 5. Start the page: [command], and open [address].

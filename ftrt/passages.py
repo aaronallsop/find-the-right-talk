@@ -20,6 +20,8 @@ def _sentence(label: str, value: str) -> str:
     value = (value or "").strip()
     if not value:
         return ""
+    # a list cell ("Platform teams; Security teams" or "Product A.; Product B.") reads as sentences
+    value = re.sub(r"\.?;\s+", ". ", value)
     if value[-1] not in ".!?":
         value += "."
     return f"{label}: {value}" if label else value
@@ -36,8 +38,10 @@ def cut(text: str, target: int = config.PASSAGE_WORDS, min_tail: int = config.MI
             if current:
                 passages.append(" ".join(current)); current, count = [], 0
             ws = s.split()
-            for i in range(0, len(ws), target):
-                passages.append(" ".join(ws[i:i + target]))
+            pieces = [" ".join(ws[i:i + target]) for i in range(0, len(ws), target)]
+            if len(pieces) > 1 and words_of(pieces[-1]) < min_tail:   # fold a short tail into the piece before it
+                pieces[-2:] = [" ".join(pieces[-2:])]
+            passages.extend(pieces)
             continue
         if count + n > target and current:
             passages.append(" ".join(current)); current, count = [], 0

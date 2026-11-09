@@ -63,7 +63,8 @@ def documents(records: list[dict], vectors) -> list[dict]:
 
 
 def recreate(client, index: str):
-    assert index.startswith(config.OWN_PREFIX), f"refusing to touch {index}: not one of ours"
+    if not index.startswith(config.OWN_PREFIX):
+        raise SystemExit(f"refusing to touch {index}: not one of ours")
     if client.indices.exists(index=index):
         client.indices.delete(index=index)
     client.indices.create(index=index, **mapping())

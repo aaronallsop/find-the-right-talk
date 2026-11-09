@@ -55,7 +55,7 @@ it is built.
 ## Built on the day, one line per piece
 
 - **Loading (B1, 11:03):** One command reads the five spreadsheets, cuts every talk, speaker,
-  sponsor and outlet into passages of about 120 words (2,307 in all), turns each passage into 384
+  sponsor and outlet into passages of about 120 words (2,209 in all), turns each passage into 384
   numbers with the small meaning model on the laptop, and loads them into two brand-new catalogues
   in about 12 seconds; a search of the loaded text for email addresses finds none.
 - **Three ways to search (B2, 11:07):** From Terminal, one command searches the programme by words
@@ -63,6 +63,6 @@ it is built.
   wording; it always returns something), or blended (each list votes, a result gets more points the
   higher it ranks in each, and the totals decide), and shows the passage that made each result match;
   a compare mode runs all three at once so you can watch them disagree. Measured 9 November: "SLSA
-  Level 3" is won by words (ActiveState, which says it); the Black Friday sentence gets nothing from
-  words and Fastly from meaning; the GPU-isolation sentence gets Edera from words and vCluster from
+  Level 3" is won by words (Docker and ActiveState, the two sponsors whose own text says it); the Black Friday sentence gets nothing from
+  words and cloud-cost and autoscaling companies from meaning (North first, the Start-Up Kedify fifth); the GPU-isolation sentence gets Edera from words and vCluster from
   meaning, with the next four close behind.
