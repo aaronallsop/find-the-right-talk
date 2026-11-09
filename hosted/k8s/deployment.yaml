@@ -1,0 +1,48 @@
+# The lean hosted page on a Kubernetes cluster. Replace IMAGE with the image's address, then:
+#     kubectl apply -f hosted/k8s/deployment.yaml
+# It expects a secret called ftrt-elastic holding ES_CLOUD_URL and ES_CLOUD_API_KEY; Aaron creates it himself:
+#     kubectl create secret generic ftrt-elastic --from-env-file="$HOME/elastic-cloud/.env"
+# (that reads his own settings file on his own machine; the key is never typed, printed or put in any file here)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: find-the-right-talk
+  labels: {app: find-the-right-talk}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: find-the-right-talk}
+  template:
+    metadata:
+      labels: {app: find-the-right-talk}
+    spec:
+      containers:
+        - name: page
+          image: IMAGE
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ES_CLOUD_URL
+              valueFrom: {secretKeyRef: {name: ftrt-elastic, key: ES_CLOUD_URL}}
+            - name: ES_CLOUD_API_KEY
+              valueFrom: {secretKeyRef: {name: ftrt-elastic, key: ES_CLOUD_API_KEY}}
+          readinessProbe:
+            httpGet: {path: /healthz, port: 8080}
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /healthz, port: 8080}
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: find-the-right-talk
+spec:
+  selector: {app: find-the-right-talk}
+  ports:
+    - port: 80
+      targetPort: 8080

@@ -1,0 +1,6 @@
+*
+!ftrt
+!data
+!hosted
+**/__pycache__
+**/*.pyc

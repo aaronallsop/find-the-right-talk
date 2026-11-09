@@ -62,6 +62,7 @@ def run_match():
     body = request.get_json(silent=True) or {}
     outlet_id, beat, assignment = _text(body, "outlet_id"), _text(body, "beat"), _text(body, "assignment")
     startups = bool(body.get("startups"))   # the start-ups toggle narrows the sponsors; talks and speakers are unaffected
+    search.begin_request()
     with tracing.span("press door", outlet=outlet_id or "typed", startups=startups) as root:
         return _run_match(root, outlet_id, beat, assignment, startups)
 
@@ -81,11 +82,12 @@ def _run_match(root, outlet_id, beat, assignment, startups):
     with ThreadPoolExecutor(max_workers=len(match.MATCH_KINDS)) as pool:   # sponsors, talks, speakers at once
         found = dict(zip(match.MATCH_KINDS, pool.map(tracing.carry(
             lambda kind: match.match(client, parts, config.PAGE_RESULTS, kind, startups and kind == "sponsor")), match.MATCH_KINDS)))
-    root.set_attribute("left_out", ", ".join(search.left_out()) or "none")
+    sat_out = search.left_out()   # read once: the trace and the page say the same
+    root.set_attribute("left_out", ", ".join(sat_out) or "none")
     results = {kind: {way: _plain(rs) for way, rs in found[kind].items()} for kind in match.MATCH_KINDS}
     on = ("what it always covers and what it came to find (counting double)" if len(parts) == 2
           else "what it always covers")
-    return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups, left_out=search.left_out(),
+    return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups, left_out=sat_out,
                    kinds=[["sponsor", "Start-up sponsors" if startups else "Sponsors"], ["talk", "Talks"], ["speaker", "Speakers"]])
 
 
@@ -94,6 +96,7 @@ def run_flip():
     """The vendor door: a picked sponsor, or the two typed boxes, finds the outlets that fit it and the nearest talks."""
     body = request.get_json(silent=True) or {}
     sponsor_id, does, showing = _text(body, "sponsor_id"), _text(body, "does"), _text(body, "showing")
+    search.begin_request()
     with tracing.span("vendor door", sponsor=sponsor_id or "typed"):
         return _run_flip(sponsor_id, does, showing)
 
@@ -134,6 +137,7 @@ def run_search():
         return jsonify(error="Type something to search for."), 400
     if (mode not in search.MODES and mode != "compare") or kind not in (None, "talk", "event", "speaker", "sponsor"):
         return jsonify(error="Unknown search."), 400
+    search.begin_request()
     with tracing.span("plain search", mode=mode, kind=kind or "all", startups=startups):
         return _run_search(q, mode, kind, startups)
 

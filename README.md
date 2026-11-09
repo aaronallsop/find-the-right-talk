@@ -86,6 +86,21 @@ Status at 13:45 on 9 November, one line each:
   same the other way round (the vendor door).
 - `agent.py`: sets up the Agent Builder agent and its three tools in Elastic Cloud from a script.
 
+## The other sponsor tools
+
+Status at 13:55 on 9 November:
+
+- **Gitar (Sonar):** done. It reviewed all of today's code; see "Who did what, and how AI was used".
+- **Dash0:** the tracing is built. When a Dash0 settings file (`~/dash0/.env`, with
+  `DASH0_AUTH_TOKEN` and `DASH0_ENDPOINT`, kept outside the project and never committed) is filled
+  in, the page sends a trace of each search to Dash0 using OpenTelemetry. Without the file, tracing
+  is off and nothing else changes. What goes to Dash0: the names of the steps (the match, each way
+  of searching, the re-rank, fetching passages), how long each took, how many results each found,
+  which of Elastic's models were left out, and the id of a picked outlet or sponsor. What never
+  goes: the text anyone typed, or the search question.
+- **Radar:** in progress (a cluster has started, and it deploys from a public repository made from Radar's starter template), with a hard stop at 15:15. If a hosted page is not live by then, this line
+  will say so.
+
 ## Where it falls short
 
 Measured on 9 November against two test outlets whose answer keys were written beforehand
@@ -173,7 +188,8 @@ test passed, and the fixes it called for have since been made to this README):
    with the password in its `.env` file; this project reads the password from there and never stores it).
    Without the cloud file, every command uses that local engine; with it, `FTRT_ENGINE=local` in
    front of a command uses the local engine instead.
-3. Install Python 3.11, then this project's pieces:
+3. Install Python 3.11, then this project's pieces (this also installs the OpenTelemetry packages
+   used for the optional Dash0 tracing):
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 4. Load the data: `.venv/bin/python -m ftrt.load`. It takes 66 seconds to Elastic Cloud (measured 13:35; Elastic's ELSER and Jina's models
    read every passage as it loads), and 12 seconds on the laptop engine

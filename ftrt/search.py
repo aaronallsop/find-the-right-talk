@@ -15,7 +15,7 @@ on the laptop engine it is skipped. Blended merges the ranked lists (two on the 
 cloud), one vote each, by reciprocal rank fusion, in our own code.
 """
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
-import argparse, sys, textwrap, threading, time
+import argparse, contextvars, sys, textwrap, threading, time
 from concurrent.futures import ThreadPoolExecutor
 from elasticsearch import ApiError, TransportError
 from . import config, engine, tracing
@@ -139,6 +139,7 @@ def jina_question(client, query: str) -> list[float] | None:
     """The question's Jina numbers from Elastic's hosted service, or None if it is resting or does not answer in time."""
     global _jina_resting_until
     if time.time() < _jina_resting_until:
+        _left_out(config.JINA_NAME)
         return None
     try:
         r = client.options(request_timeout=config.JINA_SEARCH_LIMIT, max_retries=0).inference.text_embedding(
@@ -146,6 +147,7 @@ def jina_question(client, query: str) -> list[float] | None:
         return r.body["text_embedding"][0]["embedding"]
     except (ApiError, TransportError) as e:
         _jina_resting_until = time.time() + config.JINA_REST
+        _left_out(config.JINA_NAME)
         print(f"Jina did not answer within {config.JINA_SEARCH_LIMIT} s ({type(e).__name__}); left out, and not asked "
               f"again for {config.JINA_REST} s.", file=sys.stderr)
         return None
@@ -169,6 +171,7 @@ def search_elser(client, query: str, n: int = 10, index: str = config.PROGRAMME_
     (the laptop engine) or ELSER does not answer (it may be waking up), so callers skip this voice rather than fail."""
     global _elser_resting_until
     if time.time() < _elser_resting_until:
+        _left_out(config.ELSER_NAME)
         return None
     try:
         if not has_elser(client, index):
@@ -178,6 +181,7 @@ def search_elser(client, query: str, n: int = 10, index: str = config.PROGRAMME_
             index=index, query=body, size=_fetch_size(n), source_includes=_fields(passages))
     except (ApiError, TransportError) as e:
         _elser_resting_until = time.time() + config.ELSER_REST
+        _left_out(config.ELSER_NAME)
         print(f"ELSER did not answer within {config.ELSER_SEARCH_LIMIT} s ({type(e).__name__}); left out, and not "
               f"asked again for {config.ELSER_REST} s.", file=sys.stderr)
         return None
@@ -256,12 +260,23 @@ def rerank_on() -> bool:
     return bool(config.RERANK_ENDPOINT) and engine.where() == "cloud"
 
 
+_sat_out = contextvars.ContextVar("sat_out", default=None)   # this request's models that were left out
+
+
+def begin_request() -> None:
+    """Start counting, for this request only, which of Elastic's models sit it out."""
+    _sat_out.set(set())
+
+
+def _left_out(name: str) -> None:
+    got = _sat_out.get()
+    if got is not None:
+        got.add(name)
+
+
 def left_out() -> list[str]:
-    """Which of Elastic's models are sitting out right now because they did not answer in time."""
-    now = time.time()
-    return ([config.ELSER_NAME] if now < _elser_resting_until else []) + \
-           ([config.JINA_NAME] if now < _jina_resting_until else []) + \
-           ([config.RERANK_NAME] if rerank_on() and now < _rerank_resting_until else [])
+    """Which of Elastic's models sat this request out (resting, or slow to answer), as recorded while it ran."""
+    return sorted(_sat_out.get() or ())
 
 
 def wake_rerank(client) -> float | None:
@@ -278,7 +293,10 @@ def rerank(client, question: str, results: list[dict], top: int = config.RERANK_
     """Elastic's re-ranker reads the question with each of the top results' passages and re-orders them;
     the rest keep their order. None on the laptop engine, or if it does not answer, so callers skip it."""
     global _rerank_resting_until
-    if not rerank_on() or not results or time.time() < _rerank_resting_until:
+    if not rerank_on() or not results:
+        return None
+    if time.time() < _rerank_resting_until:
+        _left_out(config.RERANK_NAME)
         return None
     head = results[:top]
     try:
@@ -287,6 +305,7 @@ def rerank(client, question: str, results: list[dict], top: int = config.RERANK_
             timeout=f"{config.RERANK_SEARCH_LIMIT}s")
     except (ApiError, TransportError) as e:
         _rerank_resting_until = time.time() + config.RERANK_REST
+        _left_out(config.RERANK_NAME)
         print(f"The re-ranker did not answer within {config.RERANK_SEARCH_LIMIT} s ({type(e).__name__}); left out, "
               f"and not asked again for {config.RERANK_REST} s.", file=sys.stderr)
         return None

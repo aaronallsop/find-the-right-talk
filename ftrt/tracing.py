@@ -12,10 +12,11 @@ What a trace holds: the name of each step (the press door's match, each way of s
 re-ranker, fetching the passages), how long each took, how many results it found, and which of Elastic's models
 were left out; for a picked outlet or sponsor, its id. Never the text anyone typed, and never the search question.
 """
-import contextlib, os
+import contextlib, contextvars, os
 from pathlib import Path
 from dotenv import dotenv_values
-from opentelemetry import context as otel_context, trace
+from opentelemetry import trace
+from opentelemetry.trace import StatusCode
 
 SETTINGS_FILE = Path(os.environ.get("FTRT_DASH0_ENV") or Path.home() / "dash0" / ".env").expanduser()
 SERVICE_NAME = "find-the-right-talk"
@@ -46,19 +47,21 @@ def setup() -> bool:
 @contextlib.contextmanager
 def span(name: str, **attributes):
     """One step of a search, with its own timing. Attributes must never hold typed text or a question."""
-    with tracer.start_as_current_span(name, attributes={k: v for k, v in attributes.items() if v is not None}) as s:
-        yield s
+    with tracer.start_as_current_span(name, attributes={k: v for k, v in attributes.items() if v is not None},
+                                      record_exception=False, set_status_on_exception=False) as s:
+        try:
+            yield s
+        except BaseException as e:   # only the kind of error: its message can name the engine's address
+            s.set_status(StatusCode.ERROR, type(e).__name__)
+            raise
 
 
 def carry(fn):
-    """The same function, run inside the current trace even on another thread (the searches run side by side)."""
-    parent = otel_context.get_current()
+    """The same function, run inside the current request's context even on another thread (the searches run side by
+    side): its trace, and its list of the models that sat this request out."""
+    parent = contextvars.copy_context()
     def run(*args, **kwargs):
-        token = otel_context.attach(parent)
-        try:
-            return fn(*args, **kwargs)
-        finally:
-            otel_context.detach(token)
+        return parent.copy().run(fn, *args, **kwargs)   # a fresh copy each time: one context cannot run twice at once
     return run
 
 

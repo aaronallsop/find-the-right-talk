@@ -102,14 +102,12 @@ the demo searches before and after):**
 
 What is going on, and only what you still need to do, in time order. Items A to C were added at 13:46 for the grand-prize plan; the rest are in time order.
 
-A. Create the Dash0 account. Titan will say which file and line names for the token; you put the
-   token in a settings file yourself.
-B. Radar (you get a free Kubernetes cluster, deleted on 13 November): (1) join on Radar's join page
-   with the team code Saturn gave you (it is on the private status page, not here, because this board
-   is public), a team name (lower case, digits, dashes, at most 20 characters) and your email; (2) sign
-   in at https://app.radarhq.io and accept; (3) get the starter repository's link from the Radar table
-   or the kickoff page; tell Saturn the team name and the link. Skip the `claude mcp add` step. Later:
-   enter your Elastic key into the cluster as a secret yourself.
+A. Create ~/dash0/.env yourself (never on screen) with DASH0_AUTH_TOKEN=<token from Dash0 settings> and
+   DASH0_ENDPOINT=<Dash0's OTLP over HTTP endpoint>; then restart the page
+   (`.venv/bin/python -m ftrt.page`); it should say "Traces of each search go to Dash0"; then tell Saturn.
+B. Radar: you joined (team "caiv") and your cluster is starting. Make the repository from Radar's
+   starter template (Use this template, Public, for example caiv-radar) and send Saturn its address.
+   Later: enter your Elastic key into the cluster as a secret yourself.
 C. The Breach Chronicle: the split already failed at 13:31 and it is out of the demo. Is there another
    fix you meant? (If not, nothing to do.)
 
@@ -220,6 +218,8 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 13:48, Aaron: go/no-go 1 is GO (everything due by 15:15 is done and checked). Radar hosted page: GO, with a hard stop at 15:15 (drop it if it is not live; the README then says so). Correction: Radar does give each team a free Kubernetes cluster, deleted on 13 November. Dione builds the lean hosted page in a new hosted/ folder; Titan saves it.
 - 13:49, Aaron: keep Jina. Elastic's "Jina models for embeddings" ask is done.
 - 13:46, Aaron (his note, 13:55): go for the grand prize, which needs all four sponsor tools (Elastic, Gitar, Dash0, Radar). Dash0: Titan adds tracing to the page (45-minute cap); Aaron creates the Dash0 account and puts the token in a settings file himself. Radar: a lean hosted version of the page, built by Dione in its own folder, committed by Titan, and deployed to Radar's cluster with Aaron's Elastic key entered by Aaron himself as a cluster secret; only after Aaron confirms with Radar that the cluster outlives judging and a deploy is quick (60-minute cap). Gitar continues on the new code. The freeze at 15:45 holds. The 13:40 hosting decision (hosting is off) is reversed by this.
+- 13:50 Radar: Aaron joined, team "caiv"; the cluster is starting. It deploys from a public repository made from Radar's starter template (Argo CD).
+- 13:49 Dash0 tracing is in the code, saved in be5b328 (Titan, 45-minute cap). It sends traces of each search only when Aaron's Dash0 settings file is filled in; without it, tracing is off. The text anyone types and the search question are never sent. Waiting on item A (the Dash0 account).
 - 13:44 Jina embeddings are in, saved and pushed (809ca91): one more voice in the blend and one more column in Compare all (cloud only); all 2,250 passages go to Elastic's hosted service once at load. Load to Elastic Cloud now takes 66 seconds (Titan, 13:35), not 470. The page's engine line now names ELSER, Jina embeddings and a re-ranker.
 - 13:36, Aaron created an OpenAI model endpoint in the cloud Kibana for the agent ("openai-chat_completion-k563qy9gg9", gpt-4.1); Dione confirmed it exists. At 13:38 Cassini's test question still went to the old trial model and was refused: the agent uses the project's default model, and the switch had not taken effect. Aaron is checking the setting. No Agent Builder trial worries if OpenAI works.
 - 13:37, Aaron: drop the Breach Chronicle from the demo; three minutes is too short for two outlets. The video script and the README's walk-through use the Hello World Gazette only. The Chronicle stays in the data and in Cassini's evidence as an honest miss, with one line in the README's limits.
