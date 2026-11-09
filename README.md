@@ -54,8 +54,9 @@ embeddings, and an Agent Builder agent with custom tools. Workflows is not used.
   to OpenAI, billed to the author, so it is capped at 30 requests a minute.
 - **Dash0** traces each search on the laptop page with OpenTelemetry: step names and timings only,
   never the text anyone typed.
-- **Gitar**, an AI code reviewer, reviewed the code. Its one finding was fixed; nothing it wrote
-  was merged.
+- **Gitar**, an AI code reviewer, reviewed the final code and says "Approved". Its one finding was
+  fixed; nothing it wrote was merged. Its standing note is medium risk: the hosted page makes paid
+  inference calls, so it is capped at 20 requests a minute per address and 30 overall.
 
 ## Set it up
 

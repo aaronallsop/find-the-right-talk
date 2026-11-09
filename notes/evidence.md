@@ -6,8 +6,64 @@ the project's Elastic Cloud serverless engine unless a line says otherwise. A se
 repeated runs gave the identical list, scores included. Each result names the version of the code (the commit
 hash from the repository history) it was measured on; a result is a statement about that version only.
 
-**Draft stamp: first written 12:44 on 9 November, section 3a added 13:48, section 5.0 added 14:07. To be re-run and re-stamped after the 15:45 freeze;
-until then each line stands for the version named on it.**
+**Stamps.** Sections 1 to 7 were written and extended during the day (first draft 12:44; section 3a 13:48; section 5.0 14:07) and each line names the
+version and the time it was measured on. **Section 0 is the final run on the frozen version (16:05 to 16:10).** Where a later section and section 0 differ,
+section 0 is the current state. The setup steps were not re-tested from a fresh copy after 11:53 (section 1).
+
+## 0. Final run on the frozen version (9 November, 16:05 to 16:10 by the laptop's clock)
+
+**Version:** the freeze commit c1ae3ad, which changed only documents and the ignore list. The last change to the code was 329fcd7 (the fit check on the
+Talks and Speakers tabs) and the last change to the data was e912a7b (American spelling), reloaded into the cloud project 16:00 to 16:03. Measured on the
+laptop's page (http://127.0.0.1:8765) and on the hosted copy at its public address, both in the real browser, both on Elastic Cloud serverless with
+Elastic's ELSER, Jina embeddings and a re-ranker (the hosted copy has no on-laptop meaning model, so its Meaning way is absent and its lists differ a little).
+
+**The three demo searches** (sponsors, all ways, three runs each at 16:05:09 to 16:06:06: names and order identical in all three runs of each search):
+
+| Search | Blended top three | Words | Re-ranked |
+|---|---|---|---|
+| "SLSA Level 3" | ActiveState, OpenSSF, Docker | ActiveState, Docker | ActiveState, Docker, Emphere (Start-Up) |
+| "scale up for a traffic spike and back down afterwards" | Kedify (Start-Up), ScaleOps, Ascendra Networks | nothing | Kedify, ScaleOps, Zesty |
+| "keeping different tenants' GPU workloads isolated from each other on shared hardware" | Edera, vCluster, Cast AI | Edera | vCluster, Edera |
+
+The top result in blended is the same as at every earlier check of these searches.
+
+**The Hello World Gazette with a typed second line** ("Start-ups building AI agents that help developers write and test code"), picked in the page and Go.
+- **Laptop page, sponsors, blended top ten:** mirrord by MetalBear (Start-Up), JetBrains, Momentic, Docker, Vijil (Start-Up), Testkube (Start-Up), Coder,
+  Endor Labs, Paper Compute Company (Start-Up), Depot: **identical, in order, to the list read at 15:59 before the data reload.** Results on screen in 2.78 s.
+  Start-ups only: mirrord, Vijil, Paper Compute Company, Testkube, Maze, Stacklok, pgEdge, PatapscoAI, CodeVisionary, Radar (all Start-Ups in the data); the
+  15:59 list had the same ten with PatapscoAI, CodeVisionary and pgEdge in places 7 to 9 instead of pgEdge, PatapscoAI, CodeVisionary. Switching start-ups
+  only off again restored the first list exactly; the pool line went 226, 32, 226.
+- **Hosted copy, sponsors, blended top ten:** mirrord (Start-Up), Momentic, JetBrains, Docker, Vijil, Coder, Endor Labs, Testkube, Stacklet, ActiveState; start-ups
+  only: mirrord, Vijil, Testkube, Paper Compute Company, Maze, Stacklok, CodeVisionary, Radar, pgEdge, OllyGarden. The same three sponsors as the laptop's top
+  three (Momentic and JetBrains swapped); results in 1.56 s. Start-ups off restored the first list exactly.
+
+**The fit check** (an AI-written box above each tab's top three, explaining why they suit the outlet from their own passages), checked sentence by sentence
+against "The passage it read":
+
+| Page and tab | Box appears | The box's three names | Checkable claims | Not supported |
+|---|---|---|---|---|
+| Laptop, Sponsors | 4.71 s after Go (results at 2.78 s) | the tab's top three, in order: mirrord, JetBrains, Momentic | 7 | 0 |
+| Laptop, Talks | 1.63 s after opening the tab | the tab's top three: "From Platform Catalog to Conversational Agent", "From Laptop to Cluster", "How Podium Ships 30% of PRs" | 8 | 0 |
+| Laptop, Speakers | 1.43 s | Aman Singh, Casey West, Mofi Rahman (the tab's top three) | 5 | 0 |
+| Laptop, Start-up sponsors (switch on) | 3.62 s after the click | mirrord, Vijil, Paper Compute Company (all Start-Ups) | 11 | 0 clearly wrong; 2 loosely worded ("analyzes" coding agent sessions; "improving agent performance") |
+| Hosted, Sponsors | 4.01 s after Go | mirrord, Momentic, JetBrains (the tab's top three) | 8 | 0 |
+| Hosted, Talks | 1.94 s | the tab's top three (the same three talks) | 6 | 0 |
+| Hosted, Speakers | 1.34 s | Aman Singh, Casey West, Mofi Rahman | 5 | 0 |
+| Hosted, Start-up sponsors (switch on) | 2.96 s after the click | mirrord, Vijil, Testkube (all Start-Ups) | 8 | 0 |
+
+Each box carries the label "Fit check: AI-written from the passages below. Check before you rely on it." and a footer naming the model (OpenAI's gpt-4.1,
+reached through Elastic's inference service). A "claim" is one checkable fact about the sponsor, talk or speaker (my split); each sentence also has a
+hedged "may interest you" or "directly linking to your interest" remark about the outlet, which is a judgment and not counted. The words vary from run
+to run; the claims did not go beyond the passages.
+
+**The vendor door, Kedify (laptop, three runs):** 2.45 s, 1.78 s, 2.05 s; 14 outlets and a Talks tab, identical each time, no error; the fit-check box is
+not shown there. Outlets in order: Greenstack, TFIR, LearnKube, The Regulated Cloud, Techstrong, SDxCentral, Women in Infrastructure, OpsMatters, The New
+Stack, Futurum Group, Open Source Sustainability Weekly, The Breach Chronicle, Hello World Gazette, TechRevolt News. **Hosted copy** (three runs): 1.40 s,
+1.10 s, 1.21 s; 14 outlets, the first five Greenstack, TFIR, LearnKube, Techstrong, The Regulated Cloud. The order of Kedify's outlets moved between versions of
+the code and data during the day; across the five checks Greenstack was first every time, and TFIR and LearnKube were in the top five every time.
+
+**Not re-run on the frozen version:** the plain search's Compare all, the 14-outlet sweep and the Agent Builder agent (section 7), which keep the version and
+time on their own lines.
 
 ## 1. The data, loaded from a fresh copy of the public repository
 

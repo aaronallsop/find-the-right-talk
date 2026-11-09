@@ -1440,3 +1440,14 @@ Rafay Systems, Lablup (the same as at 13:46), no fit request, box hidden; Compar
 typed sponsor name in a box, not a drop-down.)
 **One change to flag:** Kedify's outlets now read Greenstack, TFIR, LearnKube, The Regulated Cloud, SDxCentral (at 14:06: Greenstack, Open Source Sustainability Weekly, TFIR,
 LearnKube, The New Stack; at 12:18: Greenstack, LearnKube, TFIR, Women in Infrastructure, The Regulated Cloud): the order moves with each version.
+
+---
+
+# Final run on the frozen version (freeze commit c1ae3ad; code last changed 329fcd7, data last changed e912a7b), 16:05 to 16:10 (machine clock)
+
+The full results are in `notes/evidence.md` section 0. Summary: three demo searches identical across 3 runs each; the Gazette with the typed line gives the same
+blended sponsor top ten as the 15:59 list (and the start-ups-only list the same ten with places 7 to 9 re-ordered); the fit check boxes (laptop Sponsors, Talks,
+Speakers, and start-ups on; and the hosted copy's four) each name the tab's top three, carry the AI-written label, and have no unsupported claim (a
+couple of loosely worded ones on the laptop's start-ups-on box); Kedify's vendor door answers in 1.1 to 2.5 s on both pages with 14 outlets and no error;
+start-ups on and off restore the first list exactly on both pages. The hosted copy opened this time in the real browser (it was refused at 14:14), so it was
+checked directly. The fit-check box is not shown on the vendor door.

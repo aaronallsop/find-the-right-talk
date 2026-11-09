@@ -169,8 +169,9 @@ Aaron's words, kept as written. Square brackets are what is on screen, not words
    it can point to."
 8. [Radar page in the browser, then the Dash0 trace. 2:30]
    "The hosted version runs on Radar's Kubernetes cluster, searching with Elastic's models alone.
-   Every press of Go is traced in Dash0, so you can see the searches running in parallel. And Sonar's
-   Gitar reviewed every line of today's code."
+   Every press of Go is traced in Dash0, so you can see the searches running in parallel. And Gitar
+   reviewed every line of today's code." (CHANGED: "Sonar's Gitar" is now "Gitar"; Titan knows of no link
+   to Sonar, gitar.ai is the reviewer, so "Gitar" is the safe wording. Aaron to approve.)
 9. [GitHub: the commit history scrolling from the 11:00 commit. 2:45]
    "All of it written today. The first commit, at eleven, has no code in it; the history shows the
    rest. Where does it fail? Meaning finds the topic, not the stance, and my hardest test outlet, the
@@ -179,8 +180,8 @@ Aaron's words, kept as written. Square brackets are what is on screen, not words
 
 **Checks before recording (Neptune's, kept under the script):** the Gazette's top five and Kedify's outlet
 list are Cassini's afternoon measurements; if the final save changes either, read what is on screen.
-Beat 7 only if the agent clip exists; cut it otherwise. Beat 8's Sonar line needs the review pull
-request (PR 1) visible as closed, not deleted.
+Beat 7 only if the agent clip exists; cut it otherwise. Beat 8's Gitar line: the review pull
+request (aaronallsop/find-the-right-talk#1) is closed unmerged as of 16:10; show it as closed, not deleted.
 
 **Things to confirm before recording (Rhea's flags; the words are Aaron's, these are checks):**
 - **Beat 5, Jina finds Kedify:** the measured result is that meaning, and Elastic's ELSER alone, put
