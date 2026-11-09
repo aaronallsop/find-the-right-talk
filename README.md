@@ -39,7 +39,7 @@ spreadsheets in the same layout.
 - **Elasticsearch** runs the keyword search, the vector search and the filters in one place. This
   project's own code blends the ranked lists (reciprocal rank fusion).
 - **Elastic's ELSER model and Jina's embedding model**, both through Elastic, read every passage
-  and each get a vote in the blend. Jina and the re-ranker run on Elastic's hosted service.
+  and each get a vote in the blend.
 - **Elastic's hosted re-ranker** re-orders the blended top 20 in the "Re-ranked" view.
 - **An Elastic inference connector** reaches OpenAI's gpt-4.1 for the fit check and the agent.
 - **An Elastic Agent Builder agent** with three custom read-only tools answers questions over the
@@ -87,11 +87,9 @@ in `ftrt/config.py`. Without one the page works as before and the fit check box 
   question and the top 20 passages) go to Elastic's hosted inference service. The agent (its
   questions and the passages it reads) and the fit check (the outlet's two texts and the three
   sponsors' own text, nothing else) go to OpenAI through Elastic, billed to the project's owner.
-  Typed text is used once and never stored by this page.
+  Nothing anyone types is stored.
 
-Nothing anyone types is stored. What was measured on the day, including the misses (a test outlet,
-the Breach Chronicle, misses its must-finds, and the AI-written fit check and agent can be wrong, so
-each shows the passage it read), is in `notes/evidence.md`.
+What was measured on the day, including the misses, is in `notes/evidence.md`.
 
 ## Data and licence
 
