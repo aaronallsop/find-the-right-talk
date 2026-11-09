@@ -1,0 +1,7 @@
+# Kept out of the public repository. data/ IS committed (public data, credited in data/CREDITS.md).
+.venv/
+.env
+.claude/settings.local.json
+__pycache__/
+*.pyc
+.DS_Store

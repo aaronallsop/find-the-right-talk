@@ -1,0 +1,72 @@
+# find-the-right-talk
+
+**Which talks and sponsors at KubeCon should a given media outlet cover?** Pick an outlet and
+this ranks the programme — talks, speakers and sponsors — by how well each fits what that outlet
+covers, and says why each one matched. Search the programme three ways: by words, by meaning,
+or both.
+
+Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake City,
+9 November 2026, by Aaron Allsop.
+
+## Set it up
+
+[Exact steps, tested on the day from a fresh copy of this repository into an empty folder:]
+1. Install Docker Desktop and start it.
+2. Install Elasticsearch and Kibana locally with Elastic's start-local script: [command].
+3. Install Python 3.11, then this project's pieces: [command].
+4. Load the data: [one command]. Takes about [measured] seconds.
+5. Start the page: [command], and open [address].
+
+Needs no internet once set up, and no API key [unless the fit check is built].
+
+## How it works
+
+[Five boxes, from the cheat sheet: data → catalogue → three searches → the match → the page.]
+
+## What existed before the day, and what was built on it
+
+- **Before 9 November (allowed under rules 1 and 2):** the idea; notes and research (`notes/`);
+  the public programme, copied once with credit; the sponsor and outlet profiles in `data/`,
+  including six invented sample outlets, labelled, two of them test cases whose answer keys were
+  written in advance (`notes/answer-keys.md`). Aaron built the same search pattern for his own
+  video library the week before, as a separate private project; none of its code is in this
+  repository. This project was rebuilt from scratch on the day.
+- **On 9 November, after 11:00:** all of the code — loading, the three searches, the match,
+  the page. The commit history starts at the beginning of the hackathon. This first commit holds
+  no code: only the data, the notes, the rulebook (`CLAUDE.md`), the licence, the ignore list and
+  this README.
+
+## Who did what, and how AI was used
+
+- **Aaron Allsop:** the idea; the two test outlets, the Hello World Gazette and the Breach
+  Chronicle (their names, audiences, beats and KubeCon assignments); every product decision; and
+  the checks listed below.
+- **Claude Code (Anthropic):** wrote the code, under Aaron's direction, during the hackathon:
+  Claude Fable 5.1 for the first hour, then Claude Opus 5.5, with Claude Sonnet 5.5 keeping the
+  to-do board, checking results and minding the engine. Every commit it made says so.
+- **Before the day,** Claude also drafted the sponsor profiles (from each company's website, or
+  its conference listing where the site could not be read) and the real outlets' profiles (from
+  their own pages), and wrote up the sample outlets: four it invented, two from Aaron's briefs.
+  Each is labelled in the data.
+- **The meaning search** uses all-MiniLM-L6-v2, a small open-source model that runs on this
+  laptop and generates no text.
+- [If built: the fit check sends the top results to Claude through Anthropic's API.]
+- [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
+  wrote none of the code.]
+- [If used: Jules (Google) checked the README's claims against the code at the feature freeze;
+  it changed nothing.]
+
+## Checked by Aaron
+
+[One line per check Aaron did himself on the day, and what he saw.]
+
+## Tools and data
+
+- Elasticsearch and Kibana (Elastic), Docker, Python, Flask, sentence-transformers,
+  all-MiniLM-L6-v2.
+- **Data:** KubeCon + CloudNativeCon North America 2026 programme, The Linux Foundation,
+  CC BY 3.0, as of 4 November 2026. See `data/CREDITS.md`. Logos and photos are not included.
+
+## Licence
+
+MIT, for the code. The programme data remains under its own licence, CC BY 3.0.
