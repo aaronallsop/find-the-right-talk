@@ -38,5 +38,7 @@ then open http://127.0.0.1:8766. The settings file is mounted read-only, never c
 
 3. Point the team's web address at the `find-the-right-talk` service (port 80), in whatever way the starter uses.
 
-The page has no login, so it limits searches to 60 a minute per address and 600 a minute overall (every search is
-billed to the Elastic project). Change them with `HOSTED_RATE_PER_MINUTE` and `HOSTED_RATE_OVERALL_PER_MINUTE`.
+The page has no login, so it limits requests to 20 a minute per address and 30 a minute overall, as set in the
+deployment files (every search is billed to the Elastic project, and the fit check to OpenAI through it; a press-door Go
+makes two requests, the match and the fit check). Change them with `HOSTED_RATE_PER_MINUTE` and
+`HOSTED_RATE_OVERALL_PER_MINUTE`.

@@ -36,7 +36,7 @@ spec:
             - name: HOSTED_RATE_PER_MINUTE
               value: "20"
             - name: HOSTED_RATE_OVERALL_PER_MINUTE
-              value: "120"
+              value: "30"   # Aaron, 15:42: caps the OpenAI cost of the fit check (each Go makes two requests)
           resources:
             requests:
               cpu: 100m
