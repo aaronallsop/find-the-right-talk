@@ -48,7 +48,7 @@ def lists():
     sponsors = client.search(index=config.PROGRAMME_INDEX, size=500, source_includes=["record_id", "name", "tier"],
                              query={"bool": {"filter": [{"term": {"kind": "sponsor"}}, {"term": {"passage_no": 0}}]}})["hits"]["hits"]
     by_name = lambda hits: sorted((h["_source"] for h in hits), key=lambda s: s["name"].lower())
-    return jsonify(engine=engine.where(), outlets=by_name(outlets), sponsors=by_name(sponsors))
+    return jsonify(engine=engine.where(), elser=search.has_elser(client), outlets=by_name(outlets), sponsors=by_name(sponsors))
 
 
 @app.post("/api/match")
@@ -86,6 +86,8 @@ def run_search():
     if mode not in search.MODES or kind not in (None, "talk", "event", "speaker", "sponsor"):
         return jsonify(error="Unknown search."), 400
     results = search.MODES[mode](client, q, config.PAGE_RESULTS, filt=search.filters(kind))
+    if results is None:   # ELSER asked for where it is missing or not answering
+        return jsonify(error=search.ELSER_MISSING), 503
     return jsonify(results=_plain(results), mode=mode)
 
 
@@ -101,6 +103,12 @@ def main():
     global client
     client = engine.connect()
     search.embed("warm up")   # load the meaning model now, not on the first search
+    try:
+        woke = search.wake_elser(client)   # Elastic's ELSER sleeps when idle; wake it now, not on the first search
+        if woke is not None:
+            print(f"Elastic's ELSER model is awake ({woke:.0f}s)")
+    except Exception as e:   # the page still works without it: searches leave ELSER out until it answers
+        print(f"Elastic's ELSER model did not wake ({type(e).__name__}); searches will leave it out until it answers")
     print(f"Open http://{config.PAGE_HOST}:{config.PAGE_PORT}  (this laptop only; Ctrl-C stops it)")
     app.run(host=config.PAGE_HOST, port=config.PAGE_PORT, debug=False, use_reloader=False)
 

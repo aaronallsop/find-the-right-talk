@@ -98,6 +98,9 @@ Words are Aaron's, kept as written. Square brackets are what is on screen, not w
    all the code written today from an empty folder. Next time an interview cancels, I've got my
    next three stories before I've finished my coffee."
 
+**Before presenting:** Elastic's own model sleeps when idle and took 81 seconds to wake once. Run one
+search a minute or two before the demo so it is awake.
+
 **Two conditions.** Beat 4 uses whatever sentence Cassini's three runs agree on (so far: that
 sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said only once the fourth
 voice is built; until then say "searched three ways" and stop.
@@ -124,7 +127,7 @@ is the one that fails; "in a second" has not been timed; the flip (beat 3) is no
   words and vCluster then Edera from meaning.
 - **Elastic Cloud (11:24):** The same two catalogues now live in an Elastic Cloud serverless
   project; the code uses the cloud when its settings file is filled in and the laptop engine
-  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud takes about a minute
+  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud takes [time to be measured again]
   and the three demo searches give the same top results there as on the laptop.
 - **Cleaner loading and searching (11:39):** The loader now cuts every passage to fit what the
   meaning model actually reads, drops placeholder bios like "TODO", puts the day and time into
@@ -135,3 +138,4 @@ is the one that fails; "in a second" has not been timed; the flip (beat 3) is no
   telling words, and merges the rankings with the KubeCon part's votes counting double, so each
   talk, speaker or sponsor it lists comes with the passage that matched and the part that found it.
 - **The page (M3, 11:55):** The page has two doors: press pick an outlet, or type what they always cover and what they came to KubeCon to find, and get the talks, speakers and sponsors that fit, each with the passage that matched; vendors pick their company or describe it (the flip, which finds the outlets that fit them, comes next); and the plain three-way search sits underneath.
+- **Steadier results (11:57):** Results no longer reshuffle when you ask for more of them: every list is ranked to the same depth before they are blended.

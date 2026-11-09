@@ -25,8 +25,8 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
    front of a command uses the local engine instead.
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
-4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on the laptop engine and
-   about a minute to Elastic Cloud (measured 9 November; 68 seconds on a fresh copy). It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into passages (2,225 for the programme and 25 for the outlets), turns each into
+4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on the laptop engine
+   (measured 9 November); the time to Elastic Cloud is [to be measured again]. The first run downloads the small meaning model (about 90 MB) once; later runs work offline. It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into passages (2,225 for the programme and 25 for the outlets), turns each into
    384 numbers with the meaning model, and fills two new catalogues, `ftrt-programme` and
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
 5. Start the page: `.venv/bin/python -m ftrt.page`, and open http://127.0.0.1:5060 (on this laptop

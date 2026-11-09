@@ -474,3 +474,79 @@ Terminal, not a page bug.
 
 **Not checked (needs a browser):** how the page looks, that the door buttons, switches and tabs work, that
 the page's JavaScript handles every answer above, narrow or phone widths, and the Start-Up marking on screen.
+
+---
+
+# M2 scoring sheet, SECOND column set: after 321b069 ("the match no longer changes with how many results are shown"), before Elastic's model
+
+Scored 11:57 (Gazette runs 11:57:34, :36, :38; Breach runs 11:57:41, :42, :43; n=50 once at 11:57:39 and
+11:57:45), commit 321b069, Elastic Cloud serverless, sponsors only, `-n 10`, three runs: **identical names,
+ranks and scores in all three runs, for both outlets**. This is the baseline before Titan's reload for
+Elastic's model. The first column set above is kept unchanged. "Rank" is at `-n 10`; "(n50)" is the same
+company's rank at `-n 50`, shown only where it is outside the top 10.
+
+**The fix holds:** for both outlets and all three ways, the `-n 10` list is exactly the first ten of the
+`-n 50` list, names and scores (compared programmatically). The first set's "n=10 differs from n=50" fault
+is gone. The new n=10 ranks equal the old "n50" ranks, so the first set's "(n50)" numbers were the right
+ones.
+
+## Hello World Gazette — still FAIL on the answer key's test, by one place
+
+| Group | Company | Words | Meaning | Blended | In blended top 10 | First set (n=10) for comparison: W / M / B |
+|---|---|---|---|---|---|---|
+| Must find | Coder | – (n50: 29) | – (n50: 11) | 9 | **Y** | – / – / 6 |
+| Must find | Momentic | 8 | – (n50: 21) | 8 | **Y** | 7 / – / – |
+| Must find | Faros | – (n50: 38) | 7 | – (n50: 11) | **N** (11th) | – / 3 / – |
+| **Hidden gem** | **mirrord by MetalBear** | – (n50: 26) | 4 | 4 | **Y** | – / – / 5 |
+| Should also do well | Docker | 3 | – (n50: 14) | 3 | Y | 3 / – / 4 |
+| Should also do well | JetBrains | 1 | 3 | 1 | Y | 1 / 2 / 1 |
+| Standing beat only | KodeKloud | not in top 50 | – (n50: 27) | not in top 50 | N (good) | – / – / – |
+| Trap | Endor Labs | – (n50: 17) | – (n50: 45) | – (n50: 20) | N (good) | – / – / – |
+
+| Summary (n=10) | Words | Meaning | Blended |
+|---|---|---|---|
+| Assignment companies in the top 10 (3 must-finds + gem, of 4) | 1 (Momentic) | 2 (mirrord, Faros) | **3 (Coder, Momentic, mirrord)** (first set: 2) |
+| Hidden gem's rank | – (26) | 4 | 4 |
+| Standing-beat-only or trap above an assignment company? | no | no | no |
+| Pass: all 3 must-finds in blended top 10, gem in top 10, nothing lower above the gem | – | – | **Fail by one: Faros is 11th** (gem 4th, KodeKloud and Endor Labs well below) |
+
+Came up in the top 10, not expected: words: Temporal (Gold) 2, Stacklet 4, ControlTheory (Gold) 5, Dash0
+(Platinum) 6, Black Duck 7, Sentry 9, Xata 10. Meaning: Komodor (Gold) 1, Paper Compute Company (Start-Up) 2,
+Resolve AI (Gold) 5, PatapscoAI (Start-Up) 6, ControlTheory 8, Vijil (Start-Up) 9, Coralogix 10. Blended:
+ControlTheory 2, Paper Compute Company 5, Sentry 6, Resolve AI 7, Temporal 10.
+
+## The Breach Chronicle — still FAIL: no must-find and no gem in the blended top 10
+
+| Group | Company | Words | Meaning | Blended | In blended top 10 | First set (n=10): W / M / B |
+|---|---|---|---|---|---|---|
+| Must find: helps security teams | Maze (Start-Up) | – (not in top 50) | 4 | – (n50: 26) | N | – / 4 / – |
+| Must find: helps security teams | Emphere (Start-Up) | not in top 50 | not in top 50 | not in top 50 | N | same |
+| Must find: helps security teams | Endor Labs | not in top 50 | – (n50: 43) | – (n50: 27) | N | same |
+| Must find: keeping agents safe | Edera | not in top 50 | not in top 50 | not in top 50 | N | same |
+| Must find: keeping agents safe | Cosmonic | not in top 50 | – (n50: 36) | not in top 50 | N | same |
+| Must find: keeping agents safe | Teleport | not in top 50 | not in top 50 | not in top 50 | N | same |
+| Must find: keeping agents safe | Archestra AI (Start-Up) | not in top 50 | not in top 50 | – (n50: 49) | N | same |
+| **Hidden gem** | **Vijil (Start-Up)** | not in top 50 | – (n50: 23) | not in top 50 | **N** | same |
+| Standing beat only | Akamai | not in top 50 | – (n50: 40) | not in top 50 | N (good) | same |
+| Standing beat only | RapidFort, Echo | not in top 50 | not in top 50 | not in top 50 | N (good) | same |
+| Partial word trap | Orca Security | not in top 50 | not in top 50 | not in top 50 | N | same |
+
+| Summary (n=10) | Words | Meaning | Blended |
+|---|---|---|---|
+| Assignment companies in the top 10 (7 must-finds + gem, of 8) | 0 | 1 (Maze, 4th) | 0 |
+| "Helps security teams" half found in top 10 (of 3) | 0 | 1 | 0 |
+| "Keeping agents safe" half found in top 10 (of 4) | 0 | 0 | 0 |
+| Hidden gem's rank | not in top 50 | 23 | not in top 50 |
+| Standing-beat-only above an assignment company? | none present | Akamai (40) above Endor Labs (43) | none present |
+| Pass | – | – | **Fail** |
+
+Ranks of each must-find at n=50 (the Breach must-finds you asked for): Maze: meaning 4, blended 26, words not
+in top 50. Endor Labs: meaning 43, blended 27. Cosmonic: meaning 36, blended and words not in top 50.
+Archestra AI: blended 49, meaning and words not in top 50. Emphere, Edera, Teleport: not in the top 50 in any
+way. Vijil (gem): meaning 23, blended and words not in top 50. These are the same as in the first set's "(n50)".
+
+Came up in the top 10, not expected: words (unchanged): PagerDuty 1, Northflank 2, Uber 3, Linux Foundation
+Education 4, Jozu 5, Tigris Data 6, VAST Data 7, Docker 8, Aiven 9, Diagrid 10. Meaning: Resolve AI (Gold) 1,
+Twingate 2, Sysdig (Gold) 3, Plural 5, Tigera 6, Komodor 7, Datadog (Platinum) 8, Jozu 9, groundcover 10.
+Blended: Resolve AI 1, Jozu 2, PagerDuty 3, Plural 4, Sysdig 5, Edge Delta 6, Radar (Start-Up) 7, Northflank 8,
+Nirmata 9, Docker 10. As before, mostly ordinary security, observability and platform companies.

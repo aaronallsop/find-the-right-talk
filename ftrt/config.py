@@ -42,6 +42,14 @@ RRF_K = 60                  # reciprocal rank fusion constant, from the original
 BLEND_DEPTH = 100           # every list is ranked this deep before blending, however many results are shown,
                             # so the order never depends on the number asked for (up to this many)
 
+# Elastic's own meaning model, ELSER, as a further voice: Elastic Cloud only (the laptop engine skips it).
+# The in-project endpoint runs inside Aaron's serverless project; ".elser-2-elastic" would instead send the
+# text to Elastic's separate inference service. It scales down to nothing when idle, so the first call after
+# a quiet spell waits while it wakes (81 s measured at 11:58); the page warms it up when it starts.
+ELSER_ENDPOINT = ".elser-2-elasticsearch"
+ELSER_FIELD = "text_elser"  # the passage's text again, which Elastic turns into ELSER's own terms at load time
+ELSER_TIMEOUT = 300         # seconds a load or search may wait on it (waking up included)
+
 # The match (M2): an outlet's profile searches the programme.
 MATCH_WEIGHTS = {"assignment": 2.0, "beat": 1.0}   # the assignment's votes count double (Aaron, 8 November)
 MATCH_WORDS_TERMS = 25      # words search by profile: how many of its most telling words to search for

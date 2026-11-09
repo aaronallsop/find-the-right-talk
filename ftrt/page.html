@@ -109,6 +109,7 @@
         <button type="button" data-way="blended" aria-pressed="true">Blended</button>
         <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
         <button type="button" data-way="words" aria-pressed="false">Words</button>
+          <button type="button" data-way="elser" aria-pressed="false" class="elser-only" hidden>Elastic ELSER</button>
       </div>
     </div>
     <div class="tabs" role="tablist" id="match-kinds">
@@ -138,6 +139,7 @@
           <button type="button" data-way="blended" aria-pressed="true">Blended</button>
           <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
           <button type="button" data-way="words" aria-pressed="false">Words</button>
+          <button type="button" data-way="elser" aria-pressed="false" class="elser-only" hidden>Elastic ELSER</button>
         </div>
       </div>
       <div><button class="go" type="submit" style="margin:0">Search</button></div>
@@ -190,8 +192,10 @@ function showResults(list, results, emptyText) {
 
 function renderMatch() {
   if (!matchData) return;
-  const rs = matchData.results[matchKind][matchWay];
-  const empty = matchWay === "words" ? "No record shares enough telling words with this profile." : "Nothing found.";
+  const rs = matchData.results[matchKind][matchWay] || [];
+  const empty = matchWay === "words" ? "No record shares enough telling words with this profile."
+              : matchWay === "elser" && !matchData.results[matchKind].elser ? "Elastic's ELSER did not answer for this match; the blend went ahead without it."
+              : "Nothing found.";
   showResults($("match-results"), rs, empty);
 }
 
@@ -245,19 +249,23 @@ $("search-ways").onclick = e => { const b = e.target.closest("button"); if (!b) 
 
 $("search").onsubmit = async e => {
   e.preventDefault();
-  const err = $("search-error"); err.hidden = true;
+  const err = $("search-error"), go = $("search").querySelector(".go");
+  if (go.disabled) return;
+  err.hidden = true; go.disabled = true; go.textContent = "Searching…";
   try {
     const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value});
     const empty = d.mode === "words" ? "Words found nothing: no record has enough of these words. Try Meaning." : "Nothing matches.";
     showResults($("search-results"), d.results, empty);
   } catch (x) { err.textContent = x.message; err.hidden = false; }
+  go.disabled = false; go.textContent = "Search";
 };
 
 // the pickers
 (async () => {
   try {
     const d = await (await fetch("/api/lists")).json();
-    $("engine").textContent = d.engine === "cloud" ? "Elastic Cloud serverless" : "Elasticsearch on this laptop";
+    $("engine").textContent = (d.engine === "cloud" ? "Elastic Cloud serverless" : "Elasticsearch on this laptop") + (d.elser ? ", with Elastic's ELSER" : "");
+    document.querySelectorAll(".elser-only").forEach(b => b.hidden = !d.elser);
     d.outlets.forEach(o => $("outlet").append(new Option(o.name + (o.sample ? "  (sample)" : "") + (o.has_assignment ? "" : "  (standing beat only)"), o.record_id)));
     d.sponsors.forEach(s => $("sponsor").append(new Option(s.name + "  (" + s.tier + ")", s.record_id)));
   } catch (x) { $("engine").textContent = "engine not reachable"; }

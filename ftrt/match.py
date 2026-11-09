@@ -3,11 +3,12 @@
     python -m ftrt.match "Breach Chronicle"                          # blended: top sponsors, talks and speakers
     python -m ftrt.match --mode compare --kind sponsor -n 10 "Hello World Gazette"
     python -m ftrt.match --list                                      # the 14 outlets
-    options: --mode words|meaning|blended|compare, -n 5 (how many of each kind), --kind sponsor|talk|speaker, --startups
+    options: --mode words|meaning|elser|blended|compare, -n 5 (how many of each kind), --kind sponsor|talk|speaker, --startups
 
 An outlet has a standing beat (what it always covers) and, for six of them, a KubeCon assignment
 (what it came to find). Each part searches the programme on its own, by meaning with the part's
-stored numbers and by words with its text, and the rankings are merged by reciprocal rank fusion,
+stored numbers, by words with its text, and (in Elastic Cloud) by Elastic's own model, ELSER, with
+its text; the rankings are merged by reciprocal rank fusion,
 the assignment's votes counting double (Aaron, 8 November). An outlet with no assignment is
 matched on its beat alone. Events (coffee breaks, registration) are left out: they are not stories.
 """
@@ -16,7 +17,7 @@ import argparse, textwrap
 import numpy as np
 from . import config, passages
 from .engine import connect
-from .search import _FIELDS, _fetch_size, _group, embed, filters, fuse, search_meaning_vector
+from .search import ELSER_MISSING, _FIELDS, _fetch_size, _group, embed, filters, fuse, search_elser, search_meaning_vector
 
 MATCH_KINDS = ("sponsor", "talk", "speaker")
 
@@ -75,19 +76,28 @@ def typed_parts(beat: str, assignment: str = "") -> dict:
 
 def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: bool = False,
           index: str = config.PROGRAMME_INDEX) -> dict[str, list[dict]]:
-    """Rank the programme for these parts, three ways: {"words": [...], "meaning": [...], "blended": [...]}.
+    """Rank the programme for these parts: {"words": [...], "meaning": [...], "elser": [...], "blended": [...]}.
+    "elser" (Elastic's own model, with the part's text as the question) is there only in Elastic Cloud.
     Each result carries `via`: which part, and which way, gave it its best position."""
     filt = filters(kind, startups)
     if not kind:
         filt.append({"terms": {"kind": list(MATCH_KINDS)}})
     depth = max(n, config.BLEND_DEPTH)   # fixed, so the order does not change with how many are shown
-    lists = {"words": [], "meaning": []}
+    ways = {"words": lambda p: search_words_loose(client, p["text"], depth, index, filt),
+            "meaning": lambda p: search_meaning_vector(client, p["vector"], depth, index, filt),
+            "elser": lambda p: search_elser(client, p["text"], depth, index, filt)}
+    lists = {way: [] for way in ways}
     for part, p in parts.items():
-        for way, results in (("words", search_words_loose(client, p["text"], depth, index, filt)),
-                             ("meaning", search_meaning_vector(client, p["vector"], depth, index, filt))):
-            lists[way].append(([{**r, "via": f"the {part}, by {way}"} for r in results], config.MATCH_WEIGHTS[part]))
-    return {"words": fuse(lists["words"], n), "meaning": fuse(lists["meaning"], n),
-            "blended": fuse(lists["words"] + lists["meaning"], n)}
+        for way, run in ways.items():
+            results = run(p)
+            if results is not None:   # ELSER is skipped on the laptop engine
+                lists[way].append(([{**r, "via": f"the {part}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
+    out = {way: fuse(ls, n) for way, ls in lists.items() if ls}
+    out["blended"] = fuse([l for ls in lists.values() for l in ls], n)
+    return out
+
+
+WAY_NAMES = {"words": "words", "meaning": "meaning", "elser": "Elastic's ELSER"}
 
 
 def search_words_loose(client, text: str, n: int, index: str, filt: list) -> list[dict]:
@@ -117,7 +127,7 @@ def show(title: str, results: list[dict], lists: int, width: int = 100):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("outlet", nargs="?", help="an outlet's name (any part of it) or id")
-    ap.add_argument("--mode", choices=["words", "meaning", "blended", "compare"], default="blended")
+    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "compare"], default="blended")
     ap.add_argument("-n", type=int, default=5, help="how many of each kind (1 to 50)")
     ap.add_argument("--kind", choices=list(MATCH_KINDS))
     ap.add_argument("--startups", action="store_true", help="Start-Up tier sponsors only")
@@ -133,8 +143,12 @@ def main():
     print(f"\nMatching {name}, on its {' and '.join(parts)}" + (" (the assignment counting double)" if len(parts) == 2 else " alone (it has no KubeCon assignment)"))
     for kind in ([a.kind] if a.kind else (["sponsor"] if a.startups else list(MATCH_KINDS))):
         results = match(client, parts, a.n, kind, a.startups)
-        for mode in (("words", "meaning", "blended") if a.mode == "compare" else (a.mode,)):
-            lists = len(parts) * (2 if mode == "blended" else 1)
+        voices = len([w for w in ("words", "meaning", "elser") if w in results])
+        for mode in (("words", "meaning", "elser", "blended") if a.mode == "compare" else (a.mode,)):
+            if mode not in results:
+                print(f"\n=== ELSER === ({ELSER_MISSING})")
+                continue
+            lists = len(parts) * (voices if mode == "blended" else 1)
             show(f"=== {mode.upper()} === {kind}s for {name}", results[mode], lists)
 
 

@@ -101,16 +101,19 @@ the demo searches before and after):**
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: the match-order fix, the model-download fault, then Elastic's meaning model, then M5 the flip.
+- Titan: adding Elastic's own meaning model and reloading the cloud, then M5 the flip.
 - Rhea: the cloud wording in the README, cheat sheet and a first draft of the submission paragraph.
-- Cassini: re-scores after Titan's next save, and checks the page in a browser.
-- Aaron: looks at the page. M3, the two-door page, is saved and pushed (fba8720, 11:55) and runs on this laptop at http://127.0.0.1:5060; the press door works, the vendor door says "the flip comes next". Not yet seen in a browser, so not Done.
+- Cassini: re-scores after Titan's reload. Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
+- Aaron: looks at the page. M3, the two-door page, is saved and pushed (fba8720, 11:55) and runs on this laptop at http://127.0.0.1:5060; the press door works, the vendor door says "the flip comes next". Cassini's 11:57 check: all 14 outlets answer in under 1.5 seconds with ten sponsors, talks and speakers each (blended and meaning), and the typed boxes and plain search match the Terminal. Not yet seen rendered in a browser (Cassini's and Saturn's browser panes refused the address), so it stays here until Aaron has looked.
 - Dione: standing by.
 
-Watch: 11:52 Cassini scored the match against the answer keys, and both test outlets FAIL. The Hello
-World Gazette nearly passes: Coder and the hidden gem mirrord are in the top ten, and two must-finds
-are just outside. The Breach Chronicle, the demo outlet, has none of its must-finds in the top ten.
-Also found: the match's order changes with how many results are shown; Titan is fixing that.
+Watch for the demo: Elastic's in-project model sleeps when idle and took 81 seconds to wake. Run one search a minute or two before presenting; the same goes in the 17:15 screen check (the day plan, not Rhea's file, so Saturn to add it).
+
+Watch: by words alone some outlets find little or nothing (TechRevolt News nothing at all).
+
+Watch: both test outlets still FAIL their answer keys (re-scored 11:59, after the order fix). The
+Hello World Gazette misses by one place. The Breach Chronicle, the demo outlet, has none of its
+must-finds in the top ten. Aaron decides what to do about it.
 
 ## Next
 
@@ -135,6 +138,8 @@ the bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 - 11:09 passage-cutting fix (0560c9b)
 - 11:20 search fixes from review (42c36e0)
 - 11:21 Elastic Cloud connection (c346c70); 11:24 cloud catalogues loaded and demo searches proven there
+- 11:57 Saved and pushed (321b069): the match's order no longer shifts with how many results are shown, and the first run on a new machine downloads the meaning model. Passage count explained: 2,225 programme passages plus 25 outlet passages is 2,250.
+- 11:59 Cassini re-scored the match after the fix: the Hello World Gazette fails its key by one place (Faros 11th; Coder, Momentic and the gem mirrord in the top ten); the Breach Chronicle still has none of its must-finds in the top ten.
 - 11:53 Fresh-copy test (Cassini): a clean clone, set up from the README's own steps with a second key, loads and searches the cloud. PASS, with fixes needed (details in the checks file, "fresh-copy"). Rhea fixed the passage count and the load time in the README; the page step, the model download step and the match command wait for Titan.
 - 11:49 Cassini's "after" check: all three demo searches hold after the reload, three runs each, identical.
 - 11:48 The match (M2) built, saved and pushed (552c262). Not yet scored against the answer keys; the Breach Chronicle's first look is below.
@@ -147,6 +152,8 @@ the bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 
 ## Blocked
 
+- Elastic's own meaning model is built and tested on the laptop. The cloud reload waits for Aaron's approval, which he gives himself in Titan's session (it rebuilds the cloud catalogues).
+- The page could not open in any browser: port 5060 is on the browsers' blocked list (found by Dione). Titan is moving it to port 8765 and will send the README line. Until then the README's page address is wrong.
 - The fresh-copy test waits on Aaron's second key for the same cloud project (Aaron to create it himself and keep it outside the folder).
 
 ## Decided today

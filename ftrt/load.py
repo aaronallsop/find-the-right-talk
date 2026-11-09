@@ -30,8 +30,11 @@ def build_records() -> tuple[list[dict], list[dict]]:
 
 def mapping() -> dict:
     keyword = {"type": "keyword"}
+    cloud = engine.where() == "cloud"
     # Elastic Cloud serverless manages shards itself and refuses these settings; the laptop engine wants them.
-    settings = {} if engine.where() == "cloud" else {"settings": {"number_of_shards": 1, "number_of_replicas": 0}}
+    settings = {} if cloud else {"settings": {"number_of_shards": 1, "number_of_replicas": 0}}
+    # In the cloud, each passage also goes to Elastic's own meaning model (ELSER), which Elastic runs at load time.
+    elser = {config.ELSER_FIELD: {"type": "semantic_text", "inference_id": config.ELSER_ENDPOINT}} if cloud else {}
     return {
         **settings,
         "mappings": {"properties": {
@@ -46,18 +49,20 @@ def mapping() -> dict:
             "speakers": keyword, "companies": keyword, "topics": keyword, "talks": keyword, "job": keyword,
             "tier": keyword, "startup": {"type": "boolean"}, "booth": keyword, "website": keyword, "source_quality": keyword,
             "real_or_sample": keyword, "sample": {"type": "boolean"}, "has_assignment": {"type": "boolean"}, "written_by": keyword,
+            **elser,
         }},
     }
 
 
-def documents(records: list[dict], vectors) -> list[dict]:
+def documents(records: list[dict], vectors, elser: bool = False) -> list[dict]:
     docs, i = [], 0
     for rec in records:
         details = {k: v for k, v in rec.items() if k != "passages"}
         for n, text in enumerate(rec["passages"]):
             suffix = f"#{rec['part']}" if "part" in rec else ""
             docs.append({"_id": f"{rec['record_id']}{suffix}#{n}", **details, "passage_no": n,
-                         "passage_count": len(rec["passages"]), "text": text, "vector": vectors[i].tolist()})
+                         "passage_count": len(rec["passages"]), "text": text, "vector": vectors[i].tolist(),
+                         **({config.ELSER_FIELD: text} if elser else {})})
             i += 1
     return docs
 
@@ -100,6 +105,12 @@ def main():
     print(f"   {len(outlet_ids):5d} outlets ({sum(1 for r in outlets if r['part']=='assignment')} with a KubeCon assignment), in {sum(len(r['passages']) for r in outlets)} passages")
 
     client = connect()
+    elser = engine.where() == "cloud"
+    if elser and not args.check:   # ELSER sleeps when idle: wake it BEFORE anything is deleted, so a failure changes nothing
+        t = time.time()
+        client.options(request_timeout=config.ELSER_TIMEOUT).inference.inference(
+            inference_id=config.ELSER_ENDPOINT, input=["wake up"], timeout=f"{config.ELSER_TIMEOUT}s")
+        print(f"Elastic's ELSER model is awake ({time.time()-t:.0f}s); it reads each passage as it loads, which takes some minutes")
     if not args.check:
         from sentence_transformers import SentenceTransformer
         model = SentenceTransformer(config.MODEL_NAME)
@@ -110,9 +121,11 @@ def main():
             assert vectors.shape == (len(texts), config.VECTOR_SIZE)
             print(f"Turned {len(texts)} passages into {config.VECTOR_SIZE} numbers each for {index} in {time.time()-t:.0f}s")
             recreate(client, index)
-            ok, errors = helpers.bulk(client, documents(records, vectors), index=index, raise_on_error=False, stats_only=False)
-            if errors:
-                print(f"   {len(errors)} documents failed to load, first: {errors[0]}", file=sys.stderr)
+            ok, errors = helpers.bulk(client.options(request_timeout=config.ELSER_TIMEOUT), documents(records, vectors, elser),
+                                      index=index, chunk_size=100 if elser else 500, max_retries=3, initial_backoff=5,
+                                      raise_on_error=False, stats_only=False)
+            if errors:   # a partial catalogue would quietly change every result: stop and say so
+                raise SystemExit(f"{len(errors)} of {len(texts)} passages failed to load into {index}; first: {str(errors[0])[:300]}. Run the loader again.")
             client.indices.refresh(index=index)
 
     print("Now in the engine:")

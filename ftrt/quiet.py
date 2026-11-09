@@ -15,7 +15,8 @@ _MODEL_CACHE = "models--sentence-transformers--all-MiniLM-L6-v2"   # the cache f
 def _model_is_cached() -> bool:
     hub = os.environ.get("HF_HUB_CACHE") or Path(os.environ.get("HF_HOME") or Path.home() / ".cache" / "huggingface") / "hub"
     snapshots = Path(hub).expanduser() / _MODEL_CACHE / "snapshots"
-    return snapshots.is_dir() and any(snapshots.iterdir())
+    # the whole model, not just the small tokeniser files that splitting text into passages fetches first
+    return all(any(snapshots.glob(f"*/{name}")) for name in ("model.safetensors", "modules.json", "1_Pooling/config.json"))
 
 
 if _model_is_cached():
