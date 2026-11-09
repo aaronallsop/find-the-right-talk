@@ -15,6 +15,11 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
 2. Install Elasticsearch and Kibana locally with Elastic's start-local script, **run from your home
    folder**: `cd ~ && curl -fsSL https://elastic.co/start-local | sh` (it creates `~/elastic-start-local`
    with the password in its `.env` file; this project reads the password from there and never stores it).
+   **Or use Elastic Cloud instead:** create a serverless Elasticsearch project at cloud.elastic.co,
+   make a file `~/elastic-cloud/.env` with two lines, `ES_CLOUD_URL=` the project's endpoint and
+   `ES_CLOUD_API_KEY=` an API key for it, and skip the local install. When that file is filled in,
+   every command below uses the cloud; `FTRT_ENGINE=local` in front of a command uses the laptop
+   engine instead. Neither file is ever copied into this repository.
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on a laptop (measured
@@ -28,7 +33,8 @@ shows one search all three ways (words, meaning, blended) with the passage that 
 match; `--mode words`, `--mode meaning` or the default blended show one way; add `--kind sponsor`
 or `--startups` to narrow it.
 
-Needs no internet once set up, and no API key [unless the fit check is built].
+On the laptop engine it needs no internet once set up; on Elastic Cloud it needs the internet and the
+project's own key. No other key [unless the fit check is built].
 
 ## How it works
 
