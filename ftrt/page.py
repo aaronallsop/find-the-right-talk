@@ -52,6 +52,7 @@ def lists():
                              query={"bool": {"filter": [{"term": {"kind": "sponsor"}}, {"term": {"passage_no": 0}}]}})["hits"]["hits"]
     by_name = lambda hits: sorted((h["_source"] for h in hits), key=lambda s: s["name"].lower())
     return jsonify(engine=engine.where(), elser=search.has_elser(client), rerank=search.rerank_on(),
+                   jina=search.has_field(client, config.JINA_FIELD),
                    outlets=by_name(outlets), sponsors=by_name(sponsors))
 
 
@@ -70,6 +71,8 @@ def run_match():
         name, parts = "Your outlet", match.typed_parts(beat, assignment)
     else:
         return jsonify(error="Pick an outlet, or say what you always cover."), 400
+    if search.has_field(client, config.JINA_FIELD):
+        parts = match.with_jina(client, parts)   # Jina asked once per part, shared by the three kinds
     with ThreadPoolExecutor(max_workers=len(match.MATCH_KINDS)) as pool:   # sponsors, talks, speakers at once
         found = dict(zip(match.MATCH_KINDS, pool.map(
             lambda kind: match.match(client, parts, config.PAGE_RESULTS, kind, startups and kind == "sponsor"), match.MATCH_KINDS)))
@@ -96,6 +99,8 @@ def run_flip():
     else:
         return jsonify(error="Pick a sponsor, or say what your company does."), 400
     parts = match.parts_from_text(texts)
+    if search.has_field(client, config.JINA_FIELD):
+        parts = match.with_jina(client, parts)   # Jina asked once per part, shared by outlets and talks
     found = flip.flip(client, parts, config.PAGE_RESULTS)
     results = {kind: {way: _plain(rs) for way, rs in ways.items()} for kind, ways in found.items()}
     on = ("what it does and what it is showing at KubeCon (counting double)" if "showing" in parts
@@ -104,7 +109,6 @@ def run_flip():
                    kinds=[["outlet", "Outlets"], ["talk", "Talks"]])
 
 
-COMPARE_WAYS = ("words", "meaning", "elser", "blended", "reranked")
 
 
 @app.post("/api/search")
@@ -120,15 +124,13 @@ def run_search():
     if (mode not in search.MODES and mode != "compare") or kind not in (None, "talk", "event", "speaker", "sponsor"):
         return jsonify(error="Unknown search."), 400
     if mode == "compare":   # every way at once; a way that is not here (laptop) or did not answer comes back empty
-        filt = search.filters(kind, startups)
-        with ThreadPoolExecutor(max_workers=len(COMPARE_WAYS)) as pool:
-            found = dict(zip(COMPARE_WAYS, pool.map(lambda way: search.MODES[way](client, q, config.PAGE_RESULTS, filt=filt), COMPARE_WAYS)))
+        found = search.compare_all(client, q, config.PAGE_RESULTS, filt=search.filters(kind, startups))
         return jsonify(ways={way: (None if rs is None else _plain(rs)) for way, rs in found.items()},
-                       mode=mode, left_out=search.left_out())
+                       mode=mode, startups=startups, left_out=search.left_out())
     results = search.MODES[mode](client, q, config.PAGE_RESULTS, filt=search.filters(kind, startups))
     if results is None:   # ELSER or the re-ranker asked for where it is missing or not answering
-        return jsonify(error=search.ELSER_MISSING if mode == "elser" else search.RERANK_MISSING), 503
-    return jsonify(results=_plain(results), mode=mode, left_out=search.left_out())
+        return jsonify(error=search.MISSING[mode]), 503
+    return jsonify(results=_plain(results), mode=mode, startups=startups, left_out=search.left_out())
 
 
 @app.errorhandler(Exception)

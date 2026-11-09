@@ -3,7 +3,7 @@
     python -m ftrt.flip "Kedify"                                  # blended: outlets, then talks
     python -m ftrt.flip --mode compare "Kedify"
     python -m ftrt.flip --list                                    # the 226 sponsors
-    options: --mode words|meaning|elser|blended|reranked|compare, -n 5 (how many talks; every outlet is ranked)
+    options: --mode words|meaning|elser|jina|blended|reranked|compare, -n 5 (how many talks; every outlet is ranked)
 
 The match turned round. A sponsor has two parts: what it does (its own description, what it
 makes, who it is for, the problems it solves) and what it is showing at KubeCon (empty for most
@@ -67,7 +67,7 @@ def flip(client, parts: dict, n_talks: int = 10) -> dict[str, dict[str, list[dic
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("sponsor", nargs="?", help="a sponsor's name (any part of it) or id")
-    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "reranked", "compare"], default="blended")
+    ap.add_argument("--mode", choices=["words", "meaning", "elser", "jina", "blended", "reranked", "compare"], default="blended")
     ap.add_argument("-n", type=int, default=5, help="how many talks (1 to 50)")
     ap.add_argument("--list", action="store_true", help="list the sponsors and stop")
     a = ap.parse_args()
@@ -84,10 +84,10 @@ def main():
     results = flip(client, parts, min(max(a.n, 1), 50))
     for kind, label in (("outlet", "outlets"), (TALKS, "talks")):
         res = results[kind]
-        voices = len([w for w in ("words", "meaning", "elser") if w in res])
-        for mode in (("words", "meaning", "elser", "blended", "reranked") if a.mode == "compare" else (a.mode,)):
+        voices = len([w for w in ("words", "meaning", "elser", "jina") if w in res])
+        for mode in (("words", "meaning", "elser", "jina", "blended", "reranked") if a.mode == "compare" else (a.mode,)):
             if mode not in res:
-                print(f"\n=== {mode.upper()} === ({match.ELSER_MISSING if mode == 'elser' else match.RERANK_MISSING})")
+                print(f"\n=== {mode.upper()} === ({match.MISSING[mode]})")
                 continue
             lists = len(parts) * (voices if mode == "blended" else 1)
             rows = [{**r, "tier": "sample" if r.get("sample") else r.get("tier")} for r in res[mode]]

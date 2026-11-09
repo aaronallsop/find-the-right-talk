@@ -10,6 +10,7 @@ record and the passage that made it match.
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse, csv, re, sys, time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from elasticsearch import helpers
 from . import config, engine, passages
 from .engine import connect
@@ -33,8 +34,10 @@ def mapping() -> dict:
     cloud = engine.where() == "cloud"
     # Elastic Cloud serverless manages shards itself and refuses these settings; the laptop engine wants them.
     settings = {} if cloud else {"settings": {"number_of_shards": 1, "number_of_replicas": 0}}
-    # In the cloud, each passage also goes to Elastic's own meaning model (ELSER), which Elastic runs at load time.
-    elser = {config.ELSER_FIELD: {"type": "semantic_text", "inference_id": config.ELSER_ENDPOINT}} if cloud else {}
+    # In the cloud, each passage also goes to Elastic's own meaning model (ELSER), which Elastic runs at load time,
+    # and carries its Jina numbers, fetched from Elastic's hosted inference service before the load.
+    elser = {config.ELSER_FIELD: {"type": "semantic_text", "inference_id": config.ELSER_ENDPOINT},
+             config.JINA_FIELD: {"type": "dense_vector", "dims": config.JINA_SIZE, "index": True, "similarity": "cosine"}} if cloud else {}
     return {
         **settings,
         "mappings": {"properties": {
@@ -54,7 +57,7 @@ def mapping() -> dict:
     }
 
 
-def documents(records: list[dict], vectors, elser: bool = False) -> list[dict]:
+def documents(records: list[dict], vectors, elser: bool = False, jina: list | None = None) -> list[dict]:
     docs, i = [], 0
     for rec in records:
         details = {k: v for k, v in rec.items() if k != "passages"}
@@ -62,9 +65,24 @@ def documents(records: list[dict], vectors, elser: bool = False) -> list[dict]:
             suffix = f"#{rec['part']}" if "part" in rec else ""
             docs.append({"_id": f"{rec['record_id']}{suffix}#{n}", **details, "passage_no": n,
                          "passage_count": len(rec["passages"]), "text": text, "vector": vectors[i].tolist(),
-                         **({config.ELSER_FIELD: text} if elser else {})})
+                         **({config.ELSER_FIELD: text} if elser else {}),
+                         **({config.JINA_FIELD: jina[i]} if jina else {})})
             i += 1
     return docs
+
+
+def jina_vectors(client, texts: list[str]) -> list[list[float]]:
+    """Every passage's Jina numbers, from Elastic's hosted inference service, in batches. Any refusal stops the
+    load here, before a catalogue is deleted."""
+    batches = [texts[i:i + config.JINA_BATCH] for i in range(0, len(texts), config.JINA_BATCH)]
+    def one(batch):
+        r = client.options(request_timeout=120).inference.text_embedding(
+            inference_id=config.JINA_ENDPOINT, input=batch, timeout="120s")
+        return [e["embedding"] for e in r.body["text_embedding"]]
+    with ThreadPoolExecutor(max_workers=config.JINA_PARALLEL) as pool:   # results come back in batch order
+        out = [v for got in pool.map(one, batches) for v in got]
+    assert len(out) == len(texts) and len(out[0]) == config.JINA_SIZE
+    return out
 
 
 def recreate(client, index: str):
@@ -114,14 +132,22 @@ def main():
     if not args.check:
         from sentence_transformers import SentenceTransformer
         model = SentenceTransformer(config.MODEL_NAME)
+        prepared = []   # everything is computed first; only then is any catalogue deleted and rebuilt
         for index, records in ((config.PROGRAMME_INDEX, programme), (config.OUTLETS_INDEX, outlets)):
             texts = [p for r in records for p in r["passages"]]
             t = time.time()
             vectors = model.encode(texts, batch_size=64, normalize_embeddings=True, show_progress_bar=False)
             assert vectors.shape == (len(texts), config.VECTOR_SIZE)
             print(f"Turned {len(texts)} passages into {config.VECTOR_SIZE} numbers each for {index} in {time.time()-t:.0f}s")
+            jina = None
+            if elser:
+                t = time.time()
+                jina = jina_vectors(client, texts)
+                print(f"Fetched {len(texts)} passages' {config.JINA_SIZE} Jina numbers from Elastic's hosted service in {time.time()-t:.0f}s")
+            prepared.append((index, records, texts, vectors, jina))
+        for index, records, texts, vectors, jina in prepared:
             recreate(client, index)
-            ok, errors = helpers.bulk(client.options(request_timeout=config.ELSER_TIMEOUT), documents(records, vectors, elser),
+            ok, errors = helpers.bulk(client.options(request_timeout=config.ELSER_TIMEOUT), documents(records, vectors, elser, jina),
                                       index=index, chunk_size=100 if elser else 500, max_retries=3, initial_backoff=5,
                                       raise_on_error=False, stats_only=False)
             if errors:   # a partial catalogue would quietly change every result: stop and say so

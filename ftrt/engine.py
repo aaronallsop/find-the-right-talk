@@ -36,7 +36,7 @@ def connect() -> Elasticsearch:
         if not settings:
             raise SystemExit(f"FTRT_ENGINE=cloud but {config.CLOUD_SETTINGS_FILE} is missing or not filled in.")
         url, key = settings
-        client = Elasticsearch(url, api_key=key, request_timeout=120)
+        client = Elasticsearch(url, api_key=key, request_timeout=120, connections_per_node=config.CONNECTIONS)
         label = "Elastic Cloud serverless"
     else:
         load_dotenv(config.ENGINE_SETTINGS_FILE)
@@ -44,7 +44,7 @@ def connect() -> Elasticsearch:
         if not password:
             raise SystemExit(f"No engine password found in {config.ENGINE_SETTINGS_FILE}. Is Elasticsearch installed with start-local?")
         url = os.environ.get("ES_LOCAL_URL", config.ENGINE_DEFAULT_URL)
-        client = Elasticsearch(url, basic_auth=(config.ENGINE_USER, password), request_timeout=120)
+        client = Elasticsearch(url, basic_auth=(config.ENGINE_USER, password), request_timeout=120, connections_per_node=config.CONNECTIONS)
         label = f"local engine at {url}"
     try:
         client.info()

@@ -57,6 +57,31 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
 - **Geo queries are not used:** the data has no coordinates (rooms in one building and a region
   word per outlet), so a map would be decoration.
 
+## What Elastic asked entrants to use
+
+Status at 13:30 on 9 November, one line each:
+
+1. **Elastic Cloud serverless:** done. Everything runs on a serverless Elasticsearch project.
+2. **Ingesting data:** done. The programme, speakers, sponsors and outlets are loaded as 2,250
+   passages into two catalogues.
+3. **Jina models for embeddings:** half done. Elastic's hosted Jina re-ranker is used to re-order the
+   blended top 20 (the "Re-ranked" view). Jina embeddings as a further voice are being tried and are
+   not in yet.
+4. **An Agent Builder agent with custom tools:** done. "Find the Right Talk" has three tools of our
+   own over the two catalogues.
+5. **Elastic Workflows:** not used.
+
+**The five main code files, so you can see Elasticsearch is the core** (each is in `ftrt/`):
+
+- `engine.py`: the one way the code reaches Elasticsearch, in Elastic Cloud or on a laptop.
+- `load.py`: loads the spreadsheets into two new catalogues, one document per passage, each holding
+  the words, 384 numbers for its meaning, and (in the cloud) Elastic's ELSER reading of it.
+- `search.py`: the searches: words, meaning, Elastic's ELSER, the blend (reciprocal rank fusion, in
+  this project's own code) and the re-ranked view.
+- `match.py`: an outlet's own profile searches the programme (the press door); `flip.py` does the
+  same the other way round (the vendor door).
+- `agent.py`: sets up the Agent Builder agent and its three tools in Elastic Cloud from a script.
+
 ## Where it falls short
 
 Measured on 9 November against two test outlets whose answer keys were written beforehand
@@ -65,10 +90,9 @@ Measured on 9 November against two test outlets whose answer keys were written b
 - **The Hello World Gazette** (a sample outlet, invented and labelled) finds its hidden gem,
   mirrord, and two of its three must-find companies in the top ten. Faros, a tool a manager uses to
   see what coding agents cost, comes 13th, so it misses the answer key by one company.
-- **The Breach Chronicle** (also a labelled sample) misses: none of its must-finds is in its top ten.
-  Its wording is about attacks and breaches, while its companies talk about vulnerabilities and
-  sandboxes. It stays in the data, as a reported miss. With "Start-ups only" on, two of its
-  must-finds, Maze and Archestra AI, do appear.
+- **The Breach Chronicle** (also a labelled sample, not used in the demo) misses: none of its
+  must-finds is in its top ten, because its wording is about attacks while its companies talk about
+  vulnerabilities and sandboxes. It stays in the data as a reported miss.
 - **The flip** (a sponsor finds outlets) puts its outlets in a weak order, because the scores bunch
   close together; the talks it finds are on target.
 - **Meaning finds the topic, not the stance:** re-ranked, the GPU search puts vCluster (which
@@ -90,7 +114,7 @@ Measured on 9 November against two test outlets whose answer keys were written b
   Elastic Cloud connection (laptop engine as fallback); 11:47 passages fit what the meaning model
   reads; 11:48 the match; 11:54 the page; 11:56 steadier results; 12:12 Elastic's ELSER as a further
   voice; 12:14 the page moves to port 8765; 12:17 the flip; 12:25 the start-ups switch; 12:29 a slow
-  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker; 12:46 the Agent Builder agent.
+  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker; 12:46 the Agent Builder agent; 13:22 a code review by Sonar's Gitar, and its one finding fixed.
   The commit history starts at the beginning of the hackathon: the first commit holds no code, only
   the data, the notes, the rulebook (`CLAUDE.md`), the licence, the ignore list and this README.
 
@@ -113,6 +137,11 @@ Measured on 9 November against two test outlets whose answer keys were written b
   the search text and the top 20 passages to Elastic's hosted re-ranking service (see above). The
   Agent Builder agent is the other: its answers are written by Anthropic's Claude Sonnet 4.5 on
   Elastic's hosted inference service, and are labelled as AI-written.
+- **Sonar's Gitar** reviewed all of today's code on a review pull request that was never merged: it
+  approved with suggestions. Its one finding was confirmed and fixed (the start-ups switch could
+  leave an older answer on screen when switching doors or mid-search; every answer now re-runs if the
+  setting changed). A second note, that the loader rebuilds both catalogues from the spreadsheets,
+  is by design. Nothing Gitar wrote was merged.
 - [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
   wrote none of the code.]
 
@@ -163,7 +192,7 @@ to read another Elastic Cloud settings file):
   (words, meaning, Elastic's ELSER, blended), three on the laptop engine, which skips ELSER and says
   so. Add `--startups` to narrow it to the start-ups.
 - **Match** (an outlet finds the talks, speakers and sponsors that fit it):
-  `.venv/bin/python -m ftrt.match --mode compare --kind sponsor -n 10 "Breach Chronicle"`;
+  `.venv/bin/python -m ftrt.match --mode compare --kind sponsor -n 10 "Hello World Gazette"`;
   `.venv/bin/python -m ftrt.match --list` shows the 14 outlets.
 - **Flip** (a sponsor finds the outlets that fit it, then the nearest talks):
   `.venv/bin/python -m ftrt.flip "Kedify"`; `.venv/bin/python -m ftrt.flip --list` shows the 226

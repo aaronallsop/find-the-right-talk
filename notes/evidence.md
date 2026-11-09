@@ -189,6 +189,9 @@ Two things a reader should know: the answer opens with a line of the model's own
 comprehensive results..."), and its one-line reasons are the model's wording, which was not checked; only the
 quotations were. This is one answer from one question, not a repeated measurement.
 
-**The quota is tight.** The same single question, asked twice more (12:53 and 13:06), was refused both times
-after about 30 seconds with the trial's rate limit (HTTP 429): "wait 8m44s for your trial quota to be refilled",
-then, thirteen minutes later, "wait 6m7s". A live answer from the agent cannot be relied on within a short window.
+**The quota is tight.** The same single question, asked three more times (12:53, 13:06 and 13:38), was refused
+every time after 30 to 43 seconds with the trial's rate limit (HTTP 429): "wait 8m44s for your trial quota to be
+refilled", then "wait 6m7s", then "wait 3m36s". At 13:38, after the project's default model had been reported
+switched, the refusal and the saved record still named Elastic's hosted Anthropic model
+(anthropic-claude-4.5-sonnet), so the switch had not taken effect for the agent at that time. A live answer from
+the agent cannot be relied on within a short window.
