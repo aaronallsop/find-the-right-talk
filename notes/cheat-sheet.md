@@ -51,3 +51,10 @@ it is built.
    alone where the website could not be read (six of them).
 8. *What did you do, and what did Claude do?* — I designed it, named and briefed the two test outlets, made
    every decision and checked the results. Claude wrote the code, and every commit says so.
+
+## Built on the day, one line per piece
+
+- **Loading (B1, 11:03):** One command reads the five spreadsheets, cuts every talk, speaker,
+  sponsor and outlet into passages of about 120 words (2,307 in all), turns each passage into 384
+  numbers with the small meaning model on the laptop, and loads them into two brand-new catalogues
+  in about 12 seconds; a search of the loaded text for email addresses finds none.
