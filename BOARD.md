@@ -107,8 +107,9 @@ The timeline, on the laptop clock (your clock reads about 10 minutes later), cha
   Compare all on two demo sentences), then the Radar page the same way. Then record the agent clip once
   (the Gazette question, best of two) in the cloud Kibana.
 - 15:15 to 15:30: Neptune's video script comes to you, and you give it to Rhea.
-- 16:10: the freeze (Titan's final save; the Gitar pull request closed unmerged). 16:00 to 16:10: Cassini checks the fit check, three runs.
-- 16:10 to 16:25: screen check, then one timed rehearsal (Dione's list, in the order you do it; if
+- Now, if you want it: the Radar update needs your yes, typed in Titan's session. It must be done before the 16:20 freeze.
+- 16:20: the freeze (hard stop; Titan's final save; the Gitar pull request closed unmerged). Only what is in flight finishes before it.
+- After the freeze, to 16:25: screen check, then one timed rehearsal (Dione's list, in the order you do it; if
   anything on it is wrong when you look, stop and tell Saturn, and do not record around it):
   The video shows only: the laptop page, one Terminal (only for the warm-up), the README on GitHub, the
   Radar page, the Dash0 trace view, and the agent in the CLOUD Kibana. Nothing else.
@@ -161,10 +162,9 @@ must-finds in the top ten, stays in the data, and is reported honestly as a miss
 The timeline as of about 15:25, on the laptop clock (Aaron's clock reads about 10 minutes later).
 
 - Now: Aaron's README notes, and his own test and agent clip, if not finished.
-- 15:35: Titan's first stop on the fit check (if no model is reachable, only the shortening of "Found because" is built). 16:10: the fit check is removed if it is not working.
-- 16:00 to 16:10: Cassini checks the fit check (three runs).
-- 16:10: FREEZE (Titan's final save; the Gitar pull request closed unmerged).
-- 16:10 to 16:25: Rhea's final README and submission paragraph; Aaron's screen check and one rehearsal.
+- Until 16:20 (hard stop): only what is in flight (the U.S.-spelling data reload, the Talks and Speakers fit check, the Radar update if Aaron says yes in Titan's session, Cassini's final check).
+- 16:20: FREEZE (Titan's final save; the Gitar pull request closed unmerged). Nothing new after.
+- After the freeze, to 16:25: Rhea's final README and submission paragraph; Aaron's screen check and one rehearsal.
 - 16:25: warm the models, then record, two takes at most. 16:55: upload and the form.
 - 17:15: SUBMIT, screenshot. 17:15 to 17:30: buffer; nothing changes after submitting.
 
@@ -237,7 +237,9 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 15:36 The fit check is built (Neptune, 8200739). Rhea has the README, cheat-sheet, submission and video-script words prepared and will apply them only after Cassini's check passes and Saturn confirms (Cassini checks 16:00 to 16:10). "Found because" is now three lines with "Show all".
 - 15:30 Radar caught up (Titan 15:29; Saturn confirmed): the live page now has "Best matches", "How these were found" and the new dashboard look. The hosted copy matches the laptop page except it has no Meaning way (no local model), no Dash0 tracing, and will not get the fit check.
 - About 15:25, Aaron (with Neptune, confirmed to Saturn): build the "fit check" on the press door: an AI-written box summarizing why the top three sponsors suit the outlet, from their passages, labeled "Fit check: AI-written from the passages below. Check before you rely on it."; the other seven results show a shortened "Found because" with a click for the rest. Titan is building it; stops: 15:35 (no model reachable means only the shortening) and 16:10 (not working means removed). (Radar later caught up; see 15:30.) No "when and where" line. New timeline: freeze 16:10, warm-up and recording from 16:25 (two takes at most), upload 16:55, submit 17:15 (buffer 17:15 to 17:30).
-- 15:59, Aaron: change the data to U.S. spelling too. Titan edits data/sponsors.csv and data/outlets.csv (including the label "summarised by AI" to "summarized by AI") and reloads, after the page restart, by 16:20 or not at all. When Titan confirms the data is saved, Rhea changes the label quoted in data/CREDITS.md to match; until then it stays as the data has it. Rhea did the spelling pass on the README, cheat sheet, submission paragraph, script and board at 15:57.
+- 16:02, Aaron: finish only what is in flight, hard stop 16:20, then FREEZE; nothing new after. In flight: the data reload with U.S. spelling (Titan), the Talks and Speakers fit check checked in the browser, the Radar update (needs Aaron's yes in Titan's session), Cassini's final check, Titan's freeze save. After the freeze: screen check and one rehearsal; 16:25 warm-up, then record (two takes at most); 16:55 upload and form; 17:15 submit and screenshot.
+- 16:01 Titan converted the data to U.S. spelling (313 words, including the outlets' label "summarized by AI") and is reloading; Rhea changed the label quoted in data/CREDITS.md to match.
+- 15:59, Aaron: change the data to U.S. spelling too. Titan (corrected twice by Saturn: it is Titan, not Neptune) converted data/sponsors.csv and data/outlets.csv (including the label "summarised by AI" to "summarized by AI") and reloads, after the page restart, by 16:20 or not at all. When Titan confirms the data is saved, Rhea changes the label quoted in data/CREDITS.md to match; until then it stays as the data has it. Rhea did the spelling pass on the README, cheat sheet, submission paragraph, script and board at 15:57.
 - 15:56 README.md: Rhea is its only editor from now (Saturn, 15:54; Neptune will not touch it). Latest is 0a7d259 (963 words): Neptune added "What leaves the Elastic project" under AI disclosure and kept Rhea's connector and Radar-cost edits. Honest limits are not on the front page (Aaron's instruction); the misses stay in notes/evidence.md, which the README points to. Titan saves it at the 16:10 freeze. Rhea re-read the file from disk: it is consistent with the submission paragraph.
 - 15:55 Neptune saved the short README (db3bb21, 871 words); it is Rhea's again. Rhea fixed the references in the submission paragraph and cheat sheet to sections that no longer exist (they now point to notes/evidence.md), and made four small in-place word edits to the README (about 938 words now): Jina and the re-ranker run on Elastic's hosted service; the connector serves the fit check and the agent; the Radar page's fit check is capped at 30 requests a minute and billed to the author; "Nothing anyone types is stored"; the misses named before the pointer to notes/evidence.md.
 - 15:52 Saturn: stop editing README.md; Neptune is cutting it to about 500 words for Aaron and will overwrite the file. Rhea sent Neptune the facts that must survive (what leaves the project, nothing typed is stored, the Dash0 limits, the honest limits, Gitar, Elastic's asks, the setup). Rhea finished the submission paragraph for Aaron (in the notes folder) and keeps BOARD.md, the cheat sheet and the submission draft.

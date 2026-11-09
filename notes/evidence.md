@@ -22,8 +22,8 @@ worked (exit 0, no errors); the load finished in 68 seconds (exit 0). What it pr
 | Sponsors | 226 | 566 |
 | Outlets (6 with a KubeCon assignment) | 14 | 25 |
 
-2,225 programme passages and 25 outlet passages in all, each turned into 384 numbers. Email addresses found
-in the loaded text: 0 in the programme, 0 in the outlets. The same two searches that follow, run from this
+2,225 program passages and 25 outlet passages in all, each turned into 384 numbers. Email addresses found
+in the loaded text: 0 in the program, 0 in the outlets. The same two searches that follow, run from this
 clone, gave the same top results as in the working folder ("SLSA Level 3": ActiveState first in words,
 OpenSSF first in meaning; the traffic-spike sentence below: Kedify first). The meaning model was already in
 this machine's cache; a clone on a machine without it was not tested to the end.
@@ -111,7 +111,7 @@ checked by program.
 
 ## 3a. The latest version of the match and the demo searches (version 809ca91, with Jina; 13:45 to 13:48)
 
-A further embedding model (Jina) was added as one more voice, and the catalogues reloaded (13:35 to 13:37). Six ways now: words,
+A further embedding model (Jina) was added as one more voice, and the catalogs reloaded (13:35 to 13:37). Six ways now: words,
 meaning, ELSER, Jina, blended, re-ranked. Sponsors only; the demo searches were run three times each, the Gazette three times
 (then ten more, below), the Breach Chronicle once.
 
@@ -157,7 +157,7 @@ for each; plus one comparison run each. All 14 outlets are ranked every time.
 | Edera | TFIR, Greenstack, SDxCentral | Untrusted Code on Secure Runtimes: Agent Sandboxes on Kubernetes; Extending NetworkPolicy to RDMA; Securing the Agentic Future | 16%; gap 0.0021 |
 | Docker | Hello World Gazette, The Breach Chronicle, TFIR | From YOLO to Golden Paths: Building Trusted Environments for AI Agents; Untrusted Code on Secure Runtimes; Securing the Agentic Future | 33%; ten outlets within 0.0158, then a drop |
 
-The scores bunch: the flip shows the right group of outlets better than it orders neighbours.
+The scores bunch: the flip shows the right group of outlets better than it orders neighbors.
 
 ## 5. The page
 
@@ -191,7 +191,7 @@ Switching it on takes the sponsor pool from 226 to 32, and back to 226 on switch
 switching off was identical, name for name, to the one before. The 32 are exactly the 32 Start-Up rows in the data.
 With it on, every sponsor shown (40 match rows, 10 search rows, 32 picker rows) is a Start-Up and carries the tag;
 talks and speakers lists do not change; the lists after switching off are identical to the lists before. In
-version c4a8ae8 the page no longer lets "Talks" be chosen while it is on (the box is set to sponsors and greyed).
+version c4a8ae8 the page no longer lets "Talks" be chosen while it is on (the box is set to sponsors and grayed).
 
 ### 5.0 Refreshed on the latest code (version 904a577, 14:03 to 14:07, real browser; supersedes the times and counts in 5.1 to 5.4)
 - **Engine on screen:** "Elastic Cloud serverless, with Elastic's ELSER, Jina embeddings and a re-ranker".
@@ -217,9 +217,12 @@ behaves for anyone but the person who built it. The word counts quoted for the B
 single count over the sponsors' text. The Gazette misses its own key's pass test by one company; the Breach
 Chronicle misses it entirely. No geographic search is offered: the data has no coordinates.
 
+Nine words in the sponsor text (the descriptions the tool loaded) are left as they are: eight British spellings and one "analyzes" / "analyses"
+variant. None is in a sponsor used in the demos, and fixing them would need another reload of the data.
+
 ## 7. The Elastic Agent Builder agent (version e0ead98 for the second answer; 44b827a for the first)
 
-An AI-written second way in: an agent in Elastic's Agent Builder with three read-only tools over today's two catalogues. The model behind it is whatever
+An AI-written second way in: an agent in Elastic's Agent Builder with three read-only tools over today's two catalogs. The model behind it is whatever
 the project's default connector is when it runs; two real answers were obtained, on two different models. The same single question was used both
 times: "Which sponsors and talks at KubeCon fit the Hello World Gazette?". Both answers were read back from the saved conversation records, and checked
 by a program against the data; the checker made no model call.
@@ -228,10 +231,10 @@ by a program against the data; the checker made no model call.
 |---|---|---|
 | Time | first words 11.6 s, finished 33.7 s | first words 4.8 s, finished 7.0 s (18 s from command to printed answer) |
 | Model calls, tokens | 4 calls; 41,917 input, 1,282 output | 3 calls; 23,090 input (5,888 cached), 612 output |
-| Tool calls | 3: the outlet's profile, then two searches of the programme (the assignment's words, then the beat's) | the same 3 (the beat's words copied in full) |
+| Tool calls | 3: the outlet's profile, then two searches of the program (the assignment's words, then the beat's) | the same 3 (the beat's words copied in full) |
 | Companies named exist in the data, with the right tier | 5 of 5 (Coder, Dash0, Momentic, mirrord by MetalBear, Docker) | 2 of 2 (Coder, Dash0) |
-| Talks named exist | 5 of 5; the 3 dated ones matched the programme's day and time | 3 of 3; no day or time given |
-| Quotations word for word in the programme's text | 19 of 19 | 11 of 13 quoted pieces verbatim (against the stored passage text, which carries headings such as "Dash0. Problems solved:" that the raw spreadsheet does not); 3 of the 5 picks' quotations are fully verbatim; the other 2 pieces are not: one drops a word ("actually") inside a quotation without marking it, one joins two separated parts of one passage with no ellipsis |
+| Talks named exist | 5 of 5; the 3 dated ones matched the program's day and time | 3 of 3; no day or time given |
+| Quotations word for word in the program's text | 19 of 19 | 11 of 13 quoted pieces verbatim (against the stored passage text, which carries headings such as "Dash0. Problems solved:" that the raw spreadsheet does not); 3 of the 5 picks' quotations are fully verbatim; the other 2 pieces are not: one drops a word ("actually") inside a quotation without marking it, one joins two separated parts of one passage with no ellipsis |
 | Ends with the AI-written line, exactly | yes | yes |
 | Against the answer key for this outlet | 4 of its 5 sponsors are on the key (Coder, Momentic, the hidden gem mirrord, Docker) | 1 of its 2 sponsors is on the key (Coder); Dash0 is not |
 | Also | opens with a line of the model's own narration; ten picks against "up to five" | five picks (three talks, two sponsors); no narration |
@@ -245,7 +248,7 @@ sponsors and once for talks). Checked by program against the data:
 |---|---|
 | Shape | "Sponsors" (5) then "Talks" (5), then the closing line; no opening narration |
 | Every company named exists, with the right tier | 5 of 5 (Coder, Aiven, Dash0, Momentic, Docker) |
-| Every talk named exists | 5 of 5; the day and time given are the programme's for 4 of 5; for the fifth (the Cadence talk) the answer says "no time listed" although the programme lists Thursday 12 November, 14:40-15:10 |
+| Every talk named exists | 5 of 5; the day and time given are the program's for 4 of 5; for the fifth (the Cadence talk) the answer says "no time listed" although the program lists Thursday 12 November, 14:40-15:10 |
 | Quotations word for word, pieces in order, inside one stored passage of the right record | 10 of 10 quotations (17 pieces, split at its "..." gaps) |
 | Ends with the AI-written line, exactly | yes |
 | Against the answer key for this outlet | 3 of its 5 sponsors are on the key (Coder, Momentic, Docker); Aiven and Dash0 are not; the hidden gem (mirrord), Faros and JetBrains were not picked |
