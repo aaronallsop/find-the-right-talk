@@ -100,37 +100,24 @@ the demo searches before and after):**
 
 ## For Aaron
 
-What is going on, and only what you still need to do, in time order. Items A to C were added at 13:46 for the grand-prize plan; the rest are in time order.
+What is going on, and only what you still need to do, in time order.
 
-A. Create ~/dash0/.env yourself (never on screen) with DASH0_AUTH_TOKEN=<token from Dash0 settings> and
-   DASH0_ENDPOINT=<Dash0's OTLP over HTTP endpoint>; then restart the page
-   (`.venv/bin/python -m ftrt.page`); it should say "Traces of each search go to Dash0"; then tell Saturn.
-B. Radar: you joined (team "caiv") and your cluster is starting. Make the repository from Radar's
-   starter template (Use this template, Public, for example caiv-radar) and send Saturn its address.
-   Later: enter your Elastic key into the cluster as a secret yourself.
-C. The Breach Chronicle: the split already failed at 13:31 and it is out of the demo. Is there another
-   fix you meant? (If not, nothing to do.)
-
-1. Now: switch the agent to your OpenAI model (steps from Dione's reading of Elastic's docs; the
-   on-screen wording may differ a little):
-   1. Cloud Kibana: click the search box at the top, type "Model management" (it may be called
-      "Feature settings"), and open it.
-   2. Find "Default model"; pick openai-chat_completion-k563qy9gg9; click Save. If the page has an
-      Agent Builder section with its own model choice, set that to the same endpoint and Save.
-   3. Open Agent Builder, "Find the Right Talk", and look at the model selector in the chat box
-      (do not send anything): it should show the OpenAI model; if not, pick it there.
-   4. Tell Saturn what it shows; Cassini then asks the one test question.
-2. Now, optional: the Jina reload needs your yes typed in Titan's session. If not by 13:45, it runs
-   after 14:25 (not 14:00 to 14:25; done before 15:30).
-4. About 14:05: record the agent clip once in the cloud Kibana (Agents, "Find the Right Talk"), with
+1. Radar: in the Terminal with KUBECONFIG set: `cd ~/caiv-radar && kubectl apply -f argocd/application.yaml`;
+   then https://caiv.cnh.radarhq.io should show our page within minutes. Tell Saturn what you see.
+2. Dash0: look for the service find-the-right-talk and tell Saturn if traces show.
+3. The agent's model: cloud Kibana, Model management (it may be called "Feature settings"), Default
+   model = openai-chat_completion-k563qy9gg9 (and any Agent Builder model setting), Save. Open Agent
+   Builder, "Find the Right Talk", and look at the model selector in the chat box (send nothing): it
+   should show OpenAI. Tell Saturn what it shows; Cassini then asks the one test question.
+4. Any time: the usage figures (five-hour and weekly) from the usage page, to Saturn.
+5. About 14:05: record the agent clip once in the cloud Kibana (Agents, "Find the Right Talk"), with
    the OpenAI model if Cassini has confirmed it works, else the trial model. Ask: "Which sponsors and
    talks at KubeCon fit the Hello World Gazette?" Then tell Saturn; Cassini checks the saved answer.
-5. About 14:30: read the README as a judge.
-6. 15:30: read the submission paragraph.
-7. 16:05 screen check, 16:10 warm the models, 16:15 record, 16:25 warm again, 16:30 submit.
+6. About 14:30: read the README as a judge.
+7. 15:30: read the submission paragraph.
+8. 16:05 screen check, 16:10 warm the models, 16:15 record, 16:25 warm again, 16:30 submit.
    Dione's screen check: (1) film the CLOUD Kibana, never localhost:5601 (the laptop Kibana lists your private catalogues); check the address bar before recording. (2) Private window or a fresh browser profile, two tabs only: cloud Kibana and http://127.0.0.1:8765; bookmarks bar hidden; Do Not Disturb on; no Terminal or settings file in shot. (3) In Kibana do not open Settings, API keys, Connectors, Elasticsearch Endpoints, Discover, Dev Tools, or Agent Builder's Traces/Logs; crop out the project name and address if you can. (4) Clear any leftover typed text on the page first.
    Warm the models with `.venv/bin/python -m ftrt.warm`.
-8. Any time: the usage figures (five-hour and weekly) from the usage page, to Saturn.
 
 ## Now
 
@@ -218,6 +205,11 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 13:48, Aaron: go/no-go 1 is GO (everything due by 15:15 is done and checked). Radar hosted page: GO, with a hard stop at 15:15 (drop it if it is not live; the README then says so). Correction: Radar does give each team a free Kubernetes cluster, deleted on 13 November. Dione builds the lean hosted page in a new hosted/ folder; Titan saves it.
 - 13:49, Aaron: keep Jina. Elastic's "Jina models for embeddings" ask is done.
 - 13:46, Aaron (his note, 13:55): go for the grand prize, which needs all four sponsor tools (Elastic, Gitar, Dash0, Radar). Dash0: Titan adds tracing to the page (45-minute cap); Aaron creates the Dash0 account and puts the token in a settings file himself. Radar: a lean hosted version of the page, built by Dione in its own folder, committed by Titan, and deployed to Radar's cluster with Aaron's Elastic key entered by Aaron himself as a cluster secret; only after Aaron confirms with Radar that the cluster outlives judging and a deploy is quick (60-minute cap). Gitar continues on the new code. The freeze at 15:45 holds. The 13:40 hosting decision (hosting is off) is reversed by this.
+- 14:09 Cassini re-checked the page on 904a577: all 14 outlets fine; "Compare all" shows six columns in about 1.3 to 2.4 seconds. Kedify's top five outlets in the flip are now Greenstack, Open Source Sustainability Weekly, TFIR, LearnKube and The New Stack (Women in Infrastructure fell out). Gitar now says "Approved" with its one finding closed. The caiv-radar repository is up to date and green; its address still shows Radar's starter page until Aaron runs his one command, so Radar stays unclaimed as live.
+- 14:05 Rhea brought the README, submission paragraph and video script in line with Jina, Dash0, Radar ("being deployed") and Gitar; added the limits, the Elastic asks list, and the main code files (Titan's list). Aaron reads it at about 14:30.
+- 14:02 Dash0 tracing is working (904a577): traces are sent with no error; the page at 8765 runs with tracing on.
+- 14:00 Titan pushed the code to github.com/aaronallsop/caiv-radar (33ff1c1); the build is green and the image is public. An independent review found 2 faults, fixed in 85f1d27, including error messages no longer carrying the cloud address into traces.
+- 13:53 The hosted page for Radar is saved (0a5281d; Dione built it, Titan checked: no secrets). Rate limits: 20 per visitor and 120 overall, a minute. Aaron saved the cluster access file outside the project and created the cluster secret from his own settings file (names checked, values never shown).
 - 13:50 Radar: Aaron joined, team "caiv"; the cluster is starting. It deploys from a public repository made from Radar's starter template (Argo CD).
 - 13:49 Dash0 tracing is in the code, saved in be5b328 (Titan, 45-minute cap). It sends traces of each search only when Aaron's Dash0 settings file is filled in; without it, tracing is off. The text anyone types and the search question are never sent. Waiting on item A (the Dash0 account).
 - 13:44 Jina embeddings are in, saved and pushed (809ca91): one more voice in the blend and one more column in Compare all (cloud only); all 2,250 passages go to Elastic's hosted service once at load. Load to Elastic Cloud now takes 66 seconds (Titan, 13:35), not 470. The page's engine line now names ELSER, Jina embeddings and a re-ranker.

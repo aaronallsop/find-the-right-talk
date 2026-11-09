@@ -6,7 +6,7 @@ the project's Elastic Cloud serverless engine unless a line says otherwise. A se
 repeated runs gave the identical list, scores included. Each result names the version of the code (the commit
 hash from the repository history) it was measured on; a result is a statement about that version only.
 
-**Draft stamp: first written 12:44 on 9 November, section 3a added 13:48. To be re-run and re-stamped after the 15:45 freeze;
+**Draft stamp: first written 12:44 on 9 November, section 3a added 13:48, section 5.0 added 14:07. To be re-run and re-stamped after the 15:45 freeze;
 until then each line stands for the version named on it.**
 
 ## 1. The data, loaded from a fresh copy of the public repository
@@ -192,6 +192,20 @@ switching off was identical, name for name, to the one before. The 32 are exactl
 With it on, every sponsor shown (40 match rows, 10 search rows, 32 picker rows) is a Start-Up and carries the tag;
 talks and speakers lists do not change; the lists after switching off are identical to the lists before. In
 version c4a8ae8 the page no longer lets "Talks" be chosen while it is on (the box is set to sponsors and greyed).
+
+### 5.0 Refreshed on the latest code (version 904a577, 14:03 to 14:07, real browser; supersedes the times and counts in 5.1 to 5.4)
+- **Engine on screen:** "Elastic Cloud serverless, with Elastic's ELSER, Jina embeddings and a re-ranker".
+- **All 14 outlets** answered with no error message, each in 1.77 s to 2.44 s; every outlet gave 10 sponsors, 10 talks and 10 speakers in the
+  blended view. Words finds fewer for some (for example OpsMatters 5/1/1, TechRevolt News 1/1/1 sponsors/talks/speakers).
+- **Compare all (six columns: words, meaning, ELSER, Jina, blended, re-ranked), three runs each:** the GPU sentence among sponsors in 1.45 s,
+  1.72 s, 1.31 s (identical columns each time); the Hello World Gazette match in 2.37 s, 2.44 s, 2.44 s, then drawn in about 54 ms. Every "in N"
+  badge was recomputed from the columns (zero mismatches in six runs); each column equals its single view name for name and in order; every Start-Up
+  tag (GPU: 15 sponsors shown; Gazette: 28) matches the data, none missing or wrong. Between the Gazette runs only places 9 and 10 of blended and
+  place 10 of re-ranked moved (the Jina variation in 3a).
+- **The vendor door for Kedify,** three runs: 2.12 s, 2.22 s, 1.89 s; 14 outlets and a Talks tab, identical each time; first five Greenstack, Open Source
+  Sustainability Weekly, TFIR, LearnKube, The New Stack (these differ from the order at 12:18 in section 4, before ELSER and Jina were added).
+- **Start-ups only, on and off once:** 2.03 s on, 2.37 s off; the pool line goes 226, 32, 226; the vendor picker 226, 32, 226; with it on the ten
+  sponsors shown are all Start-Ups; talks and speakers are unchanged; after switching off the lists are identical to the ones before.
 
 ### 5.5 The engine is named on screen
 The page shows "Elastic Cloud serverless, with Elastic's ELSER" beside the title (screenshot, 12:36).

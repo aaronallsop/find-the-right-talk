@@ -1249,3 +1249,45 @@ Ranks at n=50 of each must-find:
 Blended top ten: Sysdig, Resolve AI, Jozu, Plural, Edge Delta, Docker, Kubex, Chainguard, Tigera, Wiz. Jina's top ten: Digital.ai, Chainguard,
 Jozu, Edge Delta, Docker, Resolve AI, Maze (7th), Sysdig, ActiveState, Tigera. Pass test: **still fails**: 0 of 7 must-finds and not Vijil in the
 blended top 10 (Maze 11th, Endor Labs 28th, Vijil 41st). Jina is the first way to put two must-finds (Maze 7th, Endor Labs 11th) near the top.
+
+---
+
+# Page checks refreshed on 904a577 (Dash0 tracing on), real browser at http://127.0.0.1:8765, 14:03 to 14:07 (machine clock)
+
+Agent not asked, catalogues not touched (read-only requests only). Times are click to button-back, cloud.
+**Engine label on screen:** "Elastic Cloud serverless, with Elastic's ELSER, Jina embeddings and a re-ranker". Way buttons: Blended, Meaning, Words,
+Elastic ELSER, Jina, Re-ranked, Compare all (match panel and plain search).
+
+**14 outlets, each picked and Go:** all 14 answered, no error message, **1.77 s to 2.44 s each** (Futurum 2.23, Greenstack 2.17, Hello World
+Gazette 1.96, LearnKube 2.09, Open Source Sustainability Weekly 2.17, OpsMatters 1.96, SDxCentral 2.00, TechRevolt News 1.77, Techstrong 1.84,
+TFIR 2.00, Breach Chronicle 2.44, The New Stack 2.16, The Regulated Cloud 2.12, Women in Infrastructure 2.34). Counts, blended: 10 sponsors, 10
+talks, 10 speakers for every outlet. Words: Futurum 5/1/2; Greenstack 10/10/10; Gazette 10/10/10; LearnKube 10/8/2; Open Source Sustainability
+Weekly 10/10/10; OpsMatters 5/1/1; SDxCentral 10/2/1; TechRevolt News 1/1/1 (before: 0/0/0); Techstrong 10/6/10; TFIR 10/10/10; Breach Chronicle
+10/10/10; The New Stack 10/10/10; The Regulated Cloud 10/10/9; Women in Infrastructure 10/10/10 (sponsors/talks/speakers).
+
+**Compare all, GPU sentence, "Among: Sponsors"** (three runs): **1.45 s, 1.72 s, 1.31 s** (requests 1.44, 1.80, 1.38 s); six columns; identical in all
+three runs; counts Words 1, the others 10. Top of each: Words Edera (in 6); Meaning vCluster (in 5), Edera (in 6), Rafay Systems (in 5); ELSER Edera,
+vCluster, Cast AI; Jina Edera, vCluster, CoreWeave (in 4); Blended Edera, vCluster, Cast AI; Re-ranked vCluster, Edera, AEnix (in 4).
+**Compare all, Hello World Gazette** (three runs): match came back in **2.37 s, 2.44 s, 2.44 s** (requests 2.35, 2.42, 2.44 s), columns drawn in
+about 54 ms; six columns for sponsors, talks and speakers. Sponsors' top three: Words JetBrains (in 5), Temporal (in 3), Docker (in 5); Meaning Komodor,
+Paper Compute Company [Start-Up], JetBrains; ELSER Docker, Momentic, mirrord [Start-Up]; Jina Coder (in 2), ActiveState (in 2), Docker; Blended Docker,
+JetBrains, Momentic; Re-ranked Docker, mirrord, Temporal. First talk in every column but Words and Re-ranked: "From Platform Catalog to Conversational
+Agent: Wiring AI Into Your Internal Developer Platform"; Words "MCP Was the Easy Half, The Rest Was a Skill Issue"; Re-ranked "Demo Theater: From
+YOLO to Golden Paths...". **Run to run:** runs 2 and 3 differ from run 1 only in blended places 9 and 10 (Syntasso, Dash0 against Cosmonic, Syntasso)
+and re-ranked place 10 (Dash0 against ControlTheory): the known Jina wobble (see the 13:48 set); nothing else differed.
+**Badges and tags:** every "in N" badge recomputed from the six columns: zero mismatches in all six runs (three GPU, three Gazette; sponsors, talks and
+speakers tabs). Each column equals its single view name for name in order (all six ways, all runs). Start-Up tags against `data/sponsors.csv`: GPU 15
+sponsors shown (tag only on Aranya, correct), Gazette 28 sponsors shown (tag on Paper Compute Company, mirrord by MetalBear, PatapscoAI, Vijil, Testkube,
+CodeVisionary, correct): none wrong, none missing.
+
+**Vendor door, Kedify** (three runs): answers in **2.12 s, 2.22 s, 1.89 s** (requests 2.11, 2.20, 1.87 s), title "Outlets and talks for Kedify, on what
+it does and what it is showing at KubeCon (counting double)", two tabs (Outlets with 14, Talks), no error, identical in all three. Outlets: Greenstack,
+Open Source Sustainability Weekly, TFIR, LearnKube, The New Stack, The Regulated Cloud, Techstrong, Futurum Group, Hello World Gazette, The Breach
+Chronicle, SDxCentral, Women in Infrastructure, OpsMatters, TechRevolt News. **The order has changed since 12:18 (68c98c7): then Greenstack, LearnKube,
+TFIR, Women in Infrastructure, The Regulated Cloud; Open Source Sustainability Weekly was 8th.**
+
+**Start-ups on/off, once (Hello World Gazette, press door):** off 2.16 s: sponsors Docker, JetBrains, Momentic, mirrord [Start-Up], Coder, Resolve AI,
+Sentry, Stacklet, Cosmonic, Syntasso; vendor picker 226. On (one click): 2.03 s; line "Sponsors: the 32 start-ups of 226", picker 32, tab "Start-up
+sponsors": mirrord, Paper Compute Company, Vijil, CodeVisionary, Radar, Maze, Testkube, Causal Dynamics Lab, StackGuardian, pgEdge, all tagged; talks and
+speakers lists identical to those with it off; the plain search's "Among" box forced to Sponsors and greyed. Off again: 2.37 s, pool 226, picker 226,
+the "Among" box un-greyed, and the three tabs identical to the first off lists. All ten start-ups shown are Start-Up tier in the data.
