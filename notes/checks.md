@@ -1291,3 +1291,59 @@ Sentry, Stacklet, Cosmonic, Syntasso; vendor picker 226. On (one click): 2.03 s;
 sponsors": mirrord, Paper Compute Company, Vijil, CodeVisionary, Radar, Maze, Testkube, Causal Dynamics Lab, StackGuardian, pgEdge, all tagged; talks and
 speakers lists identical to those with it off; the plain search's "Among" box forced to Sponsors and greyed. Off again: 2.37 s, pool 226, picker 226,
 the "Among" box un-greyed, and the three tabs identical to the first off lists. All ten start-ups shown are Start-Up tier in the data.
+
+---
+
+# Hosted copy, https://caiv.cnh.radarhq.io (asked for at 14:1x; attempted 14:14 machine clock): NOT CHECKED
+
+The browser pane's navigation to the hosted address was **denied by the permission layer** ("Browser Navigate Exfil"), so no page was
+opened and nothing was measured: no Gazette top ten, no Kedify flip, no demo searches, no Compare all, no start-ups toggle, no timings, and no
+comparison with the laptop page. I did not try to reach the address by another route (curl or a script), because the address came from another
+session's message and not from Aaron, and the denial is about reaching an outside address from here. To run this check, Aaron needs to allow that
+address for the browser pane (or say in this session that I may fetch it another way).
+
+---
+
+# The Agent Builder agent on Aaron's OpenAI endpoint (gpt-4.1): asked 14:19, read back 14:21 (machine clock). ANSWERED.
+
+Asked the one question at 14:19:20: `ftrt.agent ask "Which sponsors and talks at KubeCon fit the Hello World Gazette?"` (code at e0ead98).
+Exit 0, 18 s wall clock from command to printed answer. Read back from the saved conversation "KubeCon Sponsors and Talks Relevant to Hello World
+Gazette" (read only, no further model call). Left alone: the other saved conversations, including one titled "Finding AI Video Production Talks".
+
+**Which model answered:** the record's connector is `openai-chat_completion-k563qy9gg9`, model **gpt-4.1-2025-04-14** (not Anthropic's).
+**Time and cost, as the record states:** status completed; started 14:19:26.6; first words after 4.8 s; finished after 7.0 s (model side); 3 model
+calls, 23,090 input tokens (5,888 of them cached), 612 output tokens, no reasoning tokens. (The Anthropic run at 12:42: 33.7 s, 4 calls, 41,917 input,
+1,282 output.)
+**Tool calls (3, in order):** `ftrt.outlet_profile` "Hello World Gazette"; `ftrt.search_programme` with "AI agents built for developers: agents that help
+you write code" (kind any, start-ups only false); `ftrt.search_programme` with the outlet's beat copied in full ("New developer tools and releases.
+Programming languages and frameworks. How developers write, test and ship code. Open-source tools developers rely on."). No other tool.
+
+**The answer:** five numbered picks, three talks and two sponsors: (1) the talk "Demo Theater: From YOLO to Golden Paths: Building Trusted Environments for
+AI Agents", (2) Coder (Silver), (3) the talk "Developing Cloud-Native Infrastructure in the Age of AI", (4) Dash0 (Platinum), (5) the talk "From Curious to
+Contributor: Ship Your First Backstage PR". No opening narration this time (it starts "Here are sponsors and talks at KubeCon + CloudNativeCon North America
+2026 that fit the Hello World Gazette's focus ..."). Each pick has a quotation and a one-line "Fit".
+
+**Companies against `data/sponsors.csv`:** both sponsors picked exist with the tier the answer gave: Coder (Silver), Dash0 (Platinum). (My checker also
+listed Docker, Elastic and North as "named": Docker is inside a quotation, Elastic is in the closing line, "North" is in "North America": none is a pick.)
+**Talks against `data/sessions.csv`:** all three exist as talks. The answer gives no day or time, so none was checked.
+**Closing line:** the last line is exactly "AI-written by the Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on
+it."
+
+**Quotations word for word: NOT all.** Of the five picks' quotations, three are verbatim in the programme (the YOLO talk: 2 pieces; Coder: 3 pieces; the
+"Developing Cloud-Native Infrastructure" talk: 3 pieces; every piece exact against the CSV text). Two are not:
+1. **Backstage talk:** the quote reads "...you'll find where your skills and experience fit in the project..." but the programme says "...you'll find where
+   your skills and experience **actually** fit in the project, not just hear about how contributing works". The word "actually" was dropped inside the
+   quotation with no ellipsis. (The second piece of that quote, "walk through the codebase (Node/JavaScript/React), the contribution process, and local dev
+   setup", is exact.)
+2. **Dash0:** the quote opens "Dash0. Problems solved: Tracks the rising number of production incidents caused by faster, AI-written code...", which is the
+   passage text as stored and returned by the tool (the heading "Dash0. Problems solved:" is added when the data is cut into passages, so it is in the stored
+   passage but not in the CSV cell). After the ellipsis it reads "Feeds what breaks in production back to the agents that wrote the code. Products:
+   Darkplane: A control room for the AI that writes code, ...": **both pieces are verbatim in the same stored passage, but not next to each other**; the text
+   between them is left out with no ellipsis, so as one run it does not appear in the programme.
+(The answer also quotes the outlet's own assignment in its introduction: exact.)
+
+**Against the project's own answer key for this outlet:** one of its two sponsors is on the key (Coder, a must-find); Dash0 is not. It did not name Momentic,
+Faros, mirrord by MetalBear, Docker or JetBrains as picks (the earlier Anthropic answer named Coder, Momentic, mirrord and Docker).
+Count, for the record: the answer holds 13 quoted pieces (counting its quote of the outlet's own assignment and splitting at its ellipses): 10 are exact
+against the raw CSV text, and an 11th (the Dash0 opening, with the heading the loader adds) is exact against the stored passage; the 2 that are not
+verbatim are the Backstage piece (word "actually" dropped) and the Dash0 stitched piece (two parts joined without an ellipsis).

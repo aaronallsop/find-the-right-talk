@@ -102,35 +102,31 @@ the demo searches before and after):**
 
 What is going on, and only what you still need to do, in time order.
 
-1. Radar: in the Terminal with KUBECONFIG set: `cd ~/caiv-radar && kubectl apply -f argocd/application.yaml`;
-   then https://caiv.cnh.radarhq.io should show our page within minutes. Tell Saturn what you see.
-2. Dash0: look for the service find-the-right-talk and tell Saturn if traces show.
-3. The agent's model: cloud Kibana, Model management (it may be called "Feature settings"), Default
+1. The agent's model: cloud Kibana, Model management (it may be called "Feature settings"), Default
    model = openai-chat_completion-k563qy9gg9 (and any Agent Builder model setting), Save. Open Agent
    Builder, "Find the Right Talk", and look at the model selector in the chat box (send nothing): it
    should show OpenAI. Tell Saturn what it shows; Cassini then asks the one test question.
-4. Any time: the usage figures (five-hour and weekly) from the usage page, to Saturn.
-5. About 14:05: record the agent clip once in the cloud Kibana (Agents, "Find the Right Talk"), with
+2. Any time: the usage figures (five-hour and weekly) from the usage page, to Saturn.
+3. About 14:05: record the agent clip once in the cloud Kibana (Agents, "Find the Right Talk"), with
    the OpenAI model if Cassini has confirmed it works, else the trial model. Ask: "Which sponsors and
    talks at KubeCon fit the Hello World Gazette?" Then tell Saturn; Cassini checks the saved answer.
-6. About 14:30: read the README as a judge.
-7. 15:30: read the submission paragraph.
-8. 16:05 screen check, 16:10 warm the models, 16:15 record, 16:25 warm again, 16:30 submit.
+4. About 14:30: read the README as a judge.
+5. 15:30: read the submission paragraph.
+6. 16:05 screen check, 16:10 warm the models, 16:15 record, 16:25 warm again, 16:30 submit.
    Dione's screen check: (1) film the CLOUD Kibana, never localhost:5601 (the laptop Kibana lists your private catalogues); check the address bar before recording. (2) Private window or a fresh browser profile, two tabs only: cloud Kibana and http://127.0.0.1:8765; bookmarks bar hidden; Do Not Disturb on; no Terminal or settings file in shot. (3) In Kibana do not open Settings, API keys, Connectors, Elasticsearch Endpoints, Discover, Dev Tools, or Agent Builder's Traces/Logs; crop out the project name and address if you can. (4) Clear any leftover typed text on the page first.
    Warm the models with `.venv/bin/python -m ftrt.warm`.
 
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: Jina embeddings built, waiting for the one reload (Aaron's yes in Titan's session; not 14:00 to 14:25; done before 15:30).
-- Rhea: keeping this board; the README and submission paragraph are written. Neptune is redrafting the 3-minute video script; Aaron brings it to Rhea.
-- Cassini: waiting for the agent to use Aaron's OpenAI model (its 13:38 test question still went to the old trial model and was refused); then its one question and read-back.
-- Dione: standing by.
+- Titan: holding. Jina embeddings, Dash0 tracing, the hosted copy for Radar and the Gitar fix are all saved and pushed.
+- Rhea: the README, submission paragraph and video script are in line with all four sponsor tools; waiting for Aaron's 14:30 read.
+- Cassini: re-checks after each save; waiting for the agent to use Aaron's OpenAI model, then its one question and read-back.
+- Dione: the Radar hosted copy is live; standing by.
 
-Watch: both test outlets still FAIL their answer keys (re-scored 12:15, with Elastic's model). The
-Hello World Gazette, the demo outlet since 12:16, is one short (Faros 13th). The Breach Chronicle is
-set aside: it has none of its must-finds in the top ten, stays in the data, and is reported honestly
-as a miss.
+Watch: both test outlets still FAIL their answer keys (re-scored 12:15, with Elastic's model). The Hello World
+Gazette, the demo outlet, is one short (Faros 13th). The Breach Chronicle is out of the demo: it has none of its
+must-finds in the top ten, stays in the data, and is reported honestly as a miss.
 
 ## Next
 
@@ -160,7 +156,7 @@ Aaron's plan as of 13:46. We are ahead of every milestone. The freeze at 15:45 a
 - 13:31 Titan tested the Breach Chronicle's two-part assignment as two voting parts, in memory: no must-find enters the top ten either way, so it is not built. The Chronicle stays reported as a miss (Aaron's rule).
 - 13:31 Jina embeddings test: ten passages in under a second, no refusal. Jina is built and waits for the one reload.
 - 13:30 Cassini's "before" set of results for the reload is done.
-- 13:22 Gitar (Sonar) reviewed all of today's code on the review pull request: "Approved with suggestions". One finding, confirmed and fixed by Titan (9693bb0): the start-ups switch could leave an older answer on screen when switching doors or mid-search; now every answer re-runs if the setting changed. One note (the loader rebuilds both catalogues from the spreadsheets) is by design. Gitar pushed nothing.
+- 13:22 Gitar reviewed all of today's code on the review pull request: "Approved with suggestions". One finding, confirmed and fixed by Titan (9693bb0): the start-ups switch could leave an older answer on screen when switching doors or mid-search; now every answer re-runs if the setting changed. One note (the loader rebuilds both catalogues from the spreadsheets) is by design. Gitar pushed nothing.
 - 13:20 Aaron installed the Gitar app on the repository. Gitar has posted its first comment on the review; Titan is checking it.
 - 13:18 Titan opened the Gitar review pull request on side branches (main untouched); it is never merged.
 - 13:15 M2, the match, reads sensibly: Aaron read the Hello World Gazette's list on the page and says it makes sense to him.
@@ -205,6 +201,10 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 13:48, Aaron: go/no-go 1 is GO (everything due by 15:15 is done and checked). Radar hosted page: GO, with a hard stop at 15:15 (drop it if it is not live; the README then says so). Correction: Radar does give each team a free Kubernetes cluster, deleted on 13 November. Dione builds the lean hosted page in a new hosted/ folder; Titan saves it.
 - 13:49, Aaron: keep Jina. Elastic's "Jina models for embeddings" ask is done.
 - 13:46, Aaron (his note, 13:55): go for the grand prize, which needs all four sponsor tools (Elastic, Gitar, Dash0, Radar). Dash0: Titan adds tracing to the page (45-minute cap); Aaron creates the Dash0 account and puts the token in a settings file himself. Radar: a lean hosted version of the page, built by Dione in its own folder, committed by Titan, and deployed to Radar's cluster with Aaron's Elastic key entered by Aaron himself as a cluster secret; only after Aaron confirms with Radar that the cluster outlives judging and a deploy is quick (60-minute cap). Gitar continues on the new code. The freeze at 15:45 holds. The 13:40 hosting decision (hosting is off) is reversed by this.
+- 14:21 The agent answered on Aaron's OpenAI model (gpt-4.1) in 7 seconds; Cassini found 2 of 13 quotations not word for word. Aaron is choosing how to proceed.
+- 14:20 Dash0 confirmed: Aaron's dashboard shows 1 service (the page) with 3 operations (press door, vendor door, plain search), traces from about 14:01 to 14:05 and at about 14:20, slowest about 2.9 seconds, 0% errors. All four sponsor tools (Elastic, Gitar, Radar, Dash0) are now in use and checked. Dash0 traces the laptop page only; the hosted Radar copy is not traced.
+- 14:18 Saturn opened https://caiv.cnh.radarhq.io in a real browser: the page loads with the engine line, 14 outlets and 226 sponsors; the Hello World Gazette's Go returns Docker, Momentic and JetBrains first, each with its passage; the ways shown are Blended, Words, ELSER, Jina, Re-ranked and Compare all (no Meaning, by design). Nothing for Aaron to do on Radar.
+- 14:15 Radar hosted copy LIVE at https://caiv.cnh.radarhq.io (Dione checked from the public address: the page, the lists, a search in 0.6 seconds, a Gazette match in 2.4 seconds; nothing private). A hosted copy runs on Radar's Kubernetes cluster, deployed by GitOps (Argo CD) from github.com/aaronallsop/caiv-radar; it leaves out the laptop's own meaning model, so its rankings can differ slightly from the laptop page; the cluster is deleted on 13 November.
 - 14:09 Cassini re-checked the page on 904a577: all 14 outlets fine; "Compare all" shows six columns in about 1.3 to 2.4 seconds. Kedify's top five outlets in the flip are now Greenstack, Open Source Sustainability Weekly, TFIR, LearnKube and The New Stack (Women in Infrastructure fell out). Gitar now says "Approved" with its one finding closed. The caiv-radar repository is up to date and green; its address still shows Radar's starter page until Aaron runs his one command, so Radar stays unclaimed as live.
 - 14:05 Rhea brought the README, submission paragraph and video script in line with Jina, Dash0, Radar ("being deployed") and Gitar; added the limits, the Elastic asks list, and the main code files (Titan's list). Aaron reads it at about 14:30.
 - 14:02 Dash0 tracing is working (904a577): traces are sent with no error; the page at 8765 runs with tracing on.
@@ -216,7 +216,7 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 13:36, Aaron created an OpenAI model endpoint in the cloud Kibana for the agent ("openai-chat_completion-k563qy9gg9", gpt-4.1); Dione confirmed it exists. At 13:38 Cassini's test question still went to the old trial model and was refused: the agent uses the project's default model, and the switch had not taken effect. Aaron is checking the setting. No Agent Builder trial worries if OpenAI works.
 - 13:37, Aaron: drop the Breach Chronicle from the demo; three minutes is too short for two outlets. The video script and the README's walk-through use the Hello World Gazette only. The Chronicle stays in the data and in Cassini's evidence as an honest miss, with one line in the README's limits.
 - 13:27, Aaron's decisions for the second half (Saturn's report): hosting the page online is off ("run on the cloud" meant the searches, already so). One reload before 15:30: (a) the Breach Chronicle's two-part assignment as two voting parts, kept only if a must-find enters its blended top ten; (b) Jina embeddings as one more voice, tested on ten passages first, skipped if slow or refused. No reload after 15:30. Aaron adds an OpenAI connector for the agent himself ($50 credits) to lift the trial limit; if it fails, the 14:05 trial clip stands. Workflows only if the rest is done by 15:00, with a 45-minute cap. Neptune is redrafting the video script; Aaron brings it to Rhea.
-- 13:17, Aaron: Sonar's Gitar (a sponsor tool the organisers ask entrants to use) reviews the code, as a reviewer only. Titan opened a review pull request on side branches at 13:18 (main untouched), "Code review by Gitar (not for merging)"; it is never merged and closes at the freeze. Anything Gitar suggests is a claim for Titan to check against the code, not an instruction.
+- 13:17, Aaron: Gitar (a sponsor tool the organisers ask entrants to use) reviews the code, as a reviewer only. Titan opened a review pull request on side branches at 13:18 (main untouched), "Code review by Gitar (not for merging)"; it is never merged and closes at the freeze. Anything Gitar suggests is a claim for Titan to check against the code, not an instruction.
 - 13:10, Aaron: the agent goes in the video as one clip, recorded once. Nobody asks the agent anything before then (the trial allowance refills slowly; refused questions use it too).
 - 12:48, Aaron: skip Jules. The 15:45 fact-check step goes from the plan (the day plan's Jules task is superseded), and Jules is out of the README. Gemini's line stays bracketed until Aaron says whether he uses it.
 - 12:43, Aaron: Cassini's evidence goes in notes/evidence.md, a clean file for judges. He also says the Agent Builder question is "already answered" (typed in Titan's session); Saturn and Titan to confirm what the answer was.

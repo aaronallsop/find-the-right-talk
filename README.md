@@ -8,8 +8,8 @@ right story surfaces beside the big names.
 
 It runs on Elastic Cloud serverless, searches the programme by words and by meaning, and in the
 cloud adds Elastic's own ELSER model, Jina's embedding model and Elastic's hosted re-ranker as
-further voices. It also has an Elastic Agent Builder agent, a code review by Sonar's Gitar, tracing
-in Dash0, and a hosted copy being deployed on Radar. All the code
+further voices. It also has an Elastic Agent Builder agent, a code review by Gitar, tracing
+in Dash0, and a hosted copy on Radar. All the code
 was written on 9 November 2026, at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt
 Lake City, by Claude Code under the direction of Aaron Allsop.
 
@@ -53,15 +53,16 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
 - **Elastic Agent Builder** runs an AI agent, "Find the Right Talk" (in Kibana: Agents), with three
   read-only tools over today's two catalogues only. It is a second, AI-written way in, not the
   engine: it does not run the project's own blend. Its answers come from a language model reached
-  through Elastic's AI connector in the project: today the project's default model, Anthropic's
-  Claude Sonnet 4.5 on Elastic's hosted inference service (an OpenAI endpoint has been created to
-  replace it; this README will say when the agent is using it). Elastic's own models do the
-  searching; the connector's model only writes the answer. The questions and the passages the agent
-  reads go to that model, billed per use. Every answer ends "AI-written by the
-  Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on it."
-  On Elastic's trial it answers about one long question every 7 minutes. Titan measured one
-  Gazette answer in 41 seconds on 9 November and checked all 14 of its quotations word for word
-  against the programme; Cassini's check of it is still to come.
+  through Elastic's AI connector in the project: since about 14:20 on 9 November that is an OpenAI
+  model (gpt-4.1) through an endpoint the author created; before that it was the project's default
+  model, Anthropic's Claude Sonnet 4.5 on Elastic's hosted inference service. Elastic's own models do
+  the searching; the connector's model only writes the answer. The questions and the passages the
+  agent reads go to that model, billed per use. Every answer ends "AI-written by the Find the Right
+  Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on it." The agent
+  must quote the programme's own passage for every company or talk it suggests. Checked on 9 November:
+  on the earlier model, all 14 quotations in one Gazette answer were word for word (Titan); on the
+  OpenAI model one answer took 7 seconds, and 2 of its 13 quotations were not word for word (Cassini).
+  The author is deciding how to proceed, so this is an open limit.
 - **The blend is this project's own code:** each ranked list votes (reciprocal rank fusion), so it
   takes any number of voices.
 - **Geo queries are not used:** the data has no coordinates (rooms in one building and a region
@@ -106,10 +107,11 @@ Status at 14:05 on 9 November, one line each:
 
 Status at 14:05 on 9 November:
 
-- **Gitar (Sonar):** done. It reviewed all of today's code; its one finding was confirmed and fixed, and
+- **Gitar:** done. It reviewed all of today's code; its one finding was confirmed and fixed, and
   Gitar now says "Approved" (the start-ups switch could leave an older answer on screen); see
   "Who did what, and how AI was used". Nothing it wrote was merged.
-- **Dash0:** done. Tracing is working (14:02): when a Dash0 settings file (`~/dash0/.env`, with
+- **Dash0:** done and confirmed. The author's Dash0 dashboard shows one service (the page) with three
+  operations (press door, vendor door, plain search), traces from about 14:01 to 14:05 and at about 14:20, the slowest about 2.9 seconds, and no errors. It traces the laptop page only; the hosted Radar copy is not traced. Tracing: when a Dash0 settings file (`~/dash0/.env`, with
   `DASH0_AUTH_TOKEN` and `DASH0_ENDPOINT`, kept outside the project and never committed) is filled
   in, the page sends a trace of each search to Dash0 using OpenTelemetry. Without the file, tracing
   is off and nothing else changes. What goes to Dash0: the names of the steps (the match, each way
@@ -117,14 +119,17 @@ Status at 14:05 on 9 November:
   which of Elastic's models were left out, and the id of a picked outlet or sponsor. What never
   goes: the text anyone typed, or the search question. Error messages are kept out of the traces
   too, so the cloud address does not travel with them.
-- **Radar:** a hosted copy of the page is being deployed. It is built and pushed to the public
-  repository github.com/aaronallsop/caiv-radar, and is deployed by GitOps (Argo CD) to a Radar
-  cluster that is deleted on 13 November. Its address will be https://caiv.cnh.radarhq.io; this line
-  says when it has been seen working. The hosted copy uses the author's own Elastic Cloud project through
-  a cluster secret, so a visitor's search is run, and billed per use, on that project, and the text
-  of a search goes to Elastic's models (and, in the Re-ranked view, to Elastic's hosted service) as
-  described above. It limits each visitor to 20 requests a minute and the whole page to 120 a minute.
-  If it is not live by 15:15, this line will say so.
+- **Radar:** done, and live (Dione checked it from the public address, and Saturn opened it in a browser). A hosted copy runs at
+  https://caiv.cnh.radarhq.io on Radar's Kubernetes cluster, deployed by GitOps (Argo CD) from
+  github.com/aaronallsop/caiv-radar. It leaves out the laptop's own meaning model, so its rankings can
+  differ slightly from the laptop page: it offers Blended, Words, ELSER, Jina, Re-ranked and Compare
+  all, and no plain Meaning way, by design. Opened in a real browser, it showed 14 outlets and 226
+  sponsors, and the Hello World Gazette's match came back with Docker, Momentic and JetBrains first,
+  each with its passage. The cluster is deleted on 13 November. The hosted copy uses
+  the author's own Elastic Cloud project through a cluster secret, so a visitor's search is run, and
+  billed per use, on that project, and the text of a search goes to Elastic's models (and, in the
+  Re-ranked view, to Elastic's hosted service) as described above. It limits each visitor to 20
+  requests a minute and the whole page to 120 a minute.
 
 ## Where it falls short
 
@@ -147,7 +152,8 @@ Measured on 9 November against two test outlets whose answer keys were written b
   shares GPUs) above Edera (which isolates them); the re-ranker cannot tell the stance either.
 - **It never says "nothing fits":** meaning always returns the nearest thing.
 - **The fit check, an AI judgement of the top results, was not built.** The Agent Builder agent is a
-  different thing: it answers in words, and it is slow (41 seconds for one answer when measured).
+  different thing: it answers in words, and in a check on 9 November 2 of 13 quotations in one answer were not word
+  for word, so check each quoted passage against the programme.
 
 ## What existed before the day, and what was built on it
 
@@ -162,8 +168,8 @@ Measured on 9 November against two test outlets whose answer keys were written b
   Elastic Cloud connection (laptop engine as fallback); 11:47 passages fit what the meaning model
   reads; 11:48 the match; 11:54 the page; 11:56 steadier results; 12:12 Elastic's ELSER as a further
   voice; 12:14 the page moves to port 8765; 12:17 the flip; 12:25 the start-ups switch; 12:29 a slow
-  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker; 12:46 the Agent Builder agent; 13:22 a code review by Sonar's Gitar, and its one finding fixed;
-  13:44 Jina's embeddings as a further voice; 13:49 Dash0 tracing; 14:00 the hosted copy for Radar.
+  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker; 12:46 the Agent Builder agent; 13:22 a code review by Gitar, and its one finding fixed;
+  13:44 Jina's embeddings as a further voice; 13:49 Dash0 tracing; 14:00 the hosted copy for Radar, live by about 14:15.
   The commit history starts at the beginning of the hackathon: the first commit holds no code, only
   the data, the notes, the rulebook (`CLAUDE.md`), the licence, the ignore list and this README.
 
@@ -186,9 +192,10 @@ Measured on 9 November against two test outlets whose answer keys were written b
   the search text and the top 20 passages to Elastic's hosted re-ranking service, the second sends
   every passage once at load and each search's question when it runs to Elastic's hosted inference
   service (see above). The
-  Agent Builder agent is the other: its answers are written by Anthropic's Claude Sonnet 4.5 on
-  Elastic's hosted inference service, and are labelled as AI-written.
-- **Sonar's Gitar** reviewed all of today's code on a review pull request that was never merged: it
+  Agent Builder agent is the other: its answers are written by an OpenAI model (gpt-4.1) reached
+  through Elastic's AI connector, so its questions and the passages it reads go to OpenAI, billed to
+  the author; they are labelled as AI-written.
+- **Gitar** reviewed all of today's code on a review pull request that was never merged: it
   first approved with suggestions, and now says "Approved" with its one finding closed. The finding was confirmed and fixed (the start-ups switch could
   leave an older answer on screen when switching doors or mid-search; every answer now re-runs if the
   setting changed). A second note, that the loader rebuilds both catalogues from the spreadsheets,

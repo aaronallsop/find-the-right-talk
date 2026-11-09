@@ -217,32 +217,27 @@ behaves for anyone but the person who built it. The word counts quoted for the B
 single count over the sponsors' text. The Gazette misses its own key's pass test by one company; the Breach
 Chronicle misses it entirely. No geographic search is offered: the data has no coordinates.
 
-## 7. The Elastic Agent Builder agent (version 44b827a)
+## 7. The Elastic Agent Builder agent (version e0ead98 for the second answer; 44b827a for the first)
 
-An AI-written second way in: an agent in Elastic's Agent Builder with three read-only tools over today's two
-catalogues, answering in Elastic's hosted language model (Anthropic Claude Sonnet 4.5).
+An AI-written second way in: an agent in Elastic's Agent Builder with three read-only tools over today's two catalogues. The model behind it is whatever
+the project's default connector is when it runs; two real answers were obtained, on two different models. The same single question was used both
+times: "Which sponsors and talks at KubeCon fit the Hello World Gazette?". Both answers were read back from the saved conversation records, and checked
+by a program against the data; the checker made no model call.
 
-**One real answer, checked from the saved record (13:08 on 9 November; the checker made no model call).** The
-question "Which sponsors and talks at KubeCon fit the Hello World Gazette?" was asked at 12:42:49. The record says:
-completed; first words after 11.6 seconds, finished after 33.7 seconds; 4 calls to the model, 41,917 input and
-1,282 output tokens; three tool calls (the outlet's profile, then two searches of the programme, one with the
-outlet's assignment and one with its beat). What was checked in the answer:
+| | First answer, 12:42 (Anthropic Claude Sonnet 4.5, on Elastic's hosted service) | Second answer, 14:19 (OpenAI gpt-4.1-2025-04-14, the project owner's own endpoint) |
+|---|---|---|
+| Time | first words 11.6 s, finished 33.7 s | first words 4.8 s, finished 7.0 s (18 s from command to printed answer) |
+| Model calls, tokens | 4 calls; 41,917 input, 1,282 output | 3 calls; 23,090 input (5,888 cached), 612 output |
+| Tool calls | 3: the outlet's profile, then two searches of the programme (the assignment's words, then the beat's) | the same 3 (the beat's words copied in full) |
+| Companies named exist in the data, with the right tier | 5 of 5 (Coder, Dash0, Momentic, mirrord by MetalBear, Docker) | 2 of 2 (Coder, Dash0) |
+| Talks named exist | 5 of 5; the 3 dated ones matched the programme's day and time | 3 of 3; no day or time given |
+| Quotations word for word in the programme's text | 19 of 19 | 11 of 13 quoted pieces verbatim (against the stored passage text, which carries headings such as "Dash0. Problems solved:" that the raw spreadsheet does not); 3 of the 5 picks' quotations are fully verbatim; the other 2 pieces are not: one drops a word ("actually") inside a quotation without marking it, one joins two separated parts of one passage with no ellipsis |
+| Ends with the AI-written line, exactly | yes | yes |
+| Against the answer key for this outlet | 4 of its 5 sponsors are on the key (Coder, Momentic, the hidden gem mirrord, Docker) | 1 of its 2 sponsors is on the key (Coder); Dash0 is not |
+| Also | opens with a line of the model's own narration; ten picks against "up to five" | five picks (three talks, two sponsors); no narration |
 
-| Check | Result |
-|---|---|
-| Every company named is a sponsor in the data | 5 of 5 (Coder, Dash0, Momentic, mirrord by MetalBear, Docker), with the tier the answer gave |
-| Every talk named exists, and the day and time given are the programme's | 5 of 5 exist; the 3 that were dated match |
-| Every quotation appears word for word in the programme's text | 19 of 19 |
-| Ends with the AI-written line, exactly | yes |
-| Against the answer key for this outlet | 4 of its 5 sponsors are on the key (Coder, Momentic, the hidden gem mirrord, Docker); Faros and JetBrains were not named; Dash0 is not on the key |
-
-Two things a reader should know: the answer opens with a line of the model's own narration ("Perfect! I now have
-comprehensive results..."), and its one-line reasons are the model's wording, which was not checked; only the
-quotations were. This is one answer from one question, not a repeated measurement.
-
-**The quota is tight.** The same single question, asked three more times (12:53, 13:06 and 13:38), was refused
-every time after 30 to 43 seconds with the trial's rate limit (HTTP 429): "wait 8m44s for your trial quota to be
-refilled", then "wait 6m7s", then "wait 3m36s". At 13:38, after the project's default model had been reported
-switched, the refusal and the saved record still named Elastic's hosted Anthropic model
-(anthropic-claude-4.5-sonnet), so the switch had not taken effect for the agent at that time. A live answer from
-the agent cannot be relied on within a short window.
+Both answers are single answers to one question, not repeated measurements, and the one-line reasons in each are the model's own wording, which was not
+checked; only the quotations, names and the closing line were. **The quota was tight on Anthropic's hosted model:** the same question, asked three more
+times (12:53, 13:06 and 13:38) was refused every time after 30 to 43 seconds with the trial's rate limit (HTTP 429: "wait 8m44s", "wait 6m7s", "wait
+3m36s"); at 13:38 the refusal and the saved record still named the Anthropic model. The second answer above came after the agent was switched to the
+project owner's own OpenAI endpoint.

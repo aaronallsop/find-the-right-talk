@@ -16,9 +16,11 @@ sponsors to the 32 start-ups among the 226, so a small company with the right st
 beside the big names. The programme is searched by words and by meaning, and in Elastic Cloud
 serverless four voices are blended: words, a small meaning model, Elastic's own ELSER and Jina's
 embeddings, with Elastic's hosted Jina re-ranker as a further view. An Elastic Agent Builder agent
-answers in plain words and quotes the programme's own passage for every pick. Sonar's Gitar
-reviewed all the code, and Dash0 traces each search without the typed words. [A hosted copy runs on
-Radar: add this only once Saturn confirms it is live.] It does not always get it right, and the
+answers in plain words and quotes the programme's own passage for every pick. Gitar
+reviewed all the code, and Dash0 traces each search without the typed words. A hosted copy runs on
+Radar's Kubernetes cluster, deployed by GitOps (Argo CD) from github.com/aaronallsop/caiv-radar, until
+the cluster is deleted on 13 November; it leaves out the laptop's own meaning model, so its rankings
+can differ slightly. It does not always get it right, and the
 README says where.
 
 ## A shorter version, if the form has a small box
@@ -56,7 +58,6 @@ starts at 11:00.
   stays called the "fit check", never "the judge".
 - Elastic Workflows is not used (the plan was to try it only if everything else was done by 15:00).
 - Geo queries: not used. The data has no coordinates (Aaron, 11:12).
-- The Radar hosted copy is not claimed as live until Saturn confirms it works.
 - "Nothing is sent anywhere" is not said. In Elastic Cloud the programme and every search's text are
   read by Elastic's ELSER model inside Aaron's own project; Jina's embeddings, the re-ranker and the
   agent use Elastic's hosted service, billed per use (the README says so).
