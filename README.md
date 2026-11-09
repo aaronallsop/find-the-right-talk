@@ -19,8 +19,8 @@ building could be two aisles over and you would never know.
 
 - **I'm press.** Pick an outlet and type what it came to the conference to find. You get the talks,
   speakers and sponsors that fit, each with the exact passage that made it match.
-- **The fit check.** For the top three sponsors, an AI model writes one sentence on why each may
-  suit the outlet, with the passage it read behind a click. The search decides the order, not the AI.
+- **The fit check.** For the top three talks, speakers and sponsors, an AI model writes one sentence
+  on why each may suit the outlet, with the passage it read behind a click. The search decides the order, not the AI.
 - **I'm a vendor.** The same engine turned round: pick a sponsor, or describe your company, and get
   the outlets whose beat fits your story.
 - **Start-ups only.** One switch narrows any sponsor list to the start-ups, so a small company with
@@ -50,8 +50,11 @@ embeddings, and an Agent Builder agent with custom tools. Workflows is not used.
 
 ## The other sponsor tools
 
-- **Radar** hosts the live page above, deployed by Argo CD. On it, each Go sends the fit check's text
-  to OpenAI, billed to the author, so it is capped at 30 requests a minute.
+- **Radar** hosts the live page above on its cluster, deployed by Argo CD. Near the end of the day
+  Radar's screen was used to check the page's health, version, memory, timeline and checks; it showed
+  every release failing its ready-check twice on start-up, and an unused cluster pass. On the live
+  page, each Go sends the fit check's text to OpenAI, billed to the author, so it is capped at 30
+  requests a minute.
 - **Dash0** traces each search on the laptop page with OpenTelemetry: step names and timings only,
   never the text anyone typed.
 - **Gitar**, an AI code reviewer, reviewed the final code and says "Approved". Its one finding was
@@ -86,8 +89,8 @@ in `ftrt/config.py`. Without one the page works as before and the fit check box 
 - **What leaves the Elastic project.** The words, meaning and ELSER searches stay inside it. Jina's
   embeddings (every passage once at load, and each search's question) and the re-ranker (the
   question and the top 20 passages) go to Elastic's hosted inference service. The agent (its
-  questions and the passages it reads) and the fit check (the outlet's two texts and the three
-  sponsors' own text, nothing else) go to OpenAI through Elastic, billed to the project's owner.
+  questions and the passages it reads) and the fit check (the outlet's two texts and the top three
+  results' own text, whether talks, speakers or sponsors, nothing else) go to OpenAI through Elastic, billed to the project's owner.
   Nothing anyone types is stored.
 
 What was measured on the day, including the misses, is in `notes/evidence.md`.

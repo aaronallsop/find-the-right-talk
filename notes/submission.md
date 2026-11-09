@@ -18,7 +18,7 @@ It runs on Elastic Cloud serverless. Elasticsearch searches by words and by mean
 adds Elastic's own ELSER model, Jina's embeddings and a Jina re-ranker, blended in code written for
 this project. An Elastic Agent Builder agent answers in plain words and quotes the program's own
 passage for every pick. A fit check, labeled as AI-written, gives one sentence on why each of the top
-three sponsors may suit the outlet; the search, not the AI, decides the order. Gitar reviewed all the
+three results (talks, speakers or sponsors) may suit the outlet; the search, not the AI, decides the order. Gitar reviewed all the
 code and approved it, Dash0 traces each search without the typed words, and a hosted copy runs live on
 Radar's Kubernetes cluster at https://caiv.cnh.radarhq.io until 13 November. All of the code was
 written on the day, from an empty folder, by Claude Code under my direction. It does not always get it
