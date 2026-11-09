@@ -3,7 +3,7 @@
 Plain words, kept by Neptune until 12:00 and by Rhea after. The record of the day is the commit
 history; this is the to-do list.
 
-## Handoff from Neptune (written 11:50)
+## Handoff from Neptune (written 11:25; Neptune finished early to save usage)
 
 **Done, all saved and pushed to https://github.com/aaronallsop/find-the-right-talk**
 
@@ -14,19 +14,20 @@ history; this is the to-do list.
 | B2 the three searches | 50019ed, 11:07 | Words, meaning, blended, and a compare mode, from Terminal. |
 | Fix to passage cutting | 0560c9b, 11:09 | List cells cut at their items; no passage starts mid-sentence. |
 | Search fixes from review | 42c36e0, 11:20 | Results no longer shift with how many are shown; honest empty messages; README setup wording. |
-| Elastic Cloud connection | c346c70, 11:21 | Uses the serverless project when `~/elastic-cloud/.env` is filled in, the laptop engine otherwise. |
+| Elastic Cloud connection | c346c70, 11:21 | Uses the serverless project when `~/elastic-cloud/.env` is filled in, the laptop engine otherwise. Proven against the cloud at 11:24. |
 
 **Measured today** (re-measure before quoting): 501 talks, 100 events, 715 speakers, 226 sponsors
 in 2,184 passages; 14 outlets (6 with a KubeCon assignment) in 25 passages. No passage over 180
 words. 0 email addresses in the loaded text (33 passages hold speakers' social handles).
 Meaning depth check: same top answer at 1 and at 48 results, on five searches.
 
-**Half done: the move to Elastic Cloud.** The code is ready and saved (c346c70). What is left:
-Aaron fills in `~/elastic-cloud/.env` (endpoint and API key of his serverless project, created
-11:15, named "media-connect" on the Elastic side); then one run of the loader fills the cloud
-catalogues, and the three demo searches are re-run there. If Neptune did not get to it before
-12:00, this is Titan's first job. Serverless may refuse something the laptop engine accepted;
-the loader already skips the shard settings. The laptop engine stays loaded as the fallback.
+**The move to Elastic Cloud is done (11:24).** Aaron put the endpoint and key of his serverless
+project in `~/elastic-cloud/.env` himself; the loader filled the cloud catalogues first time, in
+25 seconds, with the same counts; the three demo searches give the same top results in the cloud
+as on the laptop; `FTRT_ENGINE=local` in front of a command still uses the laptop engine, which
+stays loaded as the demo's fallback. Every command now uses the cloud by default.
+
+**Half done:** nothing. No uncommitted work in the folder.
 
 **Next step: B3**, Cassini re-proves the demo searches three times each (recipe, last section),
 sponsors only, with the command in the README (`--mode compare --kind sponsor`). What they gave
@@ -85,6 +86,8 @@ the demo searches before and after):**
   with the record's name; words and meaning read the same text; blending is our own code.
 
 **Watch out for**
+- Serverless accepted everything the laptop engine did, apart from the shard settings the
+  loader already skips. The engine in use is named on screen at the start of every command.
 - The engine's trial licence runs to 3 December; nothing here depends on it (blending is ours).
 - Port 5000 is macOS's; the page (M3) should use another port and say so in the README.
 - Only Titan commits from 12:00. Save by naming files; never `git add -A`.
@@ -95,7 +98,7 @@ the demo searches before and after):**
 
 ## Now
 
-- Neptune: finished at 11:55. Waiting for Saturn.
+- Neptune: finished at 11:25. Waiting for Saturn at 12:00.
 
 ## Next
 
@@ -109,7 +112,7 @@ S1 only if well ahead. Freeze 15:45, submit 16:30.
 - 11:07 B2 the three searches (50019ed)
 - 11:09 passage-cutting fix (0560c9b)
 - 11:20 search fixes from review (42c36e0)
-- 11:21 Elastic Cloud connection, untested against the cloud (c346c70)
+- 11:21 Elastic Cloud connection (c346c70); 11:24 cloud catalogues loaded and demo searches proven there
 
 ## Blocked
 

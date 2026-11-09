@@ -22,8 +22,8 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
    engine instead. Neither file is ever copied into this repository.
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
-4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on a laptop (measured
-   9 November). It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into 2,209 passages, turns each into
+4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on the laptop engine and
+   about 25 seconds to Elastic Cloud (both measured 9 November). It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into 2,209 passages, turns each into
    384 numbers with the meaning model, and fills two new catalogues, `ftrt-programme` and
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
 5. Start the page: [command], and open [address].

@@ -66,3 +66,7 @@ it is built.
   Level 3" is won by words (Docker and ActiveState, the two sponsors whose own text says it); the Black Friday sentence gets nothing from
   words and cloud-cost and autoscaling companies from meaning (North first, the Start-Up Kedify fifth); the GPU-isolation sentence gets Edera from words and vCluster from
   meaning, with the next four close behind.
+- **Elastic Cloud (11:24):** The same two catalogues now live in an Elastic Cloud serverless
+  project; the code uses the cloud when its settings file is filled in and the laptop engine
+  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud took 25 seconds
+  and the three demo searches give the same top results there as on the laptop.
