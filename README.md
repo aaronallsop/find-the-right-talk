@@ -43,6 +43,15 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
   is outside your own Elastic Cloud project and is billed per use. Every other view stays inside
   your own Elastic Cloud project, and the re-ranker is not used on the laptop engine. About half a
   second is added to a search and 1 to 1.5 seconds to a page "Go" (measured 9 November).
+- **Elastic Agent Builder** runs an AI agent, "Find the Right Talk" (in Kibana: Agents), with three
+  read-only tools over today's two catalogues only. It is a second, AI-written way in, not the
+  engine: it does not run the project's own blend. Its answers are written by a language model on
+  Elastic's hosted inference service (Anthropic's Claude Sonnet 4.5, the project's default), so the
+  questions and the passages it reads go there, billed per use. Every answer ends "AI-written by the
+  Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on it."
+  On Elastic's trial it answers about one long question every 7 minutes. Titan measured one
+  Gazette answer in 41 seconds on 9 November and checked all 14 of its quotations word for word
+  against the programme; Cassini's check of it is still to come.
 - **The blend is this project's own code:** each ranked list votes (reciprocal rank fusion), so it
   takes any number of voices.
 - **Geo queries are not used:** the data has no coordinates (rooms in one building and a region
@@ -65,7 +74,8 @@ Measured on 9 November against two test outlets whose answer keys were written b
 - **Meaning finds the topic, not the stance:** re-ranked, the GPU search puts vCluster (which
   shares GPUs) above Edera (which isolates them); the re-ranker cannot tell the stance either.
 - **It never says "nothing fits":** meaning always returns the nearest thing.
-- **The fit check, an AI judgement of the top results, was not built.**
+- **The fit check, an AI judgement of the top results, was not built.** The Agent Builder agent is a
+  different thing: it answers in words, and it is slow (41 seconds for one answer when measured).
 
 ## What existed before the day, and what was built on it
 
@@ -80,7 +90,7 @@ Measured on 9 November against two test outlets whose answer keys were written b
   Elastic Cloud connection (laptop engine as fallback); 11:47 passages fit what the meaning model
   reads; 11:48 the match; 11:54 the page; 11:56 steadier results; 12:12 Elastic's ELSER as a further
   voice; 12:14 the page moves to port 8765; 12:17 the flip; 12:25 the start-ups switch; 12:29 a slow
-  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker.
+  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker; 12:46 the Agent Builder agent.
   The commit history starts at the beginning of the hackathon: the first commit holds no code, only
   the data, the notes, the rulebook (`CLAUDE.md`), the licence, the ignore list and this README.
 
@@ -99,8 +109,10 @@ Measured on 9 November against two test outlets whose answer keys were written b
 - **The meaning search** uses all-MiniLM-L6-v2, a small open-source model that runs on this
   laptop and generates no text. In Elastic Cloud, every passage, and the text of every search, is
   also read by Elastic's own ELSER model, which runs inside the project's own Elastic Cloud
-  deployment, not on a separate service. The optional "Re-ranked" view is the exception: it sends
-  the search text and the top 20 passages to Elastic's hosted re-ranking service (see above).
+  deployment, not on a separate service. The optional "Re-ranked" view is an exception: it sends
+  the search text and the top 20 passages to Elastic's hosted re-ranking service (see above). The
+  Agent Builder agent is the other: its answers are written by Anthropic's Claude Sonnet 4.5 on
+  Elastic's hosted inference service, and are labelled as AI-written.
 - [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
   wrote none of the code.]
 - [If used: Jules (Google) checked the README's claims against the code at the feature freeze;
@@ -159,6 +171,9 @@ to read another Elastic Cloud settings file):
   `.venv/bin/python -m ftrt.flip "Kedify"`; `.venv/bin/python -m ftrt.flip --list` shows the 226
   sponsors. On the page this is the "I'm a vendor" door.
 - **Warm up before a demo:** `.venv/bin/python -m ftrt.warm`.
+- **The Agent Builder agent:** `.venv/bin/python -m ftrt.agent setup` creates the 3 tools and the agent in
+  Elastic Cloud; `.venv/bin/python -m ftrt.agent ask "Which sponsors and talks at KubeCon fit the Hello
+  World Gazette?"` asks it; `.venv/bin/python -m ftrt.agent remove` deletes them.
 
 Elastic's ELSER sleeps when idle and can take about 80 seconds to wake. Starting the page wakes it
 in the background, and the warm-up command wakes it on demand and says how long it took ("awake

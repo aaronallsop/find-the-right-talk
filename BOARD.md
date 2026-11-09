@@ -102,6 +102,7 @@ the demo searches before and after):**
 
 (what Saturn or Rhea needs from you, each with the time; taken off when you have answered)
 
+- 12:47 The project's trial allows about one long agent question every 7 minutes. For the video: record one good answer, don't retry live, and ask the agent nothing in the 10 minutes before recording.
 - 12:45 Still open: does "run on the cloud" mean the searches (already so) or hosting the page itself online?
 - 12:23 At 13:20 read the usage page (Claude app, Settings, Usage) and tell Saturn the five-hour and weekly figures.
 - 15:30 Read the submission paragraph (Rhea's draft is in the notes) and say what to change.
@@ -111,7 +112,7 @@ the demo searches before and after):**
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: working on Agent Builder (Saturn is confirming with Titan what Aaron said).
+- Titan: holding. The Agent Builder agent is saved.
 - Rhea: README rewritten at 12:36 as the product's face, for a judge who reads and watches (setup moved lower); the words are drafted; waiting for the page-speed and Talks-tab fixes, then redoes the numbers after the freeze.
 - Cassini: checking the start-ups toggle. Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
 - Dione: standing by.
@@ -152,6 +153,7 @@ unlikely to run it. The freeze at 15:45 holds.
 - 11:57 Saved and pushed (321b069): the match's order no longer shifts with how many results are shown, and the first run on a new machine downloads the meaning model. Passage count explained: 2,225 programme passages plus 25 outlet passages is 2,250.
 - 12:12 Elastic's own meaning model, ELSER, saved and pushed (2e26f1b): in the cloud it reads every passage and gets one vote in the blend; the laptop leaves it out. Cloud load now takes 470 seconds (Titan, measured 12:01 to 12:09). The cloud was reloaded on Aaron's go-ahead. Demo searches unchanged at the top; Elastic's model alone also gets all three right. A four-helper review found and fixed 7 faults before saving. Not yet re-scored.
 - 12:33 Rhea finished the submission draft, added "Where it falls short" to the README and "Honest limits" to the cheat sheet, and wrote the fit check as not built. Aaron reads the paragraph by 15:30.
+- 12:46 The Elastic Agent Builder agent saved and pushed (44b827a, on Aaron's yes in Titan's session): "Find the Right Talk", three read-only tools over today's two catalogues. Its answers are written by Claude Sonnet 4.5 on Elastic's hosted service and labelled AI-written. Titan measured one Gazette answer in 41 seconds and checked all 14 quotations word for word. Cassini is checking it with one question.
 - 12:43 Aaron tried the flip at the vendor door and it works; Cassini checked three sponsors. M5 is done.
 - 12:37 "Compare all" on the page (acdd654): five columns side by side (words, meaning, Elastic's ELSER, blended, re-ranked), so the video can show Elastic's voice. Checked by Cassini in a real browser (12:42), three runs each, identical: the GPU sentence takes 1.2 to 1.7 seconds, every column matches its own view, and the Start-Up tags are all correct. The page shows "Elastic Cloud serverless, with Elastic's ELSER" on screen, for the video.
 - 12:35 Page fixes (c4a8ae8): checked by Cassini in a real browser (12:42), three runs each, identical: a Gazette Go takes about 2.5 seconds and a re-ranked search about 1.2 seconds; Talks cannot be chosen with start-ups on.
