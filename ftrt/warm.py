@@ -13,7 +13,7 @@ from .engine import connect
 
 
 def warm(client) -> None:
-    for name, wake, why_not in ((config.ELSER_NAME, search.wake_elser, "not in this catalogue (it needs Elastic Cloud and a load there)"),
+    for name, wake, why_not in ((config.ELSER_NAME, search.wake_elser, "not in this catalog (it needs Elastic Cloud and a load there)"),
                                 (config.RERANK_NAME, search.wake_rerank, "switched off, or not on this engine")):
         try:
             took = wake(client)

@@ -113,7 +113,7 @@ def search_meaning(client, query: str, n: int = 10, index: str = config.PROGRAMM
     return search_meaning_vector(client, embed(query), n, index, filt, passages=passages)
 
 
-ELSER_MISSING = ("Elastic's own model, ELSER, did not answer or is not in this catalogue (it runs only in Elastic "
+ELSER_MISSING = ("Elastic's own model, ELSER, did not answer or is not in this catalog (it runs only in Elastic "
                  "Cloud, after a load there with python -m ftrt.load). Skipped.")
 _elser_resting_until = 0.0   # after a failure, searches leave ELSER alone until this time
 
@@ -130,7 +130,7 @@ def has_elser(client, index: str = config.PROGRAMME_INDEX) -> bool:
     return has_field(client, config.ELSER_FIELD, index)
 
 
-JINA_MISSING = ("Jina embeddings are not in this catalogue or did not answer (they need Elastic Cloud and a load "
+JINA_MISSING = ("Jina embeddings are not in this catalog or did not answer (they need Elastic Cloud and a load "
                 "there). Skipped.")
 _jina_resting_until = 0.0
 
