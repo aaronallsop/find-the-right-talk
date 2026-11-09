@@ -8,10 +8,11 @@ it is showing; the flip (outlets that fit you) comes next. Underneath, the plain
 Typed text is used for that one search and never stored or written to any log.
 """
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
+import threading
 from pathlib import Path
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
-from . import config, engine, flip, match, search
+from . import config, engine, flip, match, search, warm
 
 PAGE_FILE = Path(__file__).with_name("page.html")
 app = Flask(__name__)
@@ -49,7 +50,8 @@ def lists():
     sponsors = client.search(index=config.PROGRAMME_INDEX, size=500, source_includes=["record_id", "name", "tier", "startup"],
                              query={"bool": {"filter": [{"term": {"kind": "sponsor"}}, {"term": {"passage_no": 0}}]}})["hits"]["hits"]
     by_name = lambda hits: sorted((h["_source"] for h in hits), key=lambda s: s["name"].lower())
-    return jsonify(engine=engine.where(), elser=search.has_elser(client), outlets=by_name(outlets), sponsors=by_name(sponsors))
+    return jsonify(engine=engine.where(), elser=search.has_elser(client), rerank=search.rerank_on(),
+                   outlets=by_name(outlets), sponsors=by_name(sponsors))
 
 
 @app.post("/api/match")
@@ -72,7 +74,7 @@ def run_match():
                for kind in match.MATCH_KINDS}
     on = ("what it always covers and what it came to find (counting double)" if len(parts) == 2
           else "what it always covers")
-    return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups,
+    return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups, left_out=search.left_out(),
                    kinds=[["sponsor", "Start-up sponsors" if startups else "Sponsors"], ["talk", "Talks"], ["speaker", "Speakers"]])
 
 
@@ -96,7 +98,7 @@ def run_flip():
     results = {kind: {way: _plain(rs) for way, rs in ways.items()} for kind, ways in found.items()}
     on = ("what it does and what it is showing at KubeCon (counting double)" if "showing" in parts
           else "what it does")
-    return jsonify(title=f"Outlets and talks for {name}, on {on}", results=results,
+    return jsonify(title=f"Outlets and talks for {name}, on {on}", results=results, left_out=search.left_out(),
                    kinds=[["outlet", "Outlets"], ["talk", "Talks"]])
 
 
@@ -113,9 +115,9 @@ def run_search():
     if mode not in search.MODES or kind not in (None, "talk", "event", "speaker", "sponsor"):
         return jsonify(error="Unknown search."), 400
     results = search.MODES[mode](client, q, config.PAGE_RESULTS, filt=search.filters(kind, startups))
-    if results is None:   # ELSER asked for where it is missing or not answering
-        return jsonify(error=search.ELSER_MISSING), 503
-    return jsonify(results=_plain(results), mode=mode)
+    if results is None:   # ELSER or the re-ranker asked for where it is missing or not answering
+        return jsonify(error=search.ELSER_MISSING if mode == "elser" else search.RERANK_MISSING), 503
+    return jsonify(results=_plain(results), mode=mode, left_out=search.left_out())
 
 
 @app.errorhandler(Exception)
@@ -130,12 +132,9 @@ def main():
     global client
     client = engine.connect()
     search.embed("warm up")   # load the meaning model now, not on the first search
-    try:
-        woke = search.wake_elser(client)   # Elastic's ELSER sleeps when idle; wake it now, not on the first search
-        if woke is not None:
-            print(f"Elastic's ELSER model is awake ({woke:.0f}s)")
-    except Exception as e:   # the page still works without it: searches leave ELSER out until it answers
-        print(f"Elastic's ELSER model did not wake ({type(e).__name__}); searches will leave it out until it answers")
+    # Elastic's models sleep when idle: wake them in the background, so the page opens at once; until they
+    # answer, searches go ahead without them and the page says so
+    threading.Thread(target=warm.warm, args=(client,), daemon=True).start()
     print(f"Open http://{config.PAGE_HOST}:{config.PAGE_PORT}  (this laptop only; Ctrl-C stops it)")
     app.run(host=config.PAGE_HOST, port=config.PAGE_PORT, debug=False, use_reloader=False)
 

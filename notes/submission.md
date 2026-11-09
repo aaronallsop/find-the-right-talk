@@ -25,3 +25,4 @@ fails]. [Elastic's own models: only if built.]
 - Nothing is called "the judge"; the AI feature, if built, is the "fit check".
 - Demo outlet: the Hello World Gazette (Aaron, 12:16). The Breach Chronicle, the other test outlet, is
   set aside, stays in the data, and is reported honestly as a miss (no must-find in its top ten).
+- 32 of the 226 sponsors are Start-ups; the "Start-ups only" switch narrows the lists to them and back (Titan, 12:24 to 12:25).

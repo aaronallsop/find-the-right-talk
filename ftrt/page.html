@@ -118,9 +118,11 @@
         <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
         <button type="button" data-way="words" aria-pressed="false">Words</button>
           <button type="button" data-way="elser" aria-pressed="false" class="elser-only" hidden>Elastic ELSER</button>
+          <button type="button" data-way="reranked" aria-pressed="false" class="rerank-only" hidden>Re-ranked</button>
       </div>
     </div>
     <div class="tabs" role="tablist" id="match-kinds"></div>
+    <p class="note" id="match-left-out" hidden></p>
     <ol class="results" id="match-results"></ol>
   </section>
 
@@ -144,11 +146,13 @@
           <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
           <button type="button" data-way="words" aria-pressed="false">Words</button>
           <button type="button" data-way="elser" aria-pressed="false" class="elser-only" hidden>Elastic ELSER</button>
+          <button type="button" data-way="reranked" aria-pressed="false" class="rerank-only" hidden>Re-ranked</button>
         </div>
       </div>
       <div><button class="go" type="submit" style="margin:0">Search</button></div>
     </form>
     <p class="error" id="search-error" hidden></p>
+    <p class="note" id="search-left-out" hidden></p>
     <ol class="results" id="search-results"></ol>
   </section>
 
@@ -196,11 +200,21 @@ function showResults(list, results, emptyText) {
   });
 }
 
+function leftOut(box, names) {
+  const n = names || [];
+  box.hidden = !n.length;
+  box.textContent = n.length ? n.join(" and ") + (n.length > 1 ? " were" : " was") +
+    " still waking up, so these results were made without " + (n.length > 1 ? "them" : "it") +
+    ". Ask again in a minute to include " + (n.length > 1 ? "them" : "it") + "." : "";
+}
+
 function renderMatch() {
   if (!matchData) return;
+  leftOut($("match-left-out"), matchData.left_out);
   const rs = matchData.results[matchKind][matchWay] || [];
   const empty = matchWay === "words" ? "No record shares enough telling words with this profile."
               : matchWay === "elser" && !matchData.results[matchKind].elser ? "Elastic's ELSER did not answer for this match; the blend went ahead without it."
+              : matchWay === "reranked" && !matchData.results[matchKind].reranked ? "Elastic's re-ranker did not answer this time; the blended order stands."
               : "Nothing found.";
   showResults($("match-results"), rs, empty);
 }
@@ -279,6 +293,7 @@ $("search").onsubmit = async e => {
   try {
     const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value, startups: startupsOnly()});
     searchShown = true;
+    leftOut($("search-left-out"), d.left_out);
     const empty = d.mode === "words" ? "Words found nothing: no record has enough of these words. Try Meaning." : "Nothing matches.";
     showResults($("search-results"), d.results, empty);
   } catch (x) { err.textContent = x.message; err.hidden = false; }
@@ -308,6 +323,7 @@ $("startups").onchange = () => {
     const d = await (await fetch("/api/lists")).json();
     $("engine").textContent = (d.engine === "cloud" ? "Elastic Cloud serverless" : "Elasticsearch on this laptop") + (d.elser ? ", with Elastic's ELSER" : "");
     document.querySelectorAll(".elser-only").forEach(b => b.hidden = !d.elser);
+    document.querySelectorAll(".rerank-only").forEach(b => b.hidden = !d.rerank);
     d.outlets.forEach(o => $("outlet").append(new Option(o.name + (o.sample ? "  (sample)" : "") + (o.has_assignment ? "" : "  (standing beat only)"), o.record_id)));
     sponsorsAll = d.sponsors;
     fillSponsors();

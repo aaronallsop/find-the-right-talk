@@ -110,12 +110,14 @@ the demo searches before and after):**
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: M4, the start-ups toggle, then the re-ranker trial, the fallback, the warm-up command and the Faros wording, saving after each.
+- Titan: the re-ranker trial, the fallback, the warm-up command and the Faros wording, saving after each.
 - Rhea: the cloud wording in the README, cheat sheet and a first draft of the submission paragraph.
-- Cassini: checking the flip for three sponsors. Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
+- Cassini: checking the start-ups toggle. Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
 - Dione: standing by.
 
 Watch for the demo: Elastic's in-project model sleeps when idle and took 81 seconds to wake. Run one search a minute or two before presenting; the same goes in the 17:15 screen check (the day plan, not Rhea's file, so Saturn adds it there) and before the 16:15 recording and 16:30 submission.
+
+Watch (demo note): with start-ups only, the Breach Chronicle shows Maze and Archestra AI, two of its must-finds.
 
 Watch: by words alone some outlets find little or nothing (TechRevolt News nothing at all).
 
@@ -149,6 +151,7 @@ the bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 - 11:21 Elastic Cloud connection (c346c70); 11:24 cloud catalogues loaded and demo searches proven there
 - 11:57 Saved and pushed (321b069): the match's order no longer shifts with how many results are shown, and the first run on a new machine downloads the meaning model. Passage count explained: 2,225 programme passages plus 25 outlet passages is 2,250.
 - 12:12 Elastic's own meaning model, ELSER, saved and pushed (2e26f1b): in the cloud it reads every passage and gets one vote in the blend; the laptop leaves it out. Cloud load now takes 470 seconds (Titan, measured 12:01 to 12:09). The cloud was reloaded on Aaron's go-ahead. Demo searches unchanged at the top; Elastic's model alone also gets all three right. A four-helper review found and fixed 7 faults before saving. Not yet re-scored.
+- 12:27 M4, the start-ups toggle, saved and pushed (9ab6782): one switch narrows every sponsor list on the page to the 32 start-ups among the 226 sponsors, and back. Measured by Titan, 12:24 to 12:25: the picker went 226, 32, 226. Cassini is checking it. Also: a sleeping Elastic model is now left out of a search instead of making it fail.
 - 12:20 The flip checked by Cassini on three sponsors, identical in three runs: the talks it finds are on target; the outlet scores bunch close together.
 - 12:20 M3, the two-door page, done: Aaron opened http://127.0.0.1:8765 in his own browser and it works. Cassini checked all 14 outlets at 11:57; Titan and Aaron saw it on screen. (Saved in fba8720; moved to port 8765 in d5e84b1.)
 - 12:17 M5, the flip, saved and pushed (68c98c7): a sponsor, picked or typed in, finds the outlets that fit it, and the talks nearest to what it does. It is the vendor door on the page. Not yet checked that its outlet list matches common sense.

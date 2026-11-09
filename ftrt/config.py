@@ -47,9 +47,20 @@ BLEND_DEPTH = 100           # every list is ranked this deep before blending, ho
 # text to Elastic's separate inference service. It scales down to nothing when idle, so the first call after
 # a quiet spell waits while it wakes (81 s measured at 11:58); the page warms it up when it starts.
 ELSER_ENDPOINT = ".elser-2-elasticsearch"
+ELSER_NAME = "Elastic's ELSER"
+RERANK_NAME = "Elastic's re-ranker"
 ELSER_FIELD = "text_elser"  # the passage's text again, which Elastic turns into ELSER's own terms at load time
-ELSER_TIMEOUT = 300         # seconds a load or search may wait on it (waking up included)
-ELSER_REST = 300            # after it fails to answer a search, seconds before searches ask it again
+ELSER_TIMEOUT = 300         # seconds a load, or a deliberate wake-up, may wait on it
+ELSER_SEARCH_LIMIT = 4      # seconds a search waits for it; slower, and the results come without it (and say so)
+ELSER_REST = 60             # after it misses a search, seconds before searches ask it again (it is probably waking)
+
+# Elastic's re-ranker (Aaron's item 6): reads the question and each of the blended top results' passages
+# together and puts them in a new order. Elastic Cloud only; left out if it does not answer. At 12:18-12:21 the
+# in-project one would not start ("no ML nodes with sufficient capacity"); which endpoint to use is Aaron's call.
+RERANK_ENDPOINT = None      # off: the in-project ".rerank-v1-elasticsearch" has no room to start; set an endpoint to switch it on
+RERANK_TOP = 20             # how many of the blended results it re-orders; the rest keep the blended order
+RERANK_SEARCH_LIMIT = 4     # seconds a search waits for it; slower, and the blended order stands (and says so)
+RERANK_REST = 60            # after it misses, seconds before it is asked again (so the page does not wait on it)
 
 # The match (M2): an outlet's profile searches the programme.
 MATCH_WEIGHTS = {"assignment": 2.0, "beat": 1.0,   # the assignment's votes count double (Aaron, 8 November)

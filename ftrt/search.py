@@ -4,6 +4,7 @@
     python -m ftrt.search --mode words "SLSA Level 3"
     python -m ftrt.search --mode meaning "surviving a Black Friday traffic spike"
     python -m ftrt.search --mode elser "..."                 # Elastic Cloud only
+    python -m ftrt.search --mode reranked "..."              # blended, top 20 re-ordered by Elastic's re-ranker (cloud only)
     python -m ftrt.search --mode compare "..."               # the same search, every way side by side
     options: -n 10 (how many), --kind sponsor|talk|speaker|event, --startups (Start-Up sponsors only)
 
@@ -16,7 +17,7 @@ cloud), one vote each, by reciprocal rank fusion, in our own code.
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse, sys, textwrap, time
 from elasticsearch import ApiError, TransportError
-from . import config
+from . import config, engine
 from .engine import connect
 
 _model = None
@@ -111,11 +112,12 @@ def search_elser(client, query: str, n: int = 10, index: str = config.PROGRAMME_
         if not has_elser(client, index):
             return None
         body = {"bool": {"must": {"semantic": {"field": config.ELSER_FIELD, "query": query}}, "filter": filt or []}}
-        r = client.options(request_timeout=config.ELSER_TIMEOUT).search(index=index, query=body, size=_fetch_size(n), source_includes=_FIELDS)
+        r = client.options(request_timeout=config.ELSER_SEARCH_LIMIT, max_retries=0).search(
+            index=index, query=body, size=_fetch_size(n), source_includes=_FIELDS)
     except (ApiError, TransportError) as e:
         _elser_resting_until = time.time() + config.ELSER_REST
-        print(f"ELSER did not answer ({type(e).__name__}); left out, and not asked again for "
-              f"{config.ELSER_REST // 60} minutes.", file=sys.stderr)
+        print(f"ELSER did not answer within {config.ELSER_SEARCH_LIMIT} s ({type(e).__name__}); left out, and not "
+              f"asked again for {config.ELSER_REST} s.", file=sys.stderr)
         return None
     return _group(r["hits"]["hits"], n)
 
@@ -155,7 +157,62 @@ def search_blended(client, query: str, n: int = 10, index: str = config.PROGRAMM
     return fuse(lists, n)
 
 
-MODES = {"words": search_words, "meaning": search_meaning, "elser": search_elser, "blended": search_blended}
+RERANK_MISSING = ("Elastic's re-ranker runs only in Elastic Cloud, and only when it answers. Skipped.")
+
+
+_rerank_resting_until = 0.0   # after a failure, the re-ranker is left alone until this time
+
+
+def rerank_on() -> bool:
+    """The re-ranker is used only in Elastic Cloud, and only when an endpoint is set (config.RERANK_ENDPOINT)."""
+    return bool(config.RERANK_ENDPOINT) and engine.where() == "cloud"
+
+
+def left_out() -> list[str]:
+    """Which of Elastic's models are sitting out right now because they did not answer in time."""
+    now = time.time()
+    return ([config.ELSER_NAME] if now < _elser_resting_until else []) + \
+           ([config.RERANK_NAME] if rerank_on() and now < _rerank_resting_until else [])
+
+
+def wake_rerank(client) -> float | None:
+    """Wake the re-ranker, waiting as long as it takes. Seconds taken, or None if it is switched off."""
+    if not rerank_on():
+        return None
+    t = time.time()
+    client.options(request_timeout=config.ELSER_TIMEOUT).inference.rerank(
+        inference_id=config.RERANK_ENDPOINT, query="wake up", input=["wake up"], timeout=f"{config.ELSER_TIMEOUT}s")
+    return time.time() - t
+
+
+def rerank(client, question: str, results: list[dict], top: int = config.RERANK_TOP) -> list[dict] | None:
+    """Elastic's re-ranker reads the question with each of the top results' passages and re-orders them;
+    the rest keep their order. None on the laptop engine, or if it does not answer, so callers skip it."""
+    global _rerank_resting_until
+    if not rerank_on() or not results or time.time() < _rerank_resting_until:
+        return None
+    head = results[:top]
+    try:
+        out = client.options(request_timeout=config.RERANK_SEARCH_LIMIT, max_retries=0).inference.rerank(
+            inference_id=config.RERANK_ENDPOINT, query=question, input=[r["passage"] for r in head],
+            timeout=f"{config.RERANK_SEARCH_LIMIT}s")
+    except (ApiError, TransportError) as e:
+        _rerank_resting_until = time.time() + config.RERANK_REST
+        print(f"The re-ranker did not answer within {config.RERANK_SEARCH_LIMIT} s ({type(e).__name__}); left out, "
+              f"and not asked again for {config.RERANK_REST} s.", file=sys.stderr)
+        return None
+    order = sorted(out.body["rerank"], key=lambda o: -o["relevance_score"])
+    return [{**head[o["index"]], "score": round(o["relevance_score"], 4)} for o in order] + results[top:]
+
+
+def search_reranked(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict] | None:
+    """The blended results, with the top ones re-ordered by Elastic's re-ranker (Elastic Cloud only)."""
+    reordered = rerank(client, query, search_blended(client, query, max(n, config.RERANK_TOP), index, filt))
+    return None if reordered is None else reordered[:n]
+
+
+MODES = {"words": search_words, "meaning": search_meaning, "elser": search_elser, "blended": search_blended,
+         "reranked": search_reranked}
 
 
 def show(title: str, results: list[dict], width: int = 100):
@@ -174,7 +231,7 @@ def show(title: str, results: list[dict], width: int = 100):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("query")
-    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "compare"], default="blended")
+    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "reranked", "compare"], default="blended")
     ap.add_argument("-n", type=int, default=10, help=f"how many results (1 to {config.BLEND_DEPTH})")
     ap.add_argument("--kind", choices=["talk", "event", "speaker", "sponsor"])
     ap.add_argument("--startups", action="store_true", help="Start-Up tier sponsors only")
@@ -183,14 +240,15 @@ def main():
     client = connect()
     filt = filters(a.kind, a.startups)
     if a.mode == "compare":
-        lists = {m: MODES[m](client, a.query, a.n, filt=filt) for m in ("words", "meaning", "elser", "blended")}
+        lists = {m: MODES[m](client, a.query, a.n, filt=filt) for m in ("words", "meaning", "elser", "blended", "reranked")}
         for m, res in lists.items():
             if res is None:
-                print(f"\n=== ELSER ===  ({ELSER_MISSING})")
+                print(f"\n=== {m.upper()} ===  ({ELSER_MISSING if m == 'elser' else RERANK_MISSING})")
             else:
                 show(f"=== {m.upper()} ===  {a.query!r}", res)
         tops = {m: (res[0]["name"] if res else ("skipped" if res is None else "nothing")) for m, res in lists.items()}
-        print(f"\nTop result: words → {tops['words']} | meaning → {tops['meaning']} | ELSER → {tops['elser']} | blended → {tops['blended']}")
+        print(f"\nTop result: words → {tops['words']} | meaning → {tops['meaning']} | ELSER → {tops['elser']} | "
+              f"blended → {tops['blended']} | re-ranked → {tops['reranked']}")
         if not lists["words"] and not lists["meaning"]:
             print("Nothing matches: check the filters.")
         elif not lists["words"]:
@@ -200,7 +258,7 @@ def main():
     else:
         res = MODES[a.mode](client, a.query, a.n, filt=filt)
         if res is None:
-            raise SystemExit(ELSER_MISSING)
+            raise SystemExit(ELSER_MISSING if a.mode == "elser" else RERANK_MISSING)
         show(f"=== {a.mode.upper()} ===  {a.query!r}", res)
 
 

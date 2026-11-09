@@ -3,7 +3,7 @@
     python -m ftrt.match "Breach Chronicle"                          # blended: top sponsors, talks and speakers
     python -m ftrt.match --mode compare --kind sponsor -n 10 "Hello World Gazette"
     python -m ftrt.match --list                                      # the 14 outlets
-    options: --mode words|meaning|elser|blended|compare, -n 5 (how many of each kind), --kind sponsor|talk|speaker, --startups
+    options: --mode words|meaning|elser|blended|reranked|compare, -n 5 (how many of each kind), --kind sponsor|talk|speaker, --startups
 
 An outlet has a standing beat (what it always covers) and, for six of them, a KubeCon assignment
 (what it came to find). Each part searches the programme on its own, by meaning with the part's
@@ -17,7 +17,7 @@ import argparse, textwrap
 import numpy as np
 from . import config, passages
 from .engine import connect
-from .search import ELSER_MISSING, _FIELDS, _fetch_size, _group, embed, filters, fuse, search_elser, search_meaning_vector
+from .search import ELSER_MISSING, RERANK_MISSING, _FIELDS, _fetch_size, _group, embed, filters, fuse, rerank, search_elser, search_meaning_vector
 
 MATCH_KINDS = ("sponsor", "talk", "speaker")
 
@@ -99,7 +99,13 @@ def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: b
             if results is not None:   # ELSER is skipped on the laptop engine
                 lists[way].append(([{**r, "via": f"{PART_NAMES[part]}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
     out = {way: fuse(ls, n) for way, ls in lists.items() if ls}
-    out["blended"] = fuse([l for ls in lists.values() for l in ls], n)
+    blended = fuse([l for ls in lists.values() for l in ls], max(n, config.RERANK_TOP))
+    out["blended"] = blended[:n]
+    # Elastic's re-ranker reads the profile (its KubeCon part first) against each of the blended top passages
+    question = " ".join(parts[p]["text"] for p in sorted(parts, key=lambda p: -config.MATCH_WEIGHTS[p]))
+    reordered = rerank(client, question, blended)
+    if reordered is not None:   # Elastic Cloud only, and only when it answers
+        out["reranked"] = [{**r, "via": "Elastic's re-ranker"} for r in reordered[:n]]
     return out
 
 
@@ -135,7 +141,7 @@ def show(title: str, results: list[dict], lists: int, width: int = 100):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("outlet", nargs="?", help="an outlet's name (any part of it) or id")
-    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "compare"], default="blended")
+    ap.add_argument("--mode", choices=["words", "meaning", "elser", "blended", "reranked", "compare"], default="blended")
     ap.add_argument("-n", type=int, default=5, help="how many of each kind (1 to 50)")
     ap.add_argument("--kind", choices=list(MATCH_KINDS))
     ap.add_argument("--startups", action="store_true", help="Start-Up tier sponsors only")
@@ -152,9 +158,9 @@ def main():
     for kind in ([a.kind] if a.kind else (["sponsor"] if a.startups else list(MATCH_KINDS))):
         results = match(client, parts, a.n, kind, a.startups)
         voices = len([w for w in ("words", "meaning", "elser") if w in results])
-        for mode in (("words", "meaning", "elser", "blended") if a.mode == "compare" else (a.mode,)):
+        for mode in (("words", "meaning", "elser", "blended", "reranked") if a.mode == "compare" else (a.mode,)):
             if mode not in results:
-                print(f"\n=== ELSER === ({ELSER_MISSING})")
+                print(f"\n=== {mode.upper()} === ({ELSER_MISSING if mode == 'elser' else RERANK_MISSING})")
                 continue
             lists = len(parts) * (voices if mode == "blended" else 1)
             show(f"=== {mode.upper()} === {kind}s for {name}", results[mode], lists)
