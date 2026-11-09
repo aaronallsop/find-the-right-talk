@@ -101,10 +101,14 @@ the demo searches before and after):**
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: saving the review-fix reload, then the match.
+- Titan: building the match (the first look is below). No cloud reloads while Cassini's test runs.
 - Rhea: the cloud wording in the README, cheat sheet and a first draft of the submission paragraph.
-- Cassini: waiting for the 12:00 save and Aaron's second key, to run the fresh-copy test at about 12:30.
+- Cassini: running the "after" demo-search check, then the fresh-copy test of the README (moved forward from 12:30).
 - Dione: standing by.
+
+Watch (Titan's first look at the match, not yet scored): the Hello World Gazette reads sensibly; the
+Breach Chronicle, the demo outlet, misses most of its must-finds. Waiting for Cassini's score before
+Aaron decides the fix.
 
 ## Next
 
@@ -129,6 +133,7 @@ bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 - 11:09 passage-cutting fix (0560c9b)
 - 11:20 search fixes from review (42c36e0)
 - 11:21 Elastic Cloud connection (c346c70); 11:24 cloud catalogues loaded and demo searches proven there
+- 11:47 Review fixes saved and pushed (174effd): passages fit what the meaning model reads, placeholder text dropped, quieter searches, and a switch to point at a second cloud settings file. Re-measured by Titan: 501 talks, 100 events, 715 speakers, 226 sponsors, 14 outlets, 2,250 passages, 0 email addresses. The README, board, cheat sheet, submission draft and Cassini's checks went in the same save.
 - 11:42 Cassini laid out the scoring sheet for the match (Gazette 8 items, Chronicle 12); nothing scored yet.
 - 11:41 Dione confirmed, read-only, that the cloud project offers Elastic's own meaning model (ELSER) and Elastic's re-ranker as ready-made services; nothing was called or changed.
 - 11:36 Relay test passed (Aaron to Rhea to Saturn): Saturn confirmed it had the message.
