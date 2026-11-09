@@ -49,11 +49,12 @@ BLEND_DEPTH = 100           # every list is ranked this deep before blending, ho
 ELSER_ENDPOINT = ".elser-2-elasticsearch"
 ELSER_FIELD = "text_elser"  # the passage's text again, which Elastic turns into ELSER's own terms at load time
 ELSER_TIMEOUT = 300         # seconds a load or search may wait on it (waking up included)
+ELSER_REST = 300            # after it fails to answer a search, seconds before searches ask it again
 
 # The match (M2): an outlet's profile searches the programme.
 MATCH_WEIGHTS = {"assignment": 2.0, "beat": 1.0,   # the assignment's votes count double (Aaron, 8 November)
                  "showing": 2.0, "does": 1.0}      # the flip mirrors it: what a sponsor shows at KubeCon counts double
-                                                   # (Titan's default, 9 November; not yet Aaron's decision)
+                                                   # (Aaron, 9 November, 12:20, through Saturn)
 MATCH_WORDS_TERMS = 25      # words search by profile: how many of its most telling words to search for
 
 # The page (M3). Port 5000 is taken by macOS itself (AirPlay Receiver); 5055-5057 may be in use too; and browsers

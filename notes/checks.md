@@ -767,3 +767,79 @@ away?** Yes on the subject, but not on the vocabulary: it shares "AI coding agen
 "open source" with the outlet, so it does not fall far: it is 17th in words and in blended, 30th in ELSER, and
 only meaning (45th) puts it near the bottom. In blended it is 17th, four places below Faros (13th) and
 seven below the top 10; it is the one of the two trap-like companies that sits closest to the must-finds.
+
+---
+
+# M5 the flip (commit 68c98c7), checked 12:18 to 12:19, cloud
+
+Command: `.venv/bin/python -m ftrt.flip "<sponsor>"` (blended), three runs each at 12:18:15 to :27 (Kedify),
+12:18:38 to :49 (Edera) and 12:19:01 to :13 (Docker), then `--mode compare` once each (12:18:33, 12:18:54,
+12:19:19). **All three runs agreed exactly for all three sponsors** (same outlets, order and scores, same talks).
+Common sense is Aaron's call; this only reports what came out. "Score" is the flip's own blended score. Kedify
+and Docker have a "what it is showing at KubeCon" part (counted double); **Edera has none** and is matched
+on what it does alone, so its scores sit on a smaller scale (three lists instead of six): compare spreads as a
+percentage of the top score, not in raw numbers.
+
+## Kedify (Start-Up)
+
+Outlets, in order: 1 Greenstack 0.1422; 2 LearnKube 0.1398; 3 TFIR 0.1390; 4 Women in Infrastructure 0.1385;
+5 The Regulated Cloud 0.1378; 6 SDxCentral 0.1355; 7 The Breach Chronicle 0.1353; 8 Open Source Sustainability
+Weekly 0.1350; 9 Hello World Gazette 0.1310; 10 Techstrong 0.1295; 11 Futurum Group 0.1293; 12 The New Stack
+0.1276; 13 OpsMatters 0.1274; 14 TechRevolt News 0.1253.
+Top three talks (blended): 1 Battle-tested Autoscaling Paradigms with KEDA; 2 SIG Autoscaling Project Updates;
+3 Beyond Model Serving: Running Production LLMs on Kubernetes with KServe.
+**Spread:** top 0.1422, bottom 0.1253, range 0.0169 (12% of the top); first to second 0.0024; the top five are
+within 0.0044.
+Compare, top outlets by way: words Greenstack, Women in Infrastructure, SDxCentral, TFIR, Breach Chronicle;
+meaning LearnKube, The Regulated Cloud, Greenstack, Open Source Sustainability Weekly, TFIR; ELSER LearnKube,
+The Regulated Cloud, TFIR, Women in Infrastructure, Greenstack. Talks top three: words KEDA talk, Beyond the
+Cluster Boundary: Sharing GPUs at Scale, KServe; meaning SIG Autoscaling Project Updates, The New Scaling
+Matrix: Balancing In-Place Resizing, VPA, HPA and Automation Solutions, Saturated by Design; ELSER KEDA talk,
+Demo Theater: Why Your Kubernetes Autoscalers Keep Fighting (and How to End the Thrash), SIG Autoscaling.
+
+## Edera (Silver; no KubeCon part)
+
+Outlets, in order: 1 TFIR 0.0492; 2 Greenstack 0.0471; 3 SDxCentral 0.0464; 4 Techstrong 0.0459; 5 The Regulated
+Cloud 0.0457; 6 The Breach Chronicle 0.0457; 7 LearnKube 0.0452; 8 Futurum Group 0.0439; 9 Women in
+Infrastructure 0.0437; 10 Hello World Gazette 0.0431; 11 The New Stack 0.0429; 12 OpsMatters 0.0421; 13
+TechRevolt News 0.0421; 14 Open Source Sustainability Weekly 0.0413.
+Top three talks: 1 Untrusted Code on Secure Runtimes: Agent Sandboxes on Kubernetes; 2 Extending NetworkPolicy to
+RDMA: Hardware-Enforced Tenant Isolation for AI Clusters; 3 Securing the Agentic Future: Distributing LLM Weights
+and Sandboxed AI Agents via Harbor.
+**Spread:** top 0.0492, bottom 0.0413, range 0.0079 (16% of the top); first to second 0.0021; the top five are
+within 0.0035; places 5 and 6 are tied at the printed precision (0.0457), as are 12 and 13 (0.0421).
+Compare, top outlets by way: words TFIR, Greenstack, Women in Infrastructure, Techstrong, SDxCentral; meaning
+TFIR, SDxCentral, The Breach Chronicle, The Regulated Cloud, LearnKube; ELSER TFIR, LearnKube, Greenstack, The
+Regulated Cloud, Techstrong. Talks top three: words Demo Theater: Agent Sandbox on EKS: Hardware-Isolated microVM
+Pods for AI Agents, the RDMA tenant-isolation talk, Untrusted Code on Secure Runtimes; meaning Demo Theater: Agent
+Substrate: Secure, High-Density Sandboxing for AI Agents, Platform-First AI Agent Security: Zero-Trust Patterns
+for Kubernetes, the RDMA talk; ELSER Securing the Agentic Future (Harbor), Platform-First AI Agent Security,
+Untrusted Code on Secure Runtimes.
+
+## Docker (Platinum)
+
+Outlets, in order: 1 Hello World Gazette 0.1438; 2 The Breach Chronicle 0.1422; 3 TFIR 0.1419; 4 Techstrong
+0.1368; 5 Women in Infrastructure 0.1351; 6 The New Stack 0.1344; 7 Greenstack 0.1330; 8 Open Source
+Sustainability Weekly 0.1329; 9 LearnKube 0.1318; 10 OpsMatters 0.1280; 11 The Regulated Cloud 0.1076;
+12 SDxCentral 0.0997; 13 Futurum Group 0.0997; 14 TechRevolt News 0.0961.
+Top three talks: 1 Demo Theater: From YOLO to Golden Paths: Building Trusted Environments for AI Agents; 2 Untrusted
+Code on Secure Runtimes: Agent Sandboxes on Kubernetes; 3 Securing the Agentic Future: Distributing LLM Weights and
+Sandboxed AI Agents via Harbor.
+**Spread:** top 0.1438, bottom 0.0961, range 0.0477 (33% of the top). Docker is the one with a real gap: places 1
+to 10 are within 0.0158 (0.1438 to 0.1280) and then it falls to 0.1076 at 11th; first to second only 0.0016.
+Compare, top outlets by way: words Women in Infrastructure, The New Stack, Hello World Gazette, TFIR, Breach
+Chronicle; meaning TFIR, Hello World Gazette, The Breach Chronicle, Techstrong, The Regulated Cloud; ELSER Hello
+World Gazette, The Regulated Cloud, The Breach Chronicle, TFIR, Women in Infrastructure. Talks top three: words
+the YOLO to Golden Paths talk, Supply Chain Security at Home: From Source to Service Without the Hassle, Demo
+Theater: Agent Sandbox on EKS; meaning and blended the YOLO talk, Untrusted Code on Secure Runtimes, Securing the
+Agentic Future; ELSER the YOLO talk, Demo Theater: Agent Sandbox on EKS, Demo Theater: The Spin Sandbox.
+
+## Reading the spread
+
+For Kedify and Edera the 14 outlets' scores bunch: the whole list spans 12% (Kedify) and 16% (Edera) of the top
+score and the leader's lead over second is 0.0024 and 0.0021, so the order inside the list is decided by very
+small differences (Edera has two printed ties). Docker's list has more shape: ten outlets within 0.0158 and then
+a drop to the last four. Where the flip is most useful as a ranking, then, is the grouping (which outlets are in
+the top handful and which are at the bottom), not the order of neighbours. The outlets each sponsor puts in the
+top two or three differ by way (words, meaning and ELSER each lead with different outlets for Kedify and
+Docker), and the blended order is a compromise of the three.

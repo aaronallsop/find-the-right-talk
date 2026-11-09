@@ -46,7 +46,7 @@ def lists():
     """The pickers: the outlets and the sponsors, by name."""
     outlets = client.search(index=config.OUTLETS_INDEX, size=200, source_includes=["record_id", "name", "has_assignment", "sample"],
                             query={"bool": {"filter": [{"term": {"part": "beat"}}, {"term": {"passage_no": 0}}]}})["hits"]["hits"]
-    sponsors = client.search(index=config.PROGRAMME_INDEX, size=500, source_includes=["record_id", "name", "tier"],
+    sponsors = client.search(index=config.PROGRAMME_INDEX, size=500, source_includes=["record_id", "name", "tier", "startup"],
                              query={"bool": {"filter": [{"term": {"kind": "sponsor"}}, {"term": {"passage_no": 0}}]}})["hits"]["hits"]
     by_name = lambda hits: sorted((h["_source"] for h in hits), key=lambda s: s["name"].lower())
     return jsonify(engine=engine.where(), elser=search.has_elser(client), outlets=by_name(outlets), sponsors=by_name(sponsors))
@@ -57,6 +57,7 @@ def run_match():
     """The press door: a picked outlet, or the two typed boxes."""
     body = request.get_json(silent=True) or {}
     outlet_id, beat, assignment = _text(body, "outlet_id"), _text(body, "beat"), _text(body, "assignment")
+    startups = bool(body.get("startups"))   # the start-ups toggle narrows the sponsors; talks and speakers are unaffected
     if outlet_id:
         try:
             name, parts = match.stored_parts(client, outlet_id)
@@ -66,12 +67,13 @@ def run_match():
         name, parts = "Your outlet", match.typed_parts(beat, assignment)
     else:
         return jsonify(error="Pick an outlet, or say what you always cover."), 400
-    results = {kind: {way: _plain(rs) for way, rs in match.match(client, parts, config.PAGE_RESULTS, kind).items()}
+    results = {kind: {way: _plain(rs) for way, rs in
+                      match.match(client, parts, config.PAGE_RESULTS, kind, startups and kind == "sponsor").items()}
                for kind in match.MATCH_KINDS}
     on = ("what it always covers and what it came to find (counting double)" if len(parts) == 2
           else "what it always covers")
-    return jsonify(title=f"Matches for {name}, on {on}", results=results,
-                   kinds=[["sponsor", "Sponsors"], ["talk", "Talks"], ["speaker", "Speakers"]])
+    return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups,
+                   kinds=[["sponsor", "Start-up sponsors" if startups else "Sponsors"], ["talk", "Talks"], ["speaker", "Speakers"]])
 
 
 @app.post("/api/flip")
@@ -103,11 +105,14 @@ def run_search():
     """The plain search: words, meaning or blended, over the programme."""
     body = request.get_json(silent=True) or {}
     q, mode, kind = _text(body, "q"), _text(body, "mode") or "blended", _text(body, "kind") or None
+    startups = bool(body.get("startups"))
+    if startups:   # only sponsors have a tier, so "start-ups only" means start-up sponsors
+        kind = "sponsor"
     if not q:
         return jsonify(error="Type something to search for."), 400
     if mode not in search.MODES or kind not in (None, "talk", "event", "speaker", "sponsor"):
         return jsonify(error="Unknown search."), 400
-    results = search.MODES[mode](client, q, config.PAGE_RESULTS, filt=search.filters(kind))
+    results = search.MODES[mode](client, q, config.PAGE_RESULTS, filt=search.filters(kind, startups))
     if results is None:   # ELSER asked for where it is missing or not answering
         return jsonify(error=search.ELSER_MISSING), 503
     return jsonify(results=_plain(results), mode=mode)

@@ -99,17 +99,17 @@ Words are Aaron's, kept as written. Square brackets are what is on screen, not w
    next three stories before I've finished my coffee."
 
 **Before presenting:** Elastic's own model sleeps when idle and took 81 seconds to wake once. Run one
-search a minute or two before the demo so it is awake.
+search a minute or two before the demo so it is awake. Warm the Elastic models before the
+16:15 recording, again before the 16:30 submission, and again in the 17:15 screen check (Titan sends the command).
 
 **Two conditions.** Beat 4 uses whatever sentence Cassini's three runs agree on (so far: that
 sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said only once the fourth
 voice is built (it is, since 12:12, in the cloud only; the laptop leaves it out, so demo from the
 cloud); if it does not answer, say "searched three ways" and stop.
 
-**Not true yet, as of 12:17 (do not rehearse as if it were):** you have not tried the page yourself
-(Titan has seen it work in a browser, 12:14); the Hello World Gazette, the demo outlet since 12:16,
+**Not true yet, as of 12:22 (do not rehearse as if it were):** the Hello World Gazette, the demo outlet since 12:16,
 still fails its answer key by one place (Faros 13th) after the last re-score; "in a second" has not
-been timed; the flip (beat 3) is not built. The Breach Chronicle is set aside: it stays in the data
+been timed; the flip (beat 3) is built (12:17) but nobody has checked that its outlet list makes sense for a sponsor. The Breach Chronicle is set aside: it stays in the data
 and is reported honestly as a miss.
 
 ## Built on the day, one line per piece
@@ -143,3 +143,4 @@ and is reported honestly as a miss.
 - **The page (M3, 11:55):** The page has two doors: press pick an outlet, or type what they always cover and what they came to KubeCon to find, and get the talks, speakers and sponsors that fit, each with the passage that matched; vendors pick their company or describe it (the flip, which finds the outlets that fit them, comes next); and the plain three-way search sits underneath.
 - **Steadier results (11:57):** Results no longer reshuffle when you ask for more of them: every list is ranked to the same depth before they are blended.
 - **Elastic's own model (12:12):** In Elastic Cloud a second, larger meaning model, Elastic's own ELSER, reads every passage too and gets one vote in the blend, beside the words search and the small model on the laptop; on the laptop it is simply left out.
+- **The flip (M5, 12:17):** The flip turns the match round: a sponsor, picked or typed in, finds the outlets whose beat and KubeCon assignment fit it, each with the outlet's own passage that matched, and the talks nearest to what it does, with what it is showing at KubeCon counting double.

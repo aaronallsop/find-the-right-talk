@@ -98,16 +98,24 @@ the demo searches before and after):**
 
 (none)
 
+## For Aaron
+
+(what Saturn or Rhea needs from you, each with the time; taken off when you have answered)
+
+- 12:23 Try the flip: on the page's vendor door pick Kedify. Do its outlets and talks make sense to you? (This is what "done" means for M5.)
+- 12:23 At 13:20 read the usage page (Claude app, Settings, Usage) and tell Saturn the five-hour and weekly figures.
+- 12:22 Write your words for demo beat 2 with the Hello World Gazette (the old lines were about the Breach Chronicle).
+- 16:10 Warm the Elastic models before recording (Titan will send the command). Again at 16:25, before submitting. Also goes in the 17:15 screen check.
+
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: M5, the flip.
+- Titan: M4, the start-ups toggle, then the re-ranker trial, the fallback, the warm-up command and the Faros wording, saving after each.
 - Rhea: the cloud wording in the README, cheat sheet and a first draft of the submission paragraph.
-- Cassini: comparing the Breach Chronicle's wording with its must-find companies' own text (the Chronicle is set aside as the demo outlet, so ask Saturn whether to continue). Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
-- Aaron: looks at the page. M3, the two-door page, is saved and pushed (fba8720, 11:55) and runs on this laptop at http://127.0.0.1:8765 (moved from 5060, which browsers block; saved in d5e84b1, 12:14); the press door works, the vendor door says "the flip comes next". Cassini's 11:57 check: all 14 outlets answer in under 1.5 seconds with ten sponsors, talks and speakers each (blended and meaning), and the typed boxes and plain search match the Terminal. Titan has now seen it working in a browser (12:14): the picker, the Breach Chronicle's matches with passages, the four-way switch, and plain search matching Terminal. It stays here until Aaron has tried it himself.
+- Cassini: checking the flip for three sponsors. Checked the page through its own web requests at 11:57 (it could not open it in a browser pane).
 - Dione: standing by.
 
-Watch for the demo: Elastic's in-project model sleeps when idle and took 81 seconds to wake. Run one search a minute or two before presenting; the same goes in the 17:15 screen check (the day plan, not Rhea's file, so Saturn to add it).
+Watch for the demo: Elastic's in-project model sleeps when idle and took 81 seconds to wake. Run one search a minute or two before presenting; the same goes in the 17:15 screen check (the day plan, not Rhea's file, so Saturn adds it there) and before the 16:15 recording and 16:30 submission.
 
 Watch: by words alone some outlets find little or nothing (TechRevolt News nothing at all).
 
@@ -141,6 +149,9 @@ the bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 - 11:21 Elastic Cloud connection (c346c70); 11:24 cloud catalogues loaded and demo searches proven there
 - 11:57 Saved and pushed (321b069): the match's order no longer shifts with how many results are shown, and the first run on a new machine downloads the meaning model. Passage count explained: 2,225 programme passages plus 25 outlet passages is 2,250.
 - 12:12 Elastic's own meaning model, ELSER, saved and pushed (2e26f1b): in the cloud it reads every passage and gets one vote in the blend; the laptop leaves it out. Cloud load now takes 470 seconds (Titan, measured 12:01 to 12:09). The cloud was reloaded on Aaron's go-ahead. Demo searches unchanged at the top; Elastic's model alone also gets all three right. A four-helper review found and fixed 7 faults before saving. Not yet re-scored.
+- 12:20 The flip checked by Cassini on three sponsors, identical in three runs: the talks it finds are on target; the outlet scores bunch close together.
+- 12:20 M3, the two-door page, done: Aaron opened http://127.0.0.1:8765 in his own browser and it works. Cassini checked all 14 outlets at 11:57; Titan and Aaron saw it on screen. (Saved in fba8720; moved to port 8765 in d5e84b1.)
+- 12:17 M5, the flip, saved and pushed (68c98c7): a sponsor, picked or typed in, finds the outlets that fit it, and the talks nearest to what it does. It is the vendor door on the page. Not yet checked that its outlet list matches common sense.
 - 12:15 Cassini re-scored with Elastic's model: the Hello World Gazette is still one short (Faros 13th); the Breach Chronicle still has none of its must-finds.
 - 11:59 Cassini re-scored the match after the fix: the Hello World Gazette fails its key by one place (Faros 11th; Coder, Momentic and the gem mirrord in the top ten); the Breach Chronicle still has none of its must-finds in the top ten.
 - 11:53 Fresh-copy test (Cassini): a clean clone, set up from the README's own steps with a second key, loads and searches the cloud. PASS, with fixes needed (details in the checks file, "fresh-copy"). Rhea fixed the passage count and the load time in the README; the page step, the model download step and the match command wait for Titan.
@@ -166,6 +177,8 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 11:17, Aaron: helpers sparingly until 13:20.
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
 - Aaron (relayed by Neptune, 12:05 by Neptune's clock): approved a rewritten 90-second demo script and three new judge answers (why Elastic Cloud, why no geo, why Elastic's own models). Rhea put them in the cheat sheet; the day plan's demo is superseded.
+- 12:27, Aaron: try Elastic's hosted Jina re-ranker once, ten minutes; keep it if it answers fast, else skip; no raising capacity. A slow Elastic model must never blank the page (fallback). Warm the Elastic models before the 16:15 recording and the 16:30 submission. Fix the Gazette's wording (Faros 13th) only if cheap, otherwise leave it.
+- 12:20, Aaron: in the flip, what a sponsor is showing at KubeCon counts double, like an outlet's assignment.
 - 12:16, Aaron: the Hello World Gazette is the demo outlet; the Breach Chronicle is set aside (it stays in the data and is reported honestly as a miss).
 - 11:55, Aaron: Elastic's own meaning model moves forward, before the page.
 - 11:47, Aaron: the 12:00 hand-over rule is phased out; Titan is the only builder and the only one

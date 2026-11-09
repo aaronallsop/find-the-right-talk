@@ -43,6 +43,11 @@ To see the match for an outlet from Terminal:
 `.venv/bin/python -m ftrt.match --mode compare --kind sponsor -n 10 "Breach Chronicle"`;
 `--list` lists the 14 outlets.
 
+To flip it round, so a sponsor finds the outlets that fit it:
+`.venv/bin/python -m ftrt.flip "Kedify"` ranks every outlet and then the nearest talks;
+`.venv/bin/python -m ftrt.flip --mode compare "Edera"` shows it all ways; `--list` lists the 226
+sponsors. On the page this is the "I'm a vendor" door.
+
 Elastic's ELSER sleeps when idle and can take about 80 seconds to wake. The page wakes it when it
 starts; if it does not answer, searches go ahead without it.
 

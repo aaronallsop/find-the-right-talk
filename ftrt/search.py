@@ -89,8 +89,9 @@ def search_meaning(client, query: str, n: int = 10, index: str = config.PROGRAMM
     return search_meaning_vector(client, embed(query), n, index, filt)
 
 
-ELSER_MISSING = ("Elastic's own model, ELSER, is not in this catalogue: it runs only in Elastic Cloud, and only "
-                 "after a load there (python -m ftrt.load). Skipped.")
+ELSER_MISSING = ("Elastic's own model, ELSER, did not answer or is not in this catalogue (it runs only in Elastic "
+                 "Cloud, after a load there with python -m ftrt.load). Skipped.")
+_elser_resting_until = 0.0   # after a failure, searches leave ELSER alone until this time
 
 
 def has_elser(client, index: str = config.PROGRAMME_INDEX) -> bool:
@@ -103,13 +104,18 @@ def has_elser(client, index: str = config.PROGRAMME_INDEX) -> bool:
 def search_elser(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict] | None:
     """Search by the meaning Elastic's own model, ELSER, finds. None where the catalogue has no ELSER field
     (the laptop engine) or ELSER does not answer (it may be waking up), so callers skip this voice rather than fail."""
+    global _elser_resting_until
+    if time.time() < _elser_resting_until:
+        return None
     try:
         if not has_elser(client, index):
             return None
         body = {"bool": {"must": {"semantic": {"field": config.ELSER_FIELD, "query": query}}, "filter": filt or []}}
         r = client.options(request_timeout=config.ELSER_TIMEOUT).search(index=index, query=body, size=_fetch_size(n), source_includes=_FIELDS)
     except (ApiError, TransportError) as e:
-        print(f"ELSER did not answer ({type(e).__name__}); left out of this search.", file=sys.stderr)
+        _elser_resting_until = time.time() + config.ELSER_REST
+        print(f"ELSER did not answer ({type(e).__name__}); left out, and not asked again for "
+              f"{config.ELSER_REST // 60} minutes.", file=sys.stderr)
         return None
     return _group(r["hits"]["hits"], n)
 

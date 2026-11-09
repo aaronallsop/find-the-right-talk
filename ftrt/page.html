@@ -42,6 +42,10 @@
   .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
   .row > .grow { flex: 1 1 260px; }
   .row select { width: auto; }
+  .toggle { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; }
+  .toggle label { display: inline-flex; align-items: center; gap: 8px; margin: 0; cursor: pointer; }
+  .toggle input { width: 18px; height: 18px; accent-color: var(--gem); }
+  .pool { color: var(--muted); font-size: 14px; }
   .note { background: var(--soft); border-radius: 8px; padding: 12px 14px; margin-top: 12px; }
   .error { color: #b3261e; }
   .results-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 8px 0 4px; }
@@ -75,6 +79,10 @@
     <div class="switch" role="group" aria-label="Who are you">
       <button type="button" id="door-press" aria-pressed="true">I'm press</button>
       <button type="button" id="door-vendor" aria-pressed="false">I'm a vendor</button>
+    </div>
+    <div class="toggle">
+      <label><input type="checkbox" id="startups"> Start-ups only</label>
+      <span class="pool" id="pool"></span>
     </div>
 
     <form id="press" autocomplete="off">
@@ -150,6 +158,8 @@
 <script>
 const $ = id => document.getElementById(id);
 let matchData = null, matchWay = "blended", matchKind = "sponsor", searchWay = "blended";
+let sponsorsAll = [], searchShown = false;
+const startupsOnly = () => $("startups").checked;
 
 function el(tag, cls, text) {
   const e = document.createElement(tag);
@@ -239,7 +249,7 @@ $("press").onsubmit = async e => {
   if (go.disabled) return;
   err.hidden = true; go.disabled = true; go.textContent = "Matching…";
   try {
-    answers.press = await post("/api/match", {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value});
+    answers.press = await post("/api/match", {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value, startups: startupsOnly()});
     if (door === "press") { showAnswer(answers.press); $("match-panel").scrollIntoView({behavior: "smooth", block: "start"}); }
   } catch (x) { err.textContent = x.message; err.hidden = false; }
   go.disabled = false; go.textContent = "Go";
@@ -267,11 +277,29 @@ $("search").onsubmit = async e => {
   if (go.disabled) return;
   err.hidden = true; go.disabled = true; go.textContent = "Searching…";
   try {
-    const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value});
+    const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value, startups: startupsOnly()});
+    searchShown = true;
     const empty = d.mode === "words" ? "Words found nothing: no record has enough of these words. Try Meaning." : "Nothing matches.";
     showResults($("search-results"), d.results, empty);
   } catch (x) { err.textContent = x.message; err.hidden = false; }
   go.disabled = false; go.textContent = "Search";
+};
+
+// the start-ups toggle: fewer sponsors everywhere, and back again
+function fillSponsors() {
+  const keep = $("sponsor").value, shown = sponsorsAll.filter(s => !startupsOnly() || s.startup);
+  $("sponsor").replaceChildren(new Option(startupsOnly() ? "Choose one of the start-up sponsors…" : "Choose one of the sponsors…", ""),
+    ...shown.map(s => new Option(s.name + "  (" + s.tier + ")", s.record_id)));
+  if (shown.some(s => s.record_id === keep)) $("sponsor").value = keep;
+  const startups = sponsorsAll.filter(s => s.startup).length;
+  $("pool").textContent = startupsOnly() ? "Sponsors: the " + startups + " start-ups of " + sponsorsAll.length
+                                         : "Sponsors: all " + sponsorsAll.length + " (" + startups + " of them start-ups)";
+}
+$("startups").onchange = () => {
+  fillSponsors();
+  // whatever is on screen is asked again, so the change shows at once
+  if (door === "press" && answers.press) $("press").requestSubmit();
+  if (searchShown && $("q").value.trim()) $("search").requestSubmit();
 };
 
 // the pickers
@@ -281,7 +309,8 @@ $("search").onsubmit = async e => {
     $("engine").textContent = (d.engine === "cloud" ? "Elastic Cloud serverless" : "Elasticsearch on this laptop") + (d.elser ? ", with Elastic's ELSER" : "");
     document.querySelectorAll(".elser-only").forEach(b => b.hidden = !d.elser);
     d.outlets.forEach(o => $("outlet").append(new Option(o.name + (o.sample ? "  (sample)" : "") + (o.has_assignment ? "" : "  (standing beat only)"), o.record_id)));
-    d.sponsors.forEach(s => $("sponsor").append(new Option(s.name + "  (" + s.tier + ")", s.record_id)));
+    sponsorsAll = d.sponsors;
+    fillSponsors();
   } catch (x) { $("engine").textContent = "engine not reachable"; }
 })();
 </script>
