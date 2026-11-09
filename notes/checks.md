@@ -1347,3 +1347,47 @@ Faros, mirrord by MetalBear, Docker or JetBrains as picks (the earlier Anthropic
 Count, for the record: the answer holds 13 quoted pieces (counting its quote of the outlet's own assignment and splitting at its ellipses): 10 are exact
 against the raw CSV text, and an 11th (the Dash0 opening, with the heading the loader adds) is exact against the stored passage; the 2 that are not
 verbatim are the Backstage piece (word "actually" dropped) and the Dash0 stitched piece (two parts joined without an ellipsis).
+
+---
+
+# The Agent Builder agent on the new endpoint "openai-chat_completion-sol" (GPT-6.1 Sol), 14:27 (machine clock): ERROR, no answer
+
+Asked the one question at 14:27:18 with the tightened instructions live (code at ba7747c): `ftrt.agent ask "Which sponsors and talks at KubeCon fit the
+Hello World Gazette?"`. **It failed after 6 seconds. Exact message: "The agent did not answer: 400 {"statusCode":400,"error":"Bad Request","message":"Received a
+bad request status code for request from inference entity id [openai-chat_completion-sol] status [400]. Error message: [Function tools with reasoning_effort
+are not supported for gpt-6.1-sol in /v1/chat/completions. To use function tools, use /v1/responses or set reasoning_effort to 'none'.]"}**" Not retried.
+**Which model:** the endpoint `openai-chat_completion-sol` (model gpt-6.1-sol, as the message names it). The saved conversation record of this attempt
+(read only) shows connector `openai-chat_completion-sol`, 0 model calls, 0 tokens, no tool calls, empty response.
+**Why, as the message says:** this model rejects a request that carries function tools (which Agent Builder sends) while reasoning is on, through the chat
+completions route Elastic uses; it asks for the other route (`/v1/responses`) or reasoning set to "none". That is a setting of the endpoint or the model, not
+of this project's code. Nothing to check: no answer, picks, quotations or closing line.
+
+---
+
+# The Agent Builder agent, gpt-4.1 again with Titan's tightened instructions (ba7747c): asked 14:42, read back 14:44 (machine clock). ANSWERED.
+
+Asked the one question at 14:42:23 (`ftrt.agent ask "Which sponsors and talks at KubeCon fit the Hello World Gazette?"`): exit 0, 13 s wall clock. Read back
+from the saved conversation "KubeCon Sponsors and Talks Relevant to Hello World Gazette" (read only).
+**Model:** connector `openai-chat_completion-k563qy9gg9`, model **gpt-4.1-2025-04-14**. **Time and cost:** status completed; started 14:42:26.6; first words
+after 5.1 s; finished after 8.1 s (model side); 3 model calls, 30,042 input tokens (5,632 cached), 960 output tokens. **Tool calls (5):**
+`ftrt.outlet_profile` "Hello World Gazette"; then `ftrt.search_programme` four times: the assignment's words with kind sponsor, with kind talk; the beat's
+words (copied in full) with kind sponsor, with kind talk. (At 14:19: 3 calls, one search of each text with kind "any".)
+
+**Shape:** a heading "Sponsors" with five, then "Talks" with five, then the closing line; no opening narration. Each pick: name, tier (sponsors) or day and
+time (talks), a quotation, and a one-line fit.
+**Picks real, against the data:** all five sponsors exist with the tier given: Coder (Silver), Aiven (Silver), Dash0 (Platinum), Momentic (Silver), Docker
+(Platinum). All five talks exist: "Demo Theater: From YOLO to Golden Paths...", "Developing Cloud-Native Infrastructure in the Age of AI", "Agents Fail.
+Workflows Recover. Durable Agent Orchestration with Cadence", "What monday.com's 500+ Engineers and AI Agents Have in Common", "KitOps: The Whole Kit for
+AI Agents". **Days and times: four of the five given are exactly the programme's** (YOLO: Thursday 12 November 11:00–11:20; Developing Cloud-Native: Wednesday
+11 November 13:20–14:20; monday.com: Thursday 12 November 11:00–11:30; KitOps: Monday 9 November 14:15–14:20). **One is wrong:** for the Cadence talk the
+answer says "no time listed", but the programme gives Thursday 12 November, 14:40–15:10, and the saved result of one of the agent's own searches contains
+that time.
+**Quotations: 10 quotations, 17 pieces (split at its "..." gaps). All 10 verbatim, every piece, and the pieces in order inside one stored passage of the
+right record** (checked against the passages as stored and returned by the tools). Against the raw spreadsheet text, 16 of the 17 pieces are exact; the 17th
+(the Coder quote's join of three product lines) differs only in the punctuation the loader adds between lines.
+**Closing line:** the last line is exactly "AI-written by the Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on it."
+**Against the answer key:** of five sponsors, three are on the key (Coder and Momentic, two of the three must-finds; Docker, "should also do well"); Aiven and
+Dash0 are not. It did not pick mirrord by MetalBear (the hidden gem), Faros (the third must-find) or JetBrains.
+**Against the 14:19 gpt-4.1 answer (before the tightening):** then two sponsors (Coder, Dash0) and three talks mixed in one numbered list, 11 of 13 quoted
+pieces verbatim (two quotes altered: a dropped word, and a stitched joint with no gap mark); now five sponsors and five talks under two headings, 10 of 10
+quotations verbatim and in order, the talks dated (4 of 5 correct, 1 wrongly "no time listed"), 3 of 5 sponsors on the key (before: 1 of 2).

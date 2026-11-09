@@ -236,8 +236,31 @@ by a program against the data; the checker made no model call.
 | Against the answer key for this outlet | 4 of its 5 sponsors are on the key (Coder, Momentic, the hidden gem mirrord, Docker) | 1 of its 2 sponsors is on the key (Coder); Dash0 is not |
 | Also | opens with a line of the model's own narration; ten picks against "up to five" | five picks (three talks, two sponsors); no narration |
 
-Both answers are single answers to one question, not repeated measurements, and the one-line reasons in each are the model's own wording, which was not
+**Third answer, 14:42 (gpt-4.1 again, after the agent's instructions were tightened to ask for exact quotations with "..." for gaps, sponsors then talks).**
+Same question; record: model gpt-4.1-2025-04-14; first words 5.1 s, finished 8.1 s (13 s from command to printed answer); 3 model calls, 30,042 input
+(5,632 cached) and 960 output tokens; 5 tool calls (the outlet's profile, then the assignment's words and the beat's words, each searched once for
+sponsors and once for talks). Checked by program against the data:
+
+| Check | Result |
+|---|---|
+| Shape | "Sponsors" (5) then "Talks" (5), then the closing line; no opening narration |
+| Every company named exists, with the right tier | 5 of 5 (Coder, Aiven, Dash0, Momentic, Docker) |
+| Every talk named exists | 5 of 5; the day and time given are the programme's for 4 of 5; for the fifth (the Cadence talk) the answer says "no time listed" although the programme lists Thursday 12 November, 14:40-15:10 |
+| Quotations word for word, pieces in order, inside one stored passage of the right record | 10 of 10 quotations (17 pieces, split at its "..." gaps) |
+| Ends with the AI-written line, exactly | yes |
+| Against the answer key for this outlet | 3 of its 5 sponsors are on the key (Coder, Momentic, Docker); Aiven and Dash0 are not; the hidden gem (mirrord), Faros and JetBrains were not picked |
+
+Compared with the 14:19 answer from the same model before the tightening (two sponsors and three talks in one list; 11 of 13 quoted pieces verbatim, two
+quotations altered): every quotation is now verbatim, the answer has the two lists, and it names more of the key's companies; one date was wrongly given as
+missing.
+
+The three answers are single answers to one question, not repeated measurements, and the one-line reasons in each are the model's own wording, which was not
 checked; only the quotations, names and the closing line were. **The quota was tight on Anthropic's hosted model:** the same question, asked three more
 times (12:53, 13:06 and 13:38) was refused every time after 30 to 43 seconds with the trial's rate limit (HTTP 429: "wait 8m44s", "wait 6m7s", "wait
 3m36s"); at 13:38 the refusal and the saved record still named the Anthropic model. The second answer above came after the agent was switched to the
 project owner's own OpenAI endpoint.
+
+**A third model tried and failed, 14:27.** After the agent's instructions were tightened and the default model was switched to a newer OpenAI endpoint
+(gpt-6.1-sol), the same question was refused in 6 seconds with an error from that endpoint (HTTP 400): "Function tools with reasoning_effort are not
+supported for gpt-6.1-sol in /v1/chat/completions. To use function tools, use /v1/responses or set reasoning_effort to 'none'." No model call was made, so
+nothing about an answer from that model has been checked.
