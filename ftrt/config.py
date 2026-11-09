@@ -19,8 +19,10 @@ VECTOR_SIZE = 384
 PASSAGE_WORDS = 120      # aim for passages of about this many words
 MIN_TAIL_WORDS = 40      # a leftover shorter than this is folded into the passage before it
 
-# Where the engine is and how to get in. The password is read from this file and never written anywhere.
-ENGINE_SETTINGS_FILE = Path.home() / "elastic-start-local" / ".env"
+# Where the engine is and how to get in. Both files live outside this folder; nothing in them is
+# ever written anywhere else. The cloud file wins when it is filled in (see engine.py).
+CLOUD_SETTINGS_FILE = Path.home() / "elastic-cloud" / ".env"         # ES_CLOUD_URL, ES_CLOUD_API_KEY
+ENGINE_SETTINGS_FILE = Path.home() / "elastic-start-local" / ".env"  # ES_LOCAL_URL, ES_LOCAL_PASSWORD
 ENGINE_DEFAULT_URL = "http://localhost:9200"
 ENGINE_USER = "elastic"
 

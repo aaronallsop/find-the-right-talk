@@ -13,7 +13,7 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 import argparse, csv, re, sys, time
 from collections import Counter
 from elasticsearch import helpers
-from . import config, passages
+from . import config, engine, passages
 from .engine import connect
 
 
@@ -32,8 +32,10 @@ def build_records() -> tuple[list[dict], list[dict]]:
 
 def mapping() -> dict:
     keyword = {"type": "keyword"}
+    # Elastic Cloud serverless manages shards itself and refuses these settings; the laptop engine wants them.
+    settings = {} if engine.where() == "cloud" else {"settings": {"number_of_shards": 1, "number_of_replicas": 0}}
     return {
-        "settings": {"number_of_shards": 1, "number_of_replicas": 0},
+        **settings,
         "mappings": {"properties": {
             "record_id": keyword, "kind": keyword, "part": keyword,
             "name": {"type": "text", "analyzer": "english", "fields": {"keyword": {"type": "keyword"}}},
