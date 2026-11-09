@@ -16,6 +16,7 @@ spec:
     metadata:
       labels: {app: find-the-right-talk}
     spec:
+      automountServiceAccountToken: false   # the page never talks to the cluster, so it gets no cluster credentials
       containers:
         - name: page
           image: IMAGE
@@ -32,6 +33,10 @@ spec:
               value: "20"
             - name: HOSTED_RATE_OVERALL_PER_MINUTE
               value: "30"   # Aaron, 15:42: caps the OpenAI cost of the fit check (each Go makes two requests)
+          startupProbe:   # start-up grace: up to 30 x 2 s = 60 s before the ready and live checks begin
+            httpGet: {path: /healthz, port: 8080}
+            periodSeconds: 2
+            failureThreshold: 30
           readinessProbe:
             httpGet: {path: /healthz, port: 8080}
             periodSeconds: 5

@@ -18,6 +18,7 @@ spec:
       labels:
         app: app
     spec:
+      automountServiceAccountToken: false   # the page never talks to the cluster, so it gets no cluster credentials
       containers:
         - name: app
           image: app
@@ -44,6 +45,14 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+          # start-up grace: the ready and live checks wait until this passes (up to 30 x 2 s = 60 s), because
+          # the page loads its code and connects to Elastic before it answers (ready-checks failed on start-up)
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 2
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /readyz
