@@ -1,7 +1,7 @@
 # Checks — Cassini's results, with the time of each
 
 Cassini looks and never fixes. Everything below was measured on 9 November 2026 against the
-programme as loaded at that time (commit f712a6d plus whatever was on disk; no code was changed
+program as loaded at that time (commit f712a6d plus whatever was on disk; no code was changed
 by Cassini). Command, run from the folder:
 `.venv/bin/python -m ftrt.search --mode compare --kind sponsor -n 5 "<search>"`
 Default engine is Elastic Cloud serverless (named on screen as "Engine: Elastic Cloud serverless");
@@ -39,7 +39,7 @@ ranks 2 and 3) have nothing to do with SLSA: meaning is just returning the neare
 
 Words fails and meaning answers, as the demo needs, but **no Start-Up is in the top three**, and
 the top result is a Silver sponsor, not the autoscaling start-up. Stable, but not the hoped-for
-story. (My reading, not measured: "idle servers ... rest of the year" pulls towards cost and
+story. (My reading, not measured: "idle servers ... rest of the year" pulls toward cost and
 hosting companies.)
 
 ### 2b. Black Friday rewordings, three runs each, sponsors only
@@ -72,7 +72,7 @@ Sponsors only, identical in all 3 runs:
 | Meaning | 1 vCluster (Gold), 2 Edera (Silver), 3 Cast AI (Platinum), 4 Runpod (Silver), 5 Aranya (Start-Up) |
 | Blended | 1 Edera, 2 vCluster, 3 Cast AI, 4 Runpod, 5 Aranya |
 
-All kinds (programme-wide; the command does allow it), identical in all 3 runs:
+All kinds (program-wide; the command does allow it), identical in all 3 runs:
 
 | Way | Top results |
 |---|---|
@@ -361,7 +361,7 @@ copied either settings file (only listed their names and sizes). No docker comma
 | 5. "Start the page: [command], and open [address]." | Not runnable: the README still has the placeholder | **fails / unclear**: the step has no command and no address |
 | "Until the page exists" search command | `.venv/bin/python -m ftrt.search --mode compare "SLSA Level 3"`, then `--kind sponsor --startups` with the traffic-spike wording | passes; see below |
 
-Load counts printed by the fresh copy (these rebuilt the demo's two catalogues in the cloud project):
+Load counts printed by the fresh copy (these rebuilt the demo's two catalogs in the cloud project):
 501 talks in 816 passages; 100 events in 126 passages; 715 speakers in 717 passages; 226 sponsors in
 566 passages; 14 outlets (6 with a KubeCon assignment) in 25 passages. 2,225 passages turned into 384
 numbers each for `ftrt-programme` (7 s) and 25 for `ftrt-outlets`. In the engine afterwards:
@@ -371,9 +371,9 @@ with an @ sign (social handles). "Done in 68s".
 **Steps that fail or are unclear, and README statements that are wrong:**
 1. **Step 5 is a placeholder** ("[command]" and "[address]"): a judge cannot start the page. (Expected
    at this stage, since the page was not built when I cloned.)
-2. **README step 4 says "cuts the text into 2,250 passages"; the load printed 2,225** programme passages
+2. **README step 4 says "cuts the text into 2,250 passages"; the load printed 2,225** program passages
    (2,250 would be 2,225 + 25 outlet passages, if that is the intended total; the README reads as the
-   programme's count). Wrong or ambiguous.
+   program's count). Wrong or ambiguous.
 3. **README step 4 says "about 30 seconds to Elastic Cloud"; this run took 68 s** (the 25 s Neptune
    measured earlier was before the passage rework). One run only; the claim is not supported by this run.
 4. **A machine without the meaning model already cached cannot run it.** `ftrt/quiet.py` sets
@@ -665,7 +665,7 @@ teams; and, in the assignment, AI agents, help, safe, inside the companies using
   exploit- (6), CVE (3), security (5), agent (7).
 - **Emphere (Start-Up), helps security teams:** AI agents that patch every known vulnerability in container
   images, with signed, tested images and proof. Words: vulnerabilit- (4), CVE (2), container, SLSA, compliance.
-- **Endor Labs, helps security teams:** an application-security platform; AI agents find, prioritise and fix
+- **Endor Labs, helps security teams:** an application-security platform; AI agents find, prioritize and fix
   vulnerabilities in code and packages, and it also checks coding agents' actions against policy. Words:
   security (5), agent (7), vulnerabilit- (5), policy, SLSA, FedRAMP.
 - **Edera, keeps agents safe:** a hypervisor that runs each container or AI agent in its own isolated zone so
@@ -759,7 +759,7 @@ assignment is about agents, which KodeKloud's text never mentions. Its only meet
 and the other ways drop it out of the top 50.
 
 **Endor Labs** (Silver, topic "Security"): "an application security platform that uses AI agents to find,
-prioritise and fix vulnerabilities in human-written and AI-generated code, open-source dependencies and
+prioritize and fix vulnerabilities in human-written and AI-generated code, open-source dependencies and
 container images", and it checks coding agents' actions against policy. Its words: code (13), agent (7),
 secur- (6), vulnerab- (5), coding agent (4), open-source (2/1). **Why it lands low:** its subject is security
 and compliance; the outlet never says security, vulnerability, risk or compliance. **Does the wording point
@@ -840,7 +840,7 @@ For Kedify and Edera the 14 outlets' scores bunch: the whole list spans 12% (Ked
 score and the leader's lead over second is 0.0024 and 0.0021, so the order inside the list is decided by very
 small differences (Edera has two printed ties). Docker's list has more shape: ten outlets within 0.0158 and then
 a drop to the last four. Where the flip is most useful as a ranking, then, is the grouping (which outlets are in
-the top handful and which are at the bottom), not the order of neighbours. The outlets each sponsor puts in the
+the top handful and which are at the bottom), not the order of neighbors. The outlets each sponsor puts in the
 top two or three differ by way (words, meaning and ELSER each lead with different outlets for Kedify and
 Docker), and the blended order is a compromise of the three.
 
@@ -928,8 +928,8 @@ Resizing Like I'm 5: Scaling Without Restarts, Autoscaling Reality Check: The Ha
 Challenge, Battle-tested Autoscaling Paradigms with KEDA, and four more. No "re-ranker did not answer" note.
 
 **With start-ups on, the plain search can no longer show sponsors under "Talks": confirmed in the page.**
-Choosing Talks, then switching the toggle on, sets the "Among" box to "Sponsors", greys it out (tooltip
-"Start-ups only: sponsors"), so "Talks" cannot be chosen while the toggle is on; switching off un-greys it
+Choosing Talks, then switching the toggle on, sets the "Among" box to "Sponsors", grays it out (tooltip
+"Start-ups only: sponsors"), so "Talks" cannot be chosen while the toggle is on; switching off un-grays it
 and puts "Talks" back (the page remembers the previous choice). **The server itself has not changed:** a
 direct request with the toggle flagged on and `kind` talk, speaker or event still returns 10 sponsors (in blended,
 meaning, ELSER and re-ranked; words returns none), so the fix is in the page, not in the engine's answer.
@@ -1021,7 +1021,7 @@ your trial quota to be refilled."** The refusal came back after 30 seconds. As i
 no answer, no list of companies, no quotations, no closing line to check, and no time for an answer to
 report. The quota should refill at about 13:02 (12:53:53 plus 8m44s, machine clock), if the earlier use was the cause.
 The checker for the answer (every company named is a sponsor in `data/sponsors.csv`, every quotation found
-word for word in the programme text, the closing line exactly as the agent's instructions require) is ready and
+word for word in the program text, the closing line exactly as the agent's instructions require) is ready and
 unused. What I have of the agent's earlier answer (12:42 to 12:45, 41 s, in the commit message of 44b827a)
 is the other session's report, not my measurement, and I did not repeat it.
 
@@ -1051,9 +1051,9 @@ Nothing created, changed or deleted. (An 'ask' by me at 12:53:23 and 13:06:08 cr
 **Time and cost, as the record states:** started 12:42:49.659; first words after 11.6 s; finished after 33.7 s
 (the 41 s Titan reported includes starting and printing); 4 calls to the language model (Anthropic Claude
 Sonnet 4.5 on Elastic's hosted service), 41,917 input tokens, 1,282 output tokens.
-**Tool calls it made (3, in order):** `ftrt.outlet_profile` with "Hello World Gazette"; `ftrt.search_programme`
+**Tool calls it made (3, in order):** `ftrt.outlet_profile` with "Hello World Gazette"; `ftrt.search_program`
 with "AI agents built for developers that help you write code" (kind any, start-ups only false);
-`ftrt.search_programme` with "new developer tools programming languages frameworks how developers write test
+`ftrt.search_program` with "new developer tools programming languages frameworks how developers write test
 and ship code" (kind any, start-ups only false). No other tool, and none outside the project's three.
 
 **Companies named, against `data/sponsors.csv`:** five sponsors, all in the file, with the tier the answer gave:
@@ -1065,7 +1065,7 @@ for the three it dated: "What monday.com's 500+ Engineers and AI Agents Have in 
 Agent Sandbox on EKS..." (Wednesday 11 November, 11:25–11:45); the other two ("Agents Fail. Workflows Recover.",
 "From Platform Catalog to Conversational Agent") carry no date in the answer. No speaker named.
 **Quotations:** 19 quoted pieces (sponsor passages, talk descriptions and talk titles): **all 19 found word
-for word, character for character (whitespace aside), in the programme's own CSV text.** None failed even the
+for word, character for character (whitespace aside), in the program's own CSV text.** None failed even the
 looser punctuation-free test. The agent used "…" nowhere inside a quotation.
 **The closing line:** the answer's last line is exactly "AI-written by the Find the Right Talk agent (Elastic
 Agent Builder). Check each quoted passage before you rely on it." (checked against the instruction text).
@@ -1254,7 +1254,7 @@ blended top 10 (Maze 11th, Endor Labs 28th, Vijil 41st). Jina is the first way t
 
 # Page checks refreshed on 904a577 (Dash0 tracing on), real browser at http://127.0.0.1:8765, 14:03 to 14:07 (machine clock)
 
-Agent not asked, catalogues not touched (read-only requests only). Times are click to button-back, cloud.
+Agent not asked, catalogs not touched (read-only requests only). Times are click to button-back, cloud.
 **Engine label on screen:** "Elastic Cloud serverless, with Elastic's ELSER, Jina embeddings and a re-ranker". Way buttons: Blended, Meaning, Words,
 Elastic ELSER, Jina, Re-ranked, Compare all (match panel and plain search).
 
@@ -1289,8 +1289,8 @@ TFIR, Women in Infrastructure, The Regulated Cloud; Open Source Sustainability W
 **Start-ups on/off, once (Hello World Gazette, press door):** off 2.16 s: sponsors Docker, JetBrains, Momentic, mirrord [Start-Up], Coder, Resolve AI,
 Sentry, Stacklet, Cosmonic, Syntasso; vendor picker 226. On (one click): 2.03 s; line "Sponsors: the 32 start-ups of 226", picker 32, tab "Start-up
 sponsors": mirrord, Paper Compute Company, Vijil, CodeVisionary, Radar, Maze, Testkube, Causal Dynamics Lab, StackGuardian, pgEdge, all tagged; talks and
-speakers lists identical to those with it off; the plain search's "Among" box forced to Sponsors and greyed. Off again: 2.37 s, pool 226, picker 226,
-the "Among" box un-greyed, and the three tabs identical to the first off lists. All ten start-ups shown are Start-Up tier in the data.
+speakers lists identical to those with it off; the plain search's "Among" box forced to Sponsors and grayed. Off again: 2.37 s, pool 226, picker 226,
+the "Among" box un-grayed, and the three tabs identical to the first off lists. All ten start-ups shown are Start-Up tier in the data.
 
 ---
 
@@ -1314,8 +1314,8 @@ Gazette" (read only, no further model call). Left alone: the other saved convers
 **Time and cost, as the record states:** status completed; started 14:19:26.6; first words after 4.8 s; finished after 7.0 s (model side); 3 model
 calls, 23,090 input tokens (5,888 of them cached), 612 output tokens, no reasoning tokens. (The Anthropic run at 12:42: 33.7 s, 4 calls, 41,917 input,
 1,282 output.)
-**Tool calls (3, in order):** `ftrt.outlet_profile` "Hello World Gazette"; `ftrt.search_programme` with "AI agents built for developers: agents that help
-you write code" (kind any, start-ups only false); `ftrt.search_programme` with the outlet's beat copied in full ("New developer tools and releases.
+**Tool calls (3, in order):** `ftrt.outlet_profile` "Hello World Gazette"; `ftrt.search_program` with "AI agents built for developers: agents that help
+you write code" (kind any, start-ups only false); `ftrt.search_program` with the outlet's beat copied in full ("New developer tools and releases.
 Programming languages and frameworks. How developers write, test and ship code. Open-source tools developers rely on."). No other tool.
 
 **The answer:** five numbered picks, three talks and two sponsors: (1) the talk "Demo Theater: From YOLO to Golden Paths: Building Trusted Environments for
@@ -1329,9 +1329,9 @@ listed Docker, Elastic and North as "named": Docker is inside a quotation, Elast
 **Closing line:** the last line is exactly "AI-written by the Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on
 it."
 
-**Quotations word for word: NOT all.** Of the five picks' quotations, three are verbatim in the programme (the YOLO talk: 2 pieces; Coder: 3 pieces; the
+**Quotations word for word: NOT all.** Of the five picks' quotations, three are verbatim in the program (the YOLO talk: 2 pieces; Coder: 3 pieces; the
 "Developing Cloud-Native Infrastructure" talk: 3 pieces; every piece exact against the CSV text). Two are not:
-1. **Backstage talk:** the quote reads "...you'll find where your skills and experience fit in the project..." but the programme says "...you'll find where
+1. **Backstage talk:** the quote reads "...you'll find where your skills and experience fit in the project..." but the program says "...you'll find where
    your skills and experience **actually** fit in the project, not just hear about how contributing works". The word "actually" was dropped inside the
    quotation with no ellipsis. (The second piece of that quote, "walk through the codebase (Node/JavaScript/React), the contribution process, and local dev
    setup", is exact.)
@@ -1339,7 +1339,7 @@ it."
    passage text as stored and returned by the tool (the heading "Dash0. Problems solved:" is added when the data is cut into passages, so it is in the stored
    passage but not in the CSV cell). After the ellipsis it reads "Feeds what breaks in production back to the agents that wrote the code. Products:
    Darkplane: A control room for the AI that writes code, ...": **both pieces are verbatim in the same stored passage, but not next to each other**; the text
-   between them is left out with no ellipsis, so as one run it does not appear in the programme.
+   between them is left out with no ellipsis, so as one run it does not appear in the program.
 (The answer also quotes the outlet's own assignment in its introduction: exact.)
 
 **Against the project's own answer key for this outlet:** one of its two sponsors is on the key (Coder, a must-find); Dash0 is not. It did not name Momentic,
@@ -1370,7 +1370,7 @@ Asked the one question at 14:42:23 (`ftrt.agent ask "Which sponsors and talks at
 from the saved conversation "KubeCon Sponsors and Talks Relevant to Hello World Gazette" (read only).
 **Model:** connector `openai-chat_completion-k563qy9gg9`, model **gpt-4.1-2025-04-14**. **Time and cost:** status completed; started 14:42:26.6; first words
 after 5.1 s; finished after 8.1 s (model side); 3 model calls, 30,042 input tokens (5,632 cached), 960 output tokens. **Tool calls (5):**
-`ftrt.outlet_profile` "Hello World Gazette"; then `ftrt.search_programme` four times: the assignment's words with kind sponsor, with kind talk; the beat's
+`ftrt.outlet_profile` "Hello World Gazette"; then `ftrt.search_program` four times: the assignment's words with kind sponsor, with kind talk; the beat's
 words (copied in full) with kind sponsor, with kind talk. (At 14:19: 3 calls, one search of each text with kind "any".)
 
 **Shape:** a heading "Sponsors" with five, then "Talks" with five, then the closing line; no opening narration. Each pick: name, tier (sponsors) or day and
@@ -1378,9 +1378,9 @@ time (talks), a quotation, and a one-line fit.
 **Picks real, against the data:** all five sponsors exist with the tier given: Coder (Silver), Aiven (Silver), Dash0 (Platinum), Momentic (Silver), Docker
 (Platinum). All five talks exist: "Demo Theater: From YOLO to Golden Paths...", "Developing Cloud-Native Infrastructure in the Age of AI", "Agents Fail.
 Workflows Recover. Durable Agent Orchestration with Cadence", "What monday.com's 500+ Engineers and AI Agents Have in Common", "KitOps: The Whole Kit for
-AI Agents". **Days and times: four of the five given are exactly the programme's** (YOLO: Thursday 12 November 11:00–11:20; Developing Cloud-Native: Wednesday
+AI Agents". **Days and times: four of the five given are exactly the program's** (YOLO: Thursday 12 November 11:00–11:20; Developing Cloud-Native: Wednesday
 11 November 13:20–14:20; monday.com: Thursday 12 November 11:00–11:30; KitOps: Monday 9 November 14:15–14:20). **One is wrong:** for the Cadence talk the
-answer says "no time listed", but the programme gives Thursday 12 November, 14:40–15:10, and the saved result of one of the agent's own searches contains
+answer says "no time listed", but the program gives Thursday 12 November, 14:40–15:10, and the saved result of one of the agent's own searches contains
 that time.
 **Quotations: 10 quotations, 17 pieces (split at its "..." gaps). All 10 verbatim, every piece, and the pieces in order inside one stored passage of the
 right record** (checked against the passages as stored and returned by the tools). Against the raw spreadsheet text, 16 of the 17 pieces are exact; the 17th
@@ -1391,3 +1391,52 @@ Dash0 are not. It did not pick mirrord by MetalBear (the hidden gem), Faros (the
 **Against the 14:19 gpt-4.1 answer (before the tightening):** then two sponsors (Coder, Dash0) and three talks mixed in one numbered list, 11 of 13 quoted
 pieces verbatim (two quotes altered: a dropped word, and a stitched joint with no gap mark); now five sponsors and five talks under two headings, 10 of 10
 quotations verbatim and in order, the talks dated (4 of 5 correct, 1 wrongly "no time listed"), 3 of 5 sponsors on the key (before: 1 of 2).
+
+---
+
+# The fit check (commit 8200739), real browser at http://127.0.0.1:8765, 15:37 to 15:40 (machine clock)
+
+Setup each run: the Hello World Gazette picked (the page then fills the first box with the outlet's beat), the second box typed "Start-ups building AI agents
+that help developers write and test code", Go. The request the page sent carried the outlet id, the beat text and the typed assignment. Engine label on screen
+as before. Model named in the box's footer: "Written by OpenAI's gpt-4.1, reached through Elastic's inference service ...".
+
+| Run | Results on screen after Go | Fit check box appears | The box's three names | Page's top three (blended sponsors) |
+|---|---|---|---|---|
+| 1 | 2.41 s | 5.76 s after Go (fit request 3.28 s) | mirrord by MetalBear [Start-Up], JetBrains, Momentic | the same three, same order |
+| 2 | 3.08 s | 4.60 s | same | same |
+| 3 | 2.70 s | 5.03 s | same | same |
+
+(1) **Names: the box's three are the list's top three, in order, in all three runs.** While waiting the box showed "Fit check: reading the top three for this outlet…"
+(seen in all three runs); results were on screen first, the box about 1.6 to 3.3 s later.
+(4) **Label: shown every time.** Heading "Fit check: AI-written from the passages below. Check before you rely on it." and footer "Written by OpenAI's gpt-4.1,
+reached through Elastic's inference service, from what this outlet covers, what it came to find, and each of these three sponsors' own passage. Nothing else is
+sent, and the order above is the search's, not the AI's." Each item has a "The passage it read" fold-out; the three passages were identical across the runs.
+
+(2) **Claims, checked sentence by sentence against "The passage it read":** each sentence has two parts: what the sponsor does (checkable) and a hedged "may ..."
+fit remark about the outlet (a judgment, not in the passage). Counting the checkable claims about the sponsor (a claim = one fact; my split):
+- Run 1: mirrord "gives AI coding agents and developers a live connection to real infrastructure" (in the passage), "for testing code changes" (in it); JetBrains
+  "Air is an agentic development environment for teams building software with AI agents" (in it, under Products); Momentic "AI QA agent explores and tests apps across
+  browsers and mobile emulators" (in it), "turning plain-English test descriptions into end-to-end tests" (in it): **5 claims, 5 supported, 0 not.**
+- Run 2: the same, plus Momentic "self-healing" (in it): **6 claims, 6 supported.**
+- Run 3: mirrord "...letting agents and developers verify code against real APIs and services without deploying" (in it); JetBrains as before; Momentic as in run 2:
+  **7 claims, 7 supported.** (Its JetBrains fit remark "AI-assisted coding environments" is a judgment; the passage lists "Using AI coding assistance".)
+Nine fit remarks in all (three per run) are hedged ("may interest you", "may fit", "may be relevant"), none states a fact about the sponsor. The wording varied from run to
+run, as expected; the sponsor claims did not drift beyond the passages.
+(3) **No non-start-up called a start-up:** only mirrord carries the Start-Up tag (correct per `data/sponsors.csv`); JetBrains and Momentic (Silver) are not tagged, and the
+word "start-up" appears in none of the nine sentences.
+
+**One run with start-ups on** (switching the switch on re-ran the match, then the box): results 2.06 s, box 3.67 s after the click (fit request 1.56 s). Top three of the
+"Start-up sponsors" list: mirrord, Vijil, Paper Compute Company (all Start-Up in the data); the box named the same three in order, tagged [Start-Up], label present.
+Claims: mirrord "live connection to real infrastructure for testing code changes instantly" (instant feedback: in the passage) and "open-source mirrord" (in it): 3 claims;
+Vijil "manages the lifecycle of AI agents with tools for discovering, evaluating, and monitoring agents, including open-source in-agent guards" (all in it): 2-3 claims;
+Paper Compute "records every coding agent session, generates reusable skills, and routes jobs to the best-performing AI models ... open-source telemetry layers": 4 claims,
+all in the passage; one slightly loose: the passage says "records every agent session", the answer says "every coding agent session" (the passage elsewhere says it captures Claude
+Code sessions). **About 9 to 10 claims, none unsupported, one loosely worded.**
+
+**The box is absent where it should be.** Checked with start-ups on: Talks tab, Speakers tab, and the Meaning, Words, Elastic ELSER, Jina, Re-ranked and Compare all views:
+box hidden in all; it showed only on the Sponsors (or "Start-up sponsors") tab with Blended. Vendor door, Kedify (fresh page): the box hidden, no fit request, the
+flip answered in 1.87 s with the Outlets and Talks tabs, no error. Plain search, GPU sentence among sponsors, Blended: 10 results, first five Edera, vCluster, Cast AI,
+Rafay Systems, Lablup (the same as at 13:46), no fit request, box hidden; Compare all search: six columns, no fit request, box hidden. (The vendor door's picker now takes a
+typed sponsor name in a box, not a drop-down.)
+**One change to flag:** Kedify's outlets now read Greenstack, TFIR, LearnKube, The Regulated Cloud, SDxCentral (at 14:06: Greenstack, Open Source Sustainability Weekly, TFIR,
+LearnKube, The New Stack; at 12:18: Greenstack, LearnKube, TFIR, Women in Infrastructure, The Regulated Cloud): the order moves with each version.

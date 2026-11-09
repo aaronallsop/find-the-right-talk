@@ -32,7 +32,7 @@ def _plain(results: list[dict]) -> list[dict]:
     for r in results:
         prefix = f"{r['name']}. "
         passage = r["passage"][len(prefix):] if r["passage"].startswith(prefix) else r["passage"]
-        out.append({"name": r["name"], "kind": r["kind"], "tier": "sample" if r.get("sample") else r.get("tier"),
+        out.append({"id": r["record_id"], "name": r["name"], "kind": r["kind"], "tier": "sample" if r.get("sample") else r.get("tier"),
                     "startup": bool(r.get("startup")),
                     "track": r.get("track"), "score": r["score"], "passage": passage,
                     "via": r.get("via"), "found_by": r.get("found_by")})
@@ -127,18 +127,19 @@ def run_fitcheck():
     Any trouble at all (no model, too slow, an odd answer) comes back as nothing to show, never as an error."""
     body = request.get_json(silent=True) or {}
     outlet_id, beat, assignment = _text(body, "outlet_id"), _text(body, "beat"), _text(body, "assignment")
-    sponsors = body.get("sponsors") if isinstance(body.get("sponsors"), list) else []
-    names = [str(n).strip()[:200] for n in sponsors[:config.FITCHECK_TOP]]
-    with tracing.span("fit check", sponsors=len(names)) as step:   # how many and how long; never what was typed
+    kind = _text(body, "kind") or "sponsor"
+    items = body.get("items") if isinstance(body.get("items"), list) else []
+    ids = [str(i).strip()[:200] for i in items[:config.FITCHECK_TOP]]
+    with tracing.span("fit check", kind=kind, items=len(ids)) as step:   # what kind, how many, how long; never what was typed
         try:
             if outlet_id and not beat:   # the box was emptied: the outlet's own beat, as the match used
                 beat = match.stored_parts(client, outlet_id)[1]["beat"]["text"]
-            items = fitcheck.check(client, beat, assignment, names)
+            found = fitcheck.check(client, beat, assignment, kind, ids)
         except (Exception, SystemExit) as e:
             step.set_attribute("failed", type(e).__name__)
-            items = None
-        step.set_attribute("shown", bool(items))
-    return jsonify(items=items or [], model=config.FITCHECK_MODEL_NAME)
+            found = None
+        step.set_attribute("shown", bool(found))
+    return jsonify(items=found or [], kind=kind, model=config.FITCHECK_MODEL_NAME)
 
 
 @app.post("/api/flip")

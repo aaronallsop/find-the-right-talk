@@ -73,7 +73,7 @@ ftrt_page.app.add_url_rule("/readyz", "readyz", lambda: "ok")     # the name Rad
 
 # 4. a limit on searches per address (and overall), because every search is billed
 RATE_PER_ADDRESS = int(os.environ.get("HOSTED_RATE_PER_MINUTE", "60"))
-RATE_OVERALL = int(os.environ.get("HOSTED_RATE_OVERALL_PER_MINUTE", "600"))
+RATE_OVERALL = int(os.environ.get("HOSTED_RATE_OVERALL_PER_MINUTE", "30"))   # each Go is two requests: the match and the fit check
 _recent, _all, _lock = collections.defaultdict(collections.deque), collections.deque(), threading.Lock()
 
 
