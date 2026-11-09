@@ -78,7 +78,8 @@ says what to build and which traps to avoid, and Monday writes it fresh.
 - **Do not use port 5000.** On this Mac it is already taken by macOS itself (AirPlay Receiver),
   so a page started on Flask's default port answers with someone else's error. Ports 5055 to
   5057 may also be held by the private project's test pages until the laptop restarts. Pick
-  another port (5060 was free Sunday night) and put it in the README's "open" step.
+  another port and put it in the README's "open" step. **Not 5060 or 5061 either:** browsers refuse
+  them outright as the internet-phone (SIP) ports (found 9 November; the page moved to 8765).
 - **The meaning model is already on this laptop**, in the Hugging Face cache. On first use the
   library still asks the internet whether there is a newer copy, and on flaky venue wifi that
   can hang. If loading is slow, set `HF_HUB_OFFLINE=1` in the environment before running

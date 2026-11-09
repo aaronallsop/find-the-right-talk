@@ -2,8 +2,8 @@
 
 **Which talks and sponsors at KubeCon should a given media outlet cover?** Pick an outlet and
 this ranks the programme — talks, speakers and sponsors — by how well each fits what that outlet
-covers, and says why each one matched. Search the programme three ways: by words, by meaning,
-or both. It runs on Elastic Cloud serverless; a local Elasticsearch in Docker is the alternative.
+covers, and says why each one matched. Search the programme by words, by meaning,
+or both (in Elastic Cloud, with Elastic's own ELSER model as one more voice). It runs on Elastic Cloud serverless; a local Elasticsearch in Docker is the alternative.
 
 Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake City,
 9 November 2026, by Aaron Allsop.
@@ -26,16 +26,25 @@ Built at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt Lake C
 3. Install Python 3.11, then this project's pieces:
    `python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 4. Load the data: `.venv/bin/python -m ftrt.load`. Takes about 12 seconds on the laptop engine
-   (measured 9 November); the time to Elastic Cloud is [to be measured again]. The first run downloads the small meaning model (about 90 MB) once; later runs work offline. It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into passages (2,225 for the programme and 25 for the outlets), turns each into
-   384 numbers with the meaning model, and fills two new catalogues, `ftrt-programme` and
+   and 470 seconds to Elastic Cloud, because Elastic's ELSER model reads every passage as it loads
+   (both measured 9 November). The first run downloads the small meaning model (about 90 MB) once; later runs work offline. It reads the four spreadsheets it needs (sessions, speakers, sponsors, outlets), cuts the text into passages (2,225 for the programme and 25 for the outlets), turns each into
+   384 numbers with the meaning model (in Elastic Cloud, Elastic's ELSER model also reads each one), and fills two new catalogues, `ftrt-programme` and
    `ftrt-outlets`. Run it again any time: it rebuilds both from scratch.
 5. Start the page: `.venv/bin/python -m ftrt.page`, and open http://127.0.0.1:5060 (on this laptop
    only; port 5060 because macOS holds 5000; Ctrl-C stops it).
 
 You can also search from Terminal: `.venv/bin/python -m ftrt.search --mode compare "SLSA Level 3"`
-shows one search all three ways (words, meaning, blended) with the passage that made each result
-match; `--mode words`, `--mode meaning` or the default blended show one way; add `--kind sponsor`
-or `--startups` to narrow it.
+shows one search all ways with the passage that made each result match: four in Elastic Cloud
+(words, meaning, Elastic's ELSER, blended), three on the laptop engine, which skips ELSER and says
+so. `--mode words`, `--mode meaning`, `--mode elser` or the default blended show one way; add
+`--kind sponsor` or `--startups` to narrow it.
+
+To see the match for an outlet from Terminal:
+`.venv/bin/python -m ftrt.match --mode compare --kind sponsor -n 10 "Breach Chronicle"`;
+`--list` lists the 14 outlets.
+
+Elastic's ELSER sleeps when idle and can take about 80 seconds to wake. The page wakes it when it
+starts; if it does not answer, searches go ahead without it.
 
 On Elastic Cloud it needs the internet and your project's own key; the local alternative needs no
 internet once set up. No other key [unless the fit check is built].
@@ -70,7 +79,9 @@ internet once set up. No other key [unless the fit check is built].
   their own pages), and wrote up the sample outlets: four it invented, two from Aaron's briefs.
   Each is labelled in the data.
 - **The meaning search** uses all-MiniLM-L6-v2, a small open-source model that runs on this
-  laptop and generates no text.
+  laptop and generates no text. In Elastic Cloud, every passage, and the text of every search, is
+  also read by Elastic's own ELSER model, which runs inside the project's own Elastic Cloud
+  deployment, not on a separate service.
 - [If built: the fit check sends the top results to Claude through Anthropic's API.]
 - [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
   wrote none of the code.]
@@ -84,7 +95,7 @@ internet once set up. No other key [unless the fit check is built].
 ## Tools and data
 
 - Elasticsearch and Kibana (Elastic), Elastic Cloud serverless (or the same engine locally in
-  Docker), Python, Flask, sentence-transformers, all-MiniLM-L6-v2.
+  Docker), Elastic's ELSER model (in the cloud), Python, Flask, sentence-transformers, all-MiniLM-L6-v2.
 - **Data:** KubeCon + CloudNativeCon North America 2026 programme, The Linux Foundation,
   CC BY 3.0, as of 4 November 2026. See `data/CREDITS.md`. Logos and photos are not included.
 

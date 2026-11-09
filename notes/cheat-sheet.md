@@ -103,7 +103,8 @@ search a minute or two before the demo so it is awake.
 
 **Two conditions.** Beat 4 uses whatever sentence Cassini's three runs agree on (so far: that
 sentence, Kedify first). "Elastic's own model as one voice" in beat 6 is said only once the fourth
-voice is built; until then say "searched three ways" and stop.
+voice is built (it is, since 12:12, in the cloud only; the laptop leaves it out, so demo from the
+cloud); if it does not answer, say "searched three ways" and stop.
 
 **Not true yet, as of 11:56 (do not rehearse as if it were):** the page is built (11:55) but nobody has
 tried it; the match does not yet pass its answer-key scoring, and the Breach Chronicle, the outlet in beat 2,
@@ -127,7 +128,7 @@ is the one that fails; "in a second" has not been timed; the flip (beat 3) is no
   words and vCluster then Edera from meaning.
 - **Elastic Cloud (11:24):** The same two catalogues now live in an Elastic Cloud serverless
   project; the code uses the cloud when its settings file is filled in and the laptop engine
-  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud takes [time to be measured again]
+  otherwise, so the demo has a fallback if the wifi fails. Loading to the cloud now takes 470 seconds, because Elastic's ELSER reads every passage
   and the three demo searches give the same top results there as on the laptop.
 - **Cleaner loading and searching (11:39):** The loader now cuts every passage to fit what the
   meaning model actually reads, drops placeholder bios like "TODO", puts the day and time into
@@ -139,3 +140,4 @@ is the one that fails; "in a second" has not been timed; the flip (beat 3) is no
   talk, speaker or sponsor it lists comes with the passage that matched and the part that found it.
 - **The page (M3, 11:55):** The page has two doors: press pick an outlet, or type what they always cover and what they came to KubeCon to find, and get the talks, speakers and sponsors that fit, each with the passage that matched; vendors pick their company or describe it (the flip, which finds the outlets that fit them, comes next); and the plain three-way search sits underneath.
 - **Steadier results (11:57):** Results no longer reshuffle when you ask for more of them: every list is ranked to the same depth before they are blended.
+- **Elastic's own model (12:12):** In Elastic Cloud a second, larger meaning model, Elastic's own ELSER, reads every passage too and gets one vote in the blend, beside the words search and the small model on the laptop; on the laptop it is simply left out.

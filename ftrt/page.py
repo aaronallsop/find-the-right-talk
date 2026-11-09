@@ -1,6 +1,6 @@
 """The page: two doors onto the same programme, on this laptop only.
 
-    python -m ftrt.page            # then open http://127.0.0.1:5060
+    python -m ftrt.page            # then open http://127.0.0.1:8765
 
 Press door: pick one of the outlets, or type what you always cover and what you came to KubeCon
 to find; Go runs the match. Vendor door: pick a sponsor, or type what your company does and what
