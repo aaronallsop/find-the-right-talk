@@ -221,6 +221,63 @@ never the local one. Never show a key, a token, a settings file, the kubeconfig,
 Radar Cloud (app.radarhq.io), Dash0 settings, your real email, or anything from your private project.
 Clear typed boxes first. In the Terminal, only run `.venv/bin/python -m ftrt.warm`.
 
+## Video captions (draft, to check against the footage)
+
+The video is silent, with on-screen captions fitted to the footage after Aaron records (Aaron, via
+Saturn, 16:36). These are Neptune's 24 draft captions as it sent them; Aaron has seen them and has not
+approved them as final. If they run long, cut 9, 17 and 20 first. Captions 15 and 19 were corrected by
+Saturn (no Jina in 15; no "clean start-up" in 19). Caption 14 and 15 must be filmed on the Sponsors tab.
+Caption 18 only if an agent clip exists. Check each claim against the footage before it goes on screen.
+
+0:00 title cards over the page, nothing picked
+1. I'm a video producer. I cover conferences as press.
+2. The plan never survives the morning. An interview cancels. Now you have a free hour and a crew standing around.
+3. Hundreds of talks. 226 sponsors. Where's the story?
+4. Find the Right Talk. KubeCon's public program, searched by meaning in Elastic Cloud. Built today from an empty folder.
+
+0:25 pick Hello World Gazette, type the exact demo line, Go
+5. I'm press. I pick my outlet and type what I came to find.
+6. First: mirrord, a start-up I would have walked straight past.
+7. Every result shows the passage that made it match.
+8. Fit check: AI writes one sentence on why each of the top three fits. The search decides the order, not the AI.
+9. The same for talks and speakers. [flick to Talks, Speakers]
+
+0:55 Start-ups only switch
+10. Start-ups only: 226 sponsors become 32. The list a reporter never has time to make.
+
+1:10 vendor door, Kedify, Go
+11. Same engine, turned round. I'm a vendor whose press meeting just canceled.
+12. These are the outlets whose beat fits my story, each with the line that matched.
+
+1:35 "How these were found", Compare all, Sponsors tab, the traffic-spike line
+13. Under the hood: the same search, six ways.
+14. Keyword search finds nothing. No sponsor uses those words.
+15. Search by meaning finds Kedify, the autoscaling start-up.
+
+1:55 "SLSA Level 3"
+16. An exact standard name: now keyword wins. ActiveState and Docker say it in their own text.
+17. So the blend lets every method vote.
+
+2:10 agent clip, if it exists
+18. An Elastic Agent Builder agent answers in plain words, from the same two catalogs.
+
+2:25 hosted page, Radar's view, Dash0 trace (from the laptop page), Gitar's review shown as closed
+19. Hosted live on Radar's Kubernetes cluster. Radar's screen showed each release failing its ready-check on start-up; a grace period fixed it the same hour.
+20. Dash0 traces every search on the laptop page.
+21. Gitar reviewed the final code: Approved.
+
+2:40 GitHub history from the 11:00 commit
+22. All the code was written today by Claude Code, under my direction. The first commit, at 11:00, has no code in it.
+23. Where it falls short: one test outlet, the Breach Chronicle, is a miss. It's reported, not hidden.
+24. Next time an interview cancels, I've got my next three stories before I finish my coffee.
+
+End card: Find the Right Talk · caiv.cnh.radarhq.io · github.com/aaronallsop/find-the-right-talk
+
+**Rhea's checks on the captions (not changes):** caption 19's "the same hour" is Neptune's wording; the
+README says only that the grace period was added and the ready-check no longer fails on start-up, so
+confirm the timing against Radar before it goes on screen. Caption 9 is true only now that the fit check
+covers talks and speakers (confirmed by Aaron for the README at 16:2x).
+
 ## Built on the day, one line per piece
 
 - **Loading (B1, 11:03):** One command reads the spreadsheets, cuts every talk, speaker,

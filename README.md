@@ -52,7 +52,8 @@ embeddings, and an Agent Builder agent with custom tools. Workflows is not used.
 
 - **Radar** hosts the live page above on its cluster, deployed by Argo CD. Near the end of the day
   Radar's screen was used to check the page's health, version, memory, timeline and checks; it showed
-  every release failing its ready-check twice on start-up, and an unused cluster pass. On the live
+  every release failing its ready-check twice on start-up, and an unused cluster pass. A start-up
+  grace period was added and the cluster pass turned off; the ready-check no longer fails on start-up. On the live
   page, each Go sends the fit check's text to OpenAI, billed to the author, so it is capped at 30
   requests a minute.
 - **Dash0** traces each search on the laptop page with OpenTelemetry: step names and timings only,
