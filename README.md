@@ -9,6 +9,16 @@ outlets that would want its story. This build uses KubeCon + CloudNativeCon Nort
 its example. The idea is not tied to KubeCon: any conference with a programme and a sponsor list
 would work the same way.
 
+> **For judges, in four lines**
+> 1. The live page: https://caiv.cnh.radarhq.io (on Radar's cluster, until 13 November).
+> 2. Elastic's asks: four of five done (serverless, ingest, Jina embeddings, an Agent Builder agent
+>    with custom tools); Workflows is not used. See "What Elastic asked entrants to use" below.
+> 3. The four sponsor tools, one proof each: Elastic (the programme is loaded on a serverless
+>    Elasticsearch project and searched with ELSER, Jina and a re-ranker); Gitar (reviewed all the code,
+>    "Approved", its one finding fixed); Radar (the live page above, deployed by Argo CD); Dash0 (the
+>    dashboard shows one service, three operations, no errors).
+> 4. The measured evidence, including the misses: `notes/evidence.md`.
+
 ## The problem
 
 I'm a video producer, and I have covered a lot of conferences as press. You always arrive with a
@@ -61,6 +71,9 @@ Aaron Allsop.
 
 ## What you can see
 
+- **Best matches, and how they were found.** Results show one "Best matches" list by default (the
+  blended result). A "How these were found" link reveals the six ways (words, meaning, Elastic's ELSER,
+  Jina's embeddings, blended, re-ranked) and Compare all, side by side.
 - **Two doors on one page.** "I'm press": pick an outlet and its beat ("What we always cover") is
   filled in for you; "What we came to KubeCon to find" is the visitor's own to type (or leave empty,
   and it matches on the beat alone). Go returns the talks, speakers and sponsors that fit, each with the
@@ -112,7 +125,7 @@ Aaron Allsop.
   OpenAI model one answer took 7 seconds, and 2 of its 13 quotations were not word for word (Cassini).
   After its instructions were tightened, all 10 quotations in an answer were verbatim, it named five
   sponsors and then five talks, 3 of the 5 sponsors were on the answer key, and one time claim was
-  wrong (being fixed at 14:45).
+  wrong (fixed in the save labelled 67bcaac).
 - **The blend is this project's own code:** each ranked list votes (reciprocal rank fusion), so it
   takes any number of voices.
 - **Geo queries are not used:** the data has no coordinates (rooms in one building and a region
@@ -120,7 +133,7 @@ Aaron Allsop.
 
 ## What Elastic asked entrants to use
 
-Status at 14:05 on 9 November, one line each:
+Status on 9 November, one line each:
 
 1. **Elastic Cloud serverless:** done. Everything runs on a serverless Elasticsearch project.
 2. **Ingesting data:** done. The programme, speakers, sponsors and outlets are loaded as 2,250
@@ -130,7 +143,7 @@ Status at 14:05 on 9 November, one line each:
 4. **An Agent Builder agent with custom tools:** done. "Find the Right Talk" has three tools of our
    own over the two catalogues, and its answers come from the model behind Elastic's AI connector.
 5. **Elastic Workflows:** not used. The plan was to try it only if everything else was done by 15:00,
-   with a 45-minute cap; at 14:05 it had not been started.
+   with a 45-minute cap; it was not needed to finish the rest, and this is final.
 
 **The main code files, so you can see Elasticsearch is the core** (all in `ftrt/` unless said):
 
@@ -155,7 +168,7 @@ Status at 14:05 on 9 November, one line each:
 
 ## The other sponsor tools
 
-Status at 14:05 on 9 November:
+Status on 9 November:
 
 - **Gitar:** done. It reviewed all of today's code; its one finding was confirmed and fixed, and
   Gitar now says "Approved" (the start-ups switch could leave an older answer on screen); see
@@ -203,8 +216,8 @@ Measured on 9 November against two test outlets whose answer keys were written b
 - **It never says "nothing fits":** meaning always returns the nearest thing.
 - **The fit check, an AI judgement of the top results, was not built.** The Agent Builder agent is a
   different thing: it answers in words; in one check on 9 November 2 of 13 quotations were not word for word, and after
-  its instructions were tightened one answer had a wrong time claim, so check each quoted passage and
-  claim against the programme.
+  its instructions were tightened one answer had a wrong time claim (since fixed), so check each quoted
+  passage and claim against the programme.
 
 ## Next steps
 
@@ -258,12 +271,13 @@ Measured on 9 November against two test outlets whose answer keys were written b
   leave an older answer on screen when switching doors or mid-search; every answer now re-runs if the
   setting changed). A second note, that the loader rebuilds both catalogues from the spreadsheets,
   is by design. Nothing Gitar wrote was merged.
-- [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
-  wrote none of the code.]
 
 ## Checked by Aaron
 
-[One line per check Aaron did himself on the day, and what he saw.]
+Between about 15:00 and 15:10 on 9 November Aaron tested both pages himself (the laptop page and the
+Radar page): the Hello World Gazette with a typed second box, the start-ups switch, the Kedify flip,
+and Compare all on two demo sentences. He found that the Compare-all grid stayed on screen under other
+views; it was fixed on both pages.
 
 ## Set it up
 

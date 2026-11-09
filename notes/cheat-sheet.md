@@ -139,11 +139,11 @@ Aaron's words, kept as written. Square brackets are what is on screen, not words
    be talking to instead?" [Point at the list.] "Greenstack, Open Source Sustainability Weekly, TFIR,
    LearnKube, The New Stack, each with the line from the outlet's own profile that matched. And
    below, the talks nearest my story."
-5. [Compare all, type "scale up for a traffic spike and back down afterwards". 1:35]
+5. [Click "How these were found" once, then Compare all, and type "scale up for a traffic spike and back down afterwards". 1:35]
    "Under the hood, six columns. Keyword search finds nothing: no sponsor uses those words. My small
    local model, Elastic's ELSER and Jina's embeddings all find Kedify, the autoscaling start-up. The
    blend lets every list vote, and Jina's re-ranker reads the top twenty again."
-6. [Compare all, "SLSA Level 3". 1:55]
+6. [Compare all (already open), "SLSA Level 3". 1:55]
    "The other way round: an exact standard name. Keyword wins, ActiveState and Docker, because their
    text says it. Meaning blurs. That's why there are six columns and why the page shows which one
    found what."
