@@ -79,11 +79,11 @@ Words are Aaron's, kept as written. Square brackets are what is on screen, not w
    wanted in that moment: KubeCon's own programme, public data with credit, made searchable by
    meaning in Elastic Cloud, today."
 2. [Pick The Hello World Gazette, press Go]
-   [AARON'S WORDS FOR THE GAZETTE TO BE WRITTEN: the lines here were about the Breach Chronicle's
-   beat and assignment, and the Chronicle is set aside as the demo outlet (12:16).]
-   "...The match reads that brief and ranks the whole programme against it, in a second. Every
-   result shows the passage that made it fit, so you can check my working. And start-ups are
-   flagged: this one you'd never find by booth size." [Point at a flagged start-up.]
+   Aaron's words (12:45, verbatim): "Hello World Gazette is a newsletter for developers about new
+   tools being created. They are at KubeCon to focus specifically on ai agents that are built to
+   help developers work day to day."
+   [On screen, no words yet: the matches come up; point at the passage that made one match; point at
+   mirrord, flagged as a Start-Up. Aaron to add the words for these, or leave them silent.]
 3. [Vendor door, pick a start-up sponsor, Go]
    "Same engine, turned round. I'm a vendor whose press meeting just cancelled: which outlets
    should I be talking to instead, and which talks are near my story?"

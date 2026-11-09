@@ -889,3 +889,122 @@ buttons, with a line "Sponsors: all 226 (32 of them start-ups)".
 4. The page's way-buttons include a fifth, "Re-ranked", in its markup. Clicking it by script gave no result list
    (one empty row per tab), and the screenshot afterwards showed only Blended, Meaning, Words and Elastic ELSER, so
    it appears to be hidden until used. I did not test it.
+
+---
+
+# Titan's speed and Talks-tab fixes (commit c4a8ae8), checked 12:34 to 12:39 (machine clock) in the real browser at http://127.0.0.1:8765
+
+Driven in the in-app browser pane. Times are taken in the page itself (from the click until the page's
+button is back to "Go" or "Search"; the request's own time is in brackets), cloud engine, three runs each.
+The page times a whole request including the server's work for the match; other sessions may have been using
+the engine at the same moment.
+
+| Action | Run 1 | Run 2 | Run 3 | Before (12:25) |
+|---|---|---|---|---|
+| Gazette, pick it and press Go | 2.71 s (request 2.69) | 2.48 s (2.46) | 2.69 s (2.67) | about 8 to 10 s |
+| Start-ups toggle ON, match re-runs by itself | 2.09 s (2.08) | 1.93 s (1.92) | 2.26 s (2.25) | about 8 to 10 s |
+| Start-ups toggle off, match re-runs | 2.46 s (2.45) | 2.35 s (2.33) | 2.74 s (2.71) | about 8 to 10 s |
+| Flip, Kedify, vendor door, Go | 1.87 s (1.84) | 1.66 s (1.64) | 1.52 s (1.50) | not timed in the page |
+| Plain search, Re-ranked way, "scale up for a traffic spike and back down afterwards" | 1.21 s (1.21) | 1.33 s (1.31) | 1.13 s (1.11) | not timed |
+
+**Speed: fixed.** All of them are between 1.1 and 2.8 seconds, and the three runs of each are within half a
+second of each other. Page-load to ready was not timed.
+
+**The Gazette's blended top ten (sponsors) is unchanged from the third column set.** On the page after each of
+the three Go runs: Docker, ControlTheory, mirrord by MetalBear, Momentic, JetBrains, Syntasso, Temporal,
+Coder, Sentry, Resolve AI: the same ten, in the same order, as the third set (12:13, 2e26f1b). Switching
+start-ups off gave that same list again after each of the three ON/off pairs; with it ON the list was the same
+ten start-ups all three times (mirrord, Paper Compute Company, pgEdge, Radar, Vijil, CodeVisionary, Testkube,
+Maze, StackGuardian, PatapscoAI), the tab named "Start-up sponsors".
+
+**Flip (Kedify), on the page:** title "Outlets and talks for Kedify, on what it does and what it is showing at
+KubeCon (counting double)"; two tabs, "Outlets" (14) and "Talks"; first five outlets Greenstack, LearnKube,
+TFIR, Women in Infrastructure, The Regulated Cloud, identical in the three runs and equal to the Terminal
+flip's first five (12:18). No error shown.
+
+**Re-ranked plain search** (way button "Re-ranked" pressed, then Search): 10 results, same in the three runs:
+Kedify, Green Dashboards Broken Clusters: Taming Stale Watches in Kubernetes Operators, ScaleOps, In-Place Pod
+Resizing Like I'm 5: Scaling Without Restarts, Autoscaling Reality Check: The Hands-On HTTP Optimization
+Challenge, Battle-tested Autoscaling Paradigms with KEDA, and four more. No "re-ranker did not answer" note.
+
+**With start-ups on, the plain search can no longer show sponsors under "Talks": confirmed in the page.**
+Choosing Talks, then switching the toggle on, sets the "Among" box to "Sponsors", greys it out (tooltip
+"Start-ups only: sponsors"), so "Talks" cannot be chosen while the toggle is on; switching off un-greys it
+and puts "Talks" back (the page remembers the previous choice). **The server itself has not changed:** a
+direct request with the toggle flagged on and `kind` talk, speaker or event still returns 10 sponsors (in blended,
+meaning, ELSER and re-ranked; words returns none), so the fix is in the page, not in the engine's answer.
+Anyone using the page cannot reach it; a direct web request still can.
+
+Note: an earlier measuring script of mine kept running in the page after the tool timed out and made
+the first attempt's states confusing; I reloaded the page and re-ran everything cleanly. The numbers above are
+from the clean run.
+
+---
+
+# On-screen engine line and "Compare all" (commit acdd654), checked 12:36 to 12:41 (machine clock), real browser at http://127.0.0.1:8765
+
+**The page says on screen that it uses Elastic Cloud: yes.** A small label at the top right of the page, beside
+the title, reads "Elastic Cloud serverless, with Elastic's ELSER" (seen in a screenshot, visible and not hidden;
+it first reads "connecting…" for a moment while the page loads its lists). When the engine is the laptop it
+would read "Elasticsearch on this laptop" (from the page's code).
+
+**Compare all** is a sixth button after the way buttons (Blended, Meaning, Words, Elastic ELSER, Re-ranked,
+Compare all) in both the match panel and the plain search. It shows five columns side by side: Words, Meaning,
+Elastic ELSER, Blended, Re-ranked. Each name that appears in more than one column carries an "in N" badge (N =
+how many of the five columns it is in); sponsors that are Start-Up carry a "Start-Up" tag; hovering shows the
+passage. Everything below was read back from what the page itself drew, three runs each unless noted.
+
+## Plain search, the GPU sentence, "Among: Sponsors", Compare all (runs at 12:36, three)
+
+Time from click to Search button back: **1.54 s, 1.73 s, 1.17 s** (one request each, 1.53 / 1.83 / 1.26 s).
+Identical columns and badges in all three runs. Counts: Words 1, Meaning 10, Elastic ELSER 10, Blended 10,
+Re-ranked 10. Top three of each column (with the badge the page showed):
+- Words: Edera (in 5)
+- Meaning: vCluster (in 4), Edera (in 5), Rafay Systems (in 4)
+- Elastic ELSER: Edera (in 5), vCluster (in 4), Cast AI (in 4)
+- Blended: Edera (in 5), vCluster (in 4), Cast AI (in 4)
+- Re-ranked: vCluster (in 4), Edera (in 5), AEnix (in 4)
+
+## Match, Hello World Gazette (the demo outlet), Compare all (three runs); and the Breach Chronicle (once)
+
+Time for the match request to come back (Go): Gazette **3.15 s, 2.45 s, 2.46 s** (the match itself; the page
+then draws Compare all by itself in about 50 to 57 ms since it uses the answer already fetched); Breach
+Chronicle **2.64 s**. Identical columns and badges in all three Gazette runs. Each column has 10 sponsors, 10
+talks and 10 speakers.
+
+**Gazette, sponsors, top three of each column:**
+- Words: JetBrains (in 3), Temporal (in 4), Docker (in 4)
+- Meaning: Komodor, Paper Compute Company [Start-Up], JetBrains (in 3)
+- Elastic ELSER: Docker (in 4), mirrord by MetalBear [Start-Up] (in 4), Momentic (in 4)
+- Blended: Docker (in 4), ControlTheory (in 4), mirrord by MetalBear [Start-Up] (in 4)
+- Re-ranked: mirrord by MetalBear [Start-Up] (in 4), Docker (in 4), Diagrid
+
+**Gazette, talks, top one of each (the page shows more; first only here):** Words MCP Was the Easy Half, The Rest
+Was a Skill Issue (in 2); Meaning, ELSER and Blended all From Platform Catalog to Conversational Agent: Wiring AI
+Into Your Internal Developer Platform (in 4); Re-ranked Demo Theater: From YOLO to Golden Paths: Building Trusted
+Environments for AI Agents (in 2). **Speakers:** Words Stefan Prodan (in 3); Meaning Mike Swift; ELSER, Blended
+and Re-ranked all Mofi Rahman (in 4).
+
+**Breach Chronicle, sponsors, top three of each column (one run):**
+- Words: Sysdig (in 5), PagerDuty (in 2), Wiz
+- Meaning: Resolve AI (in 4), Twingate (in 4), Sysdig (in 5)
+- Elastic ELSER: Sysdig (in 5), Palo Alto Networks, Plural (in 4)
+- Blended: Sysdig (in 5), Plural (in 4), Resolve AI (in 4)
+- Re-ranked: Plural (in 4), Sysdig (in 5), Resolve AI (in 4)
+Maze is the only gem-tagged start-up outside the beat companies shown (with Radar); no must-find is in a top three.
+
+**Are the "in N" badges and Start-Up tags right? Yes.**
+- **Badges:** I recomputed N for every name in every column from the page's own columns (how many of the five
+  columns it is in) and compared with the badge shown: **zero mismatches** across the three GPU runs, the three
+  Gazette runs (sponsors, talks and speakers tabs) and the Breach run. A name in one column only has no badge.
+- **Against the separate views:** for each way, the Compare all column is **name-for-name and in order the same
+  list** as the separate view of that way (GPU search: Words 1, the other four 10; Gazette sponsors: all five
+  ways 10; Breach sponsors: all five ways 10). No tag differs between a column and its separate view.
+- **Start-Up tags against `data/sponsors.csv`:** every sponsor shown in the compare columns was checked
+  (GPU 15 different sponsors, Gazette 28, Breach 26): the tag appears on exactly the Start-Up tier ones and on
+  no others (GPU: Aranya; Gazette: Paper Compute Company, mirrord by MetalBear, PatapscoAI, Vijil, Testkube;
+  Breach: Maze, Radar). None missing, none wrongly tagged.
+
+**Not checked:** how the columns look at phone width or with the longest names (the grid is code-defined to wrap);
+the hover passages; Compare all with start-ups only switched on; talks and speakers tabs beyond the badge
+check and each column's first entry.

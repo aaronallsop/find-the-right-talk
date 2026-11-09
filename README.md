@@ -21,9 +21,9 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
   What a sponsor is showing at KubeCon, like an outlet's assignment, counts double.
 - **The start-up flag.** A "Start-ups only" switch narrows every sponsor list to the 32 start-ups
   among the 226 sponsors, and switching it off brings the full lists back.
-- **Words, meaning, and Elastic's voice.** The page's search has a
-  switch between words, meaning, Elastic's ELSER model, and the blend of them; in Terminal, compare
-  mode runs one search every way so you can watch them disagree. Words win on an exact name ("SLSA
+- **Words, meaning, and Elastic's voice.** On the page, "Compare all" shows five
+  columns side by side (words, meaning, Elastic's ELSER, blended, re-ranked), and a switch picks
+  one; in Terminal, compare mode runs one search every way. Either way you can watch them disagree. Words win on an exact name ("SLSA
   Level 3"); meaning wins when no one uses your words ("scale up for a traffic spike and back down
   afterwards" finds the start-up Kedify, where words find nothing).
 - **A "Re-ranked" view.** Elastic's re-ranking model re-orders the blended top twenty, so the list
