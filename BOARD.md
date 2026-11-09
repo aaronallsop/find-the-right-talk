@@ -100,26 +100,57 @@ the demo searches before and after):**
 
 ## For Aaron
 
-What is going on, and only what you still need to do, in time order.
+Aaron's final timeline (approved 14:52 by Saturn's clock; Aaron's own clock reads about 10 minutes later). Only what is on this list.
 
-1. The agent's model: cloud Kibana, Model management (it may be called "Feature settings"), Default
-   model = openai-chat_completion-k563qy9gg9 (and any Agent Builder model setting), Save. Open Agent
-   Builder, "Find the Right Talk", and look at the model selector in the chat box (send nothing): it
-   should show OpenAI. Tell Saturn what it shows; Cassini then asks the one test question.
-2. Any time: the usage figures (five-hour and weekly) from the usage page, to Saturn.
-3. About 14:05: record the agent clip once in the cloud Kibana (Agents, "Find the Right Talk"), with
-   the OpenAI model if Cassini has confirmed it works, else the trial model. Ask: "Which sponsors and
-   talks at KubeCon fit the Hello World Gazette?" Then tell Saturn; Cassini checks the saved answer.
-4. About 14:30: read the README as a judge.
-5. 15:30: read the submission paragraph.
-6. 16:05 screen check, 16:10 warm the models, 16:15 record, 16:25 warm again, 16:30 submit.
-   Dione's screen check: (1) film the CLOUD Kibana, never localhost:5601 (the laptop Kibana lists your private catalogues); check the address bar before recording. (2) Private window or a fresh browser profile, two tabs only: cloud Kibana and http://127.0.0.1:8765; bookmarks bar hidden; Do Not Disturb on; no Terminal or settings file in shot. (3) In Kibana do not open Settings, API keys, Connectors, Elasticsearch Endpoints, Discover, Dev Tools, or Agent Builder's Traces/Logs; crop out the project name and address if you can. (4) Clear any leftover typed text on the page first.
-   Warm the models with `.venv/bin/python -m ftrt.warm`.
+- Now to 15:00: read the README on GitHub as a judge; send notes to Saturn or Rhea.
+- 15:00: read the usage figures (five-hour and weekly) and tell Saturn.
+- 15:00 to 15:15: your own test. The laptop page first (Gazette, the start-ups toggle, the Kedify flip,
+  Compare all on two demo sentences), then the Radar page the same way. Then record the agent clip once
+  (the Gazette question, best of two) in the cloud Kibana.
+- 15:15 to 15:30: Neptune's video script comes to you, and you give it to Rhea.
+- 15:45: the freeze (Titan's final save; the Gitar pull request closed unmerged).
+- 15:50 to 16:05: screen check, then one timed rehearsal (Dione's list, in the order you do it; if
+  anything on it is wrong when you look, stop and tell Saturn, and do not record around it):
+  The video shows only: the laptop page, one Terminal (only for the warm-up), the README on GitHub, the
+  Radar page, the Dash0 trace view, and the agent in the CLOUD Kibana. Nothing else.
+  - The screen: quit Slack, Mail, Messages, Calendar and any app that can pop up; turn on Do Not
+    Disturb (menu bar, Control Centre, Focus). Record a browser, NOT the Claude app. Close every
+    browser window; open ONE new private window (Cmd+Shift+N) with the bookmarks bar hidden and no
+    extension icons showing (a password manager can pop up a login box). Tabs in this order: the laptop
+    page (http://127.0.0.1:8765), the GitHub README (opened in this private window, so you are signed
+    out), the Radar page (https://caiv.cnh.radarhq.io), Dash0 traces, then the CLOUD Kibana, Agent
+    Builder, "Find the Right Talk". Hide the Dock and clear the desktop of files and folders.
+  - Laptop page: clear both typed boxes and the search box; it should say "Elastic Cloud serverless"
+    at the top.
+  - Terminal: one fresh window in the project folder, scrolled clear (Cmd+K). The only command is
+    `.venv/bin/python -m ftrt.warm`. Never type or show ls, cat, env or history (no up-arrow), any
+    settings file, or the kubeconfig, and do not use the Docker or kubectl commands in the same window.
+  - GitHub README: the public project repository only. Do not open its Settings, Actions secrets or
+    Deployments. Commits show the stand-in address, which is fine.
+  - Radar page: the public address only. Do NOT open Radar Cloud (app.radarhq.io): it lists other teams'
+    clusters and their email addresses, and its Secrets page holds the cluster key.
+  - Dash0: open only the Traces view, filtered to the service find-the-right-talk, time range last
+    hour, after one search has been run on the laptop page (the Radar page sends no traces). Check the
+    service list: if anything else shows, filter it out first. Do NOT open Settings or Auth tokens.
+  - Agent in Kibana: the address bar must be the CLOUD Kibana, NEVER http://localhost:5601 (the local
+    Kibana lists your private catalogues). Start a New conversation so the history list does not show
+    earlier test questions. Do NOT open Settings, API keys, Connectors, Elasticsearch endpoints,
+    "External inference", "Model management", the Elastic console's project pages, or Discover (unless
+    its data-view picker shows only ftrt-programme and ftrt-outlets; look once before recording). Ask
+    the one question for the clip; ask one first, off camera, to make sure it answers.
+  - Never on screen at any point: any key, token, password or settings-file contents; the kubeconfig;
+    the OpenAI key; the Elastic project's name or its console; the local Kibana; your real email (use
+    the stand-in); anything from your private project.
+- 16:00: the usage figures again.
+- 16:05: warm the models: `.venv/bin/python -m ftrt.warm`.
+- 16:10 to 16:40: record, two takes at most.
+- 16:40 to 16:50: upload and fill the form.
+- 16:50 to 17:00: SUBMIT, and take a screenshot. 17:00 to 17:30 is buffer; nothing changes after submitting.
 
 ## Now
 
 - Neptune: finished at 11:25.
-- Titan: holding. Jina embeddings, Dash0 tracing, the hosted copy for Radar and the Gitar fix are all saved and pushed.
+- Titan: building the press-door change (picking an outlet fills "What we always cover"; the "came to find" box stays free), on the laptop and Radar pages, before the 15:45 freeze. Also fixing the one wrong time claim in the agent's answer.
 - Rhea: the README, submission paragraph and video script are in line with all four sponsor tools; waiting for Aaron's 14:30 read.
 - Cassini: re-checks after each save; waiting for the agent to use Aaron's OpenAI model, then its one question and read-back.
 - Dione: the Radar hosted copy is live; standing by.
@@ -130,17 +161,16 @@ must-finds in the top ten, stays in the data, and is reported honestly as a miss
 
 ## Next
 
-Aaron's plan as of 13:46. We are ahead of every milestone. The freeze at 15:45 and the submission at
-16:30 do not move. If behind, cut from the bottom.
+Aaron's final timeline (approved 14:52 by Saturn's clock).
 
-1. The reload plan below (Gitar's review and Cassini's before set are done).
-2. The one reload (not 14:00 to 14:25, and none after 15:30): Jina embeddings as one more voice (the
-   Breach Chronicle split is not built).
-3. The agent's new model through Aaron's OpenAI connector, then Cassini's one question and read-back.
-   If the connector fails, the 14:05 trial clip stands.
-4. Workflows only if everything is done by 15:00, with a 45-minute cap.
-5. Dash0 tracing (Titan, 45-minute cap) and the Radar hosted page (Dione builds, Titan commits, 60-minute cap, only after Aaron confirms with Radar).
-6. Freeze 15:45; the README, evidence page and screenshots; Aaron's recording; submit 16:30.
+- Now to 15:00: Aaron reads the README on GitHub as a judge and sends notes.
+- 15:00: usage figures. 15:00 to 15:15: Aaron's own test (laptop page, then the Radar page), then the agent clip.
+- 15:15 to 15:45: fixes only (Titan); Rhea folds in Aaron's README notes. 15:15 to 15:30: Neptune's video script to Aaron, who gives it to Rhea.
+- 15:45: FREEZE (Titan's final save; the Gitar pull request closed unmerged).
+- 15:45 to 16:00: Cassini's final evidence. 15:45 to 16:05: Rhea's final README and submission paragraph (the paragraph goes to Aaron).
+- 15:50 to 16:05: Aaron's screen check and one timed rehearsal. 16:00: usage figures.
+- 16:05: warm the models. 16:10 to 16:40: record, two takes at most. 16:40 to 16:50: upload and the form.
+- 16:50 to 17:00: SUBMIT, screenshot. 17:00 to 17:30: buffer; nothing changes after submitting.
 
 ## Done
 
@@ -198,9 +228,13 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
 - Aaron (relayed by Neptune, 12:05 by Neptune's clock): approved a rewritten 90-second demo script and three new judge answers (why Elastic Cloud, why no geo, why Elastic's own models). Rhea put them in the cheat sheet; the day plan's demo is superseded.
 - 12:32, Aaron (said in Titan's session): yes to the hosted Jina re-ranker; it is kept.
+- About 15:07, Aaron: no AI-written "why your audience might like it" summaries on results (late, slower, costs per search, unverifiable). "Found because" keeps showing the exact passage. The README's "Next steps" has one line: an optional, labelled AI summary of why each result suits the outlet's audience.
+- About 15:05, Aaron (from his own test): picking an outlet on the press door fills "What we always cover" with its beat; "What we came to KubeCon to find" stays free for the visitor to type. Titan is building it before the 15:45 freeze, on both the laptop and Radar pages. The README and video script describe it that way once Titan confirms it is live.
+- 14:52, Aaron: the submission moves to 16:50 to 17:00 (one shot, no later take); the 16:30 rule is replaced. The video shows the Radar page and a Dash0 trace, about 10 seconds each, late.
 - 13:48, Aaron: go/no-go 1 is GO (everything due by 15:15 is done and checked). Radar hosted page: GO, with a hard stop at 15:15 (drop it if it is not live; the README then says so). Correction: Radar does give each team a free Kubernetes cluster, deleted on 13 November. Dione builds the lean hosted page in a new hosted/ folder; Titan saves it.
 - 13:49, Aaron: keep Jina. Elastic's "Jina models for embeddings" ask is done.
 - 13:46, Aaron (his note, 13:55): go for the grand prize, which needs all four sponsor tools (Elastic, Gitar, Dash0, Radar). Dash0: Titan adds tracing to the page (45-minute cap); Aaron creates the Dash0 account and puts the token in a settings file himself. Radar: a lean hosted version of the page, built by Dione in its own folder, committed by Titan, and deployed to Radar's cluster with Aaron's Elastic key entered by Aaron himself as a cluster secret; only after Aaron confirms with Radar that the cluster outlives judging and a deploy is quick (60-minute cap). Gitar continues on the new code. The freeze at 15:45 holds. The 13:40 hosting decision (hosting is off) is reversed by this.
+- 14:45 The agent on gpt-4.1 with tightened instructions: all 10 quotations verbatim, five sponsors then five talks, 3 of 5 on the answer key; one wrong time claim, which Titan is fixing.
 - 14:58 Aaron approved the final 3-minute video script (sent by Neptune); it replaces the earlier versions in the cheat sheet. Rhea flagged what to check before recording (Jina finding Kedify, Dash0 shows the laptop page only, "Sonar", the agent's quotations, and a length of about 3:15 at 140 words a minute).
 - 14:21 The agent answered on Aaron's OpenAI model (gpt-4.1) in 7 seconds; Cassini found 2 of 13 quotations not word for word. Aaron is choosing how to proceed.
 - 14:20 Dash0 confirmed: Aaron's dashboard shows 1 service (the page) with 3 operations (press door, vendor door, plain search), traces from about 14:01 to 14:05 and at about 14:20, slowest about 2.9 seconds, 0% errors. All four sponsor tools (Elastic, Gitar, Radar, Dash0) are now in use and checked. Dash0 traces the laptop page only; the hosted Radar copy is not traced.

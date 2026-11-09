@@ -90,4 +90,4 @@ MATCH_WORDS_TERMS = 25      # words search by profile: how many of its most tell
 PAGE_HOST = "127.0.0.1"     # this laptop only: the page has no login
 PAGE_PORT = 8765
 PAGE_RESULTS = 10           # results of each kind shown on the page
-PAGE_MAX_TYPED = 2000       # characters accepted in any one box
+PAGE_MAX_TYPED = 4000       # characters accepted in any one box (a picked sponsor's own text runs to 3,678)

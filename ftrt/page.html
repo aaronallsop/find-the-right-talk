@@ -96,7 +96,7 @@
     <form id="press" autocomplete="off">
       <label for="outlet">Pick an outlet</label>
       <select id="outlet"><option value="">Choose one of the outlets…</option></select>
-      <p class="or">or describe your own</p>
+      <p class="or">picking one fills in what it always covers; edit it, or write your own</p>
       <label for="beat">What we always cover</label>
       <textarea id="beat" placeholder="News about security breaches as they happen: who was hit, how it happened, and what was done about it."></textarea>
       <label for="assignment">What we came to KubeCon to find <span class="hint">(optional; counts double)</span></label>
@@ -108,7 +108,7 @@
     <form id="vendor" autocomplete="off" hidden>
       <label for="sponsor">Pick a sponsor</label>
       <select id="sponsor"><option value="">Choose one of the sponsors…</option></select>
-      <p class="or">or describe your own company</p>
+      <p class="or">picking one fills in what it does; edit it, or write your own</p>
       <label for="does">What my company does</label>
       <textarea id="does" placeholder="We make an autoscaler that adds servers when traffic spikes and removes them afterwards."></textarea>
       <label for="showing">What we are showing at KubeCon <span class="hint">(optional; counts double)</span></label>
@@ -303,11 +303,18 @@ function pressUpToDate() {
 $("door-press").onclick = () => openDoor("press");
 $("door-vendor").onclick = () => openDoor("vendor");
 
-// picking clears typing, and typing clears the pick, so it is always clear which one Go uses
-$("outlet").onchange = () => { if ($("outlet").value) { $("beat").value = ""; $("assignment").value = ""; } };
-["beat", "assignment"].forEach(id => $(id).oninput = () => { $("outlet").value = ""; });
-$("sponsor").onchange = () => { if ($("sponsor").value) { $("does").value = ""; $("showing").value = ""; } };
-["does", "showing"].forEach(id => $(id).oninput = () => { $("sponsor").value = ""; });
+// picking fills the first box with the pick's own text (editable); the second box stays the visitor's own.
+// Go matches what the two boxes say; the pick only names the result.
+async function fillFrom(kind, id, box) {
+  if (!id) return;
+  try {
+    const r = await fetch("/api/profile?" + kind + "=" + encodeURIComponent(id));   // an id, never typed text
+    const d = await r.json();
+    if (r.ok && $(kind === "outlet" ? "outlet" : "sponsor").value === id) $(box).value = d.text;
+  } catch (x) { /* the box stays as it was; Go still works from the pick */ }
+}
+$("outlet").onchange = () => { const id = $("outlet").value; $("beat").value = ""; $("assignment").value = ""; fillFrom("outlet", id, "beat"); };
+$("sponsor").onchange = () => { const id = $("sponsor").value; $("does").value = ""; $("showing").value = ""; fillFrom("sponsor", id, "does"); };
 
 $("press").onsubmit = async e => {
   e.preventDefault();

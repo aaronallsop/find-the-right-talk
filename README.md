@@ -1,17 +1,41 @@
 # find-the-right-talk
 
-**Which talks and sponsors at KubeCon should a given media outlet cover?** Pick an outlet and this
-ranks the programme (talks, speakers and sponsors) by how well each fits what that outlet covers,
-and shows the passage that made each one match. Turn the same engine round and a sponsor finds the
-outlets and talks that fit it. Start-ups can be shown on their own, so a small company with the
-right story surfaces beside the big names.
+> **The plan never survives the morning. Find the Right Talk searches the whole KubeCon programme by
+> meaning, so a reporter can find the talk worth filming and a start-up can find the outlet worth
+> calling, in seconds, before the next appointment.**
+
+*Find the Right Talk connects media to vendors at a conference, and vendors to media.*
+
+## The problem
+
+Media outlets go to a conference with a plan, and on the first day it usually falls through.
+Reschedules, cancellations and other surprises mean you have to change the plan on the day. In
+practice you walk towards your next appointment and film whatever you find along the way, and you miss
+the hidden gems.
+
+Vendors, especially smaller companies, want media coverage but do not know who to reach out to, or
+which outlets are even coming.
+
+## The solution
+
+A media outlet gives it a profile: what it covers, who its audience is, and what specifically it wants
+to focus on at this conference. Elasticsearch searches the programme by keyword and by meaning (and,
+in the cloud, with Elastic's own models) and returns the best matches: the talks, speakers and
+sponsors that fit, each with the passage that made it match. Run it before you get to the conference
+and you have a plan, and a second list for the backup plan.
+
+Turn the same engine round and a vendor finds the outlets, and the talks, that fit its story. Start-ups
+can be shown on their own, so a small company with the right story surfaces beside the big names.
+
+What is built, said plainly: you pick one of 14 outlet profiles, or type what an outlet covers and what
+it came to find; nothing typed is stored, and the tool does not save plans.
 
 It runs on Elastic Cloud serverless, searches the programme by words and by meaning, and in the
 cloud adds Elastic's own ELSER model, Jina's embedding model and Elastic's hosted re-ranker as
 further voices. It also has an Elastic Agent Builder agent, a code review by Gitar, tracing
-in Dash0, and a hosted copy on Radar. All the code
-was written on 9 November 2026, at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt
-Lake City, by Claude Code under the direction of Aaron Allsop.
+in Dash0, and a hosted copy on Radar. All the code was written on 9 November 2026, at the WeMakeDevs
+Cloud Native Hackathon, Elasticsearch track, Salt Lake City, by Claude Code under the direction of
+Aaron Allsop.
 
 ## What you can see
 
@@ -62,7 +86,9 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
   must quote the programme's own passage for every company or talk it suggests. Checked on 9 November:
   on the earlier model, all 14 quotations in one Gazette answer were word for word (Titan); on the
   OpenAI model one answer took 7 seconds, and 2 of its 13 quotations were not word for word (Cassini).
-  The author is deciding how to proceed, so this is an open limit.
+  After its instructions were tightened, all 10 quotations in an answer were verbatim, it named five
+  sponsors and then five talks, 3 of the 5 sponsors were on the answer key, and one time claim was
+  wrong (being fixed at 14:45).
 - **The blend is this project's own code:** each ranked list votes (reciprocal rank fusion), so it
   takes any number of voices.
 - **Geo queries are not used:** the data has no coordinates (rooms in one building and a region
@@ -152,8 +178,15 @@ Measured on 9 November against two test outlets whose answer keys were written b
   shares GPUs) above Edera (which isolates them); the re-ranker cannot tell the stance either.
 - **It never says "nothing fits":** meaning always returns the nearest thing.
 - **The fit check, an AI judgement of the top results, was not built.** The Agent Builder agent is a
-  different thing: it answers in words, and in a check on 9 November 2 of 13 quotations in one answer were not word
-  for word, so check each quoted passage against the programme.
+  different thing: it answers in words; in one check on 9 November 2 of 13 quotations were not word for word, and after
+  its instructions were tightened one answer had a wrong time claim, so check each quoted passage and
+  claim against the programme.
+
+## Next steps
+
+- An optional, labelled AI summary of why each result suits the outlet's audience. It was left out on
+  purpose: the results already show the exact passage that made each one match ("Found because"),
+  which anyone can check, and an AI summary would add cost per search and could not be verified.
 
 ## What existed before the day, and what was built on it
 

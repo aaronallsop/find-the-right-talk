@@ -196,15 +196,13 @@ go/no-go,** in the cloud Kibana (Agents, "Find the Right Talk"), using the scree
 before that (refused questions use the trial allowance too). If Elastic refuses, stop and tell Saturn;
 do not retry on camera.
 
-**Screen check before recording, 16:05 (Dione):**
-1. Film the cloud Kibana, never localhost:5601: the laptop Kibana lists Aaron's private catalogues.
-   Check the address bar before recording.
-2. Use a private window or a fresh browser profile with two tabs only: cloud Kibana and
-   http://127.0.0.1:8765. Hide the bookmarks bar, turn Do Not Disturb on, and keep any Terminal or
-   settings file out of shot.
-3. In Kibana do not open Settings, API keys, Connectors, Elasticsearch Endpoints, Discover, Dev Tools,
-   or the Agent Builder's Traces or Logs. Crop out the project name and address if you can.
-4. Clear any leftover typed text on the page first.
+**Screen check before recording (Dione's list; the full version is in "For Aaron" on `BOARD.md`):**
+record a browser, not the Claude app; one new private window with the bookmarks bar hidden; tabs
+in this order: the laptop page, the GitHub README (signed out), the Radar page, Dash0 traces, the
+cloud Kibana's Agent Builder; Do Not Disturb on; quit apps that can pop up. Film only the cloud Kibana,
+never the local one. Never show a key, a token, a settings file, the kubeconfig, the Elastic console,
+Radar Cloud (app.radarhq.io), Dash0 settings, your real email, or anything from your private project.
+Clear typed boxes first. In the Terminal, only run `.venv/bin/python -m ftrt.warm`.
 
 ## Built on the day, one line per piece
 
