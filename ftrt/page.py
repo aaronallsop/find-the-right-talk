@@ -9,6 +9,7 @@ Typed text is used for that one search and never stored or written to any log.
 """
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
@@ -69,9 +70,10 @@ def run_match():
         name, parts = "Your outlet", match.typed_parts(beat, assignment)
     else:
         return jsonify(error="Pick an outlet, or say what you always cover."), 400
-    results = {kind: {way: _plain(rs) for way, rs in
-                      match.match(client, parts, config.PAGE_RESULTS, kind, startups and kind == "sponsor").items()}
-               for kind in match.MATCH_KINDS}
+    with ThreadPoolExecutor(max_workers=len(match.MATCH_KINDS)) as pool:   # sponsors, talks, speakers at once
+        found = dict(zip(match.MATCH_KINDS, pool.map(
+            lambda kind: match.match(client, parts, config.PAGE_RESULTS, kind, startups and kind == "sponsor"), match.MATCH_KINDS)))
+    results = {kind: {way: _plain(rs) for way, rs in found[kind].items()} for kind in match.MATCH_KINDS}
     on = ("what it always covers and what it came to find (counting double)" if len(parts) == 2
           else "what it always covers")
     return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups, left_out=search.left_out(),

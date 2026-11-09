@@ -14,6 +14,7 @@ matched on its beat alone. Events (coffee breaks, registration) are left out: th
 """
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
 import argparse, textwrap
+from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from . import config, passages
 from .engine import connect
@@ -92,12 +93,16 @@ def match(client, parts: dict, n: int = 10, kind: str | None = None, startups: b
     ways = {"words": lambda p: search_words_loose(client, p["text"], depth, index, filt),
             "meaning": lambda p: search_meaning_vector(client, p["vector"], depth, index, filt),
             "elser": lambda p: search_elser(client, p["text"], depth, index, filt)}
+    # every part asks every way at the same time (they do not depend on each other); the lists are then put
+    # together in a fixed order, so the result is exactly what asking one after another gives, only sooner
+    jobs = [(part, way) for part in parts for way in ways]
+    with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+        answers = dict(zip(jobs, pool.map(lambda job: ways[job[1]](parts[job[0]]), jobs)))
     lists = {way: [] for way in ways}
-    for part, p in parts.items():
-        for way, run in ways.items():
-            results = run(p)
-            if results is not None:   # ELSER is skipped on the laptop engine
-                lists[way].append(([{**r, "via": f"{PART_NAMES[part]}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
+    for part, way in jobs:
+        results = answers[(part, way)]
+        if results is not None:   # ELSER is skipped on the laptop engine
+            lists[way].append(([{**r, "via": f"{PART_NAMES[part]}, by {WAY_NAMES[way]}"} for r in results], config.MATCH_WEIGHTS[part]))
     out = {way: fuse(ls, n) for way, ls in lists.items() if ls}
     blended = fuse([l for ls in lists.values() for l in ls], max(n, config.RERANK_TOP))
     out["blended"] = blended[:n]

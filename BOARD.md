@@ -102,7 +102,6 @@ the demo searches before and after):**
 
 (what Saturn or Rhea needs from you, each with the time; taken off when you have answered)
 
-- 12:30 The hosted re-ranker trial needs your yes typed in Titan's own session (it spends your Elastic money and sends search text to Elastic's service; the rulebook needs your yes there). Open TITAN and pick it, or say skip.
 - 12:23 Try the flip: on the page's vendor door pick Kedify. Do its outlets and talks make sense to you? (This is what "done" means for M5.)
 - 12:23 At 13:20 read the usage page (Claude app, Settings, Usage) and tell Saturn the five-hour and weekly figures.
 - 15:30 Read the submission paragraph (Rhea's draft is in the notes) and say what to change.
@@ -154,6 +153,7 @@ the bottom if behind. The 15:45 freeze and the 16:30 submission do not move.
 - 11:57 Saved and pushed (321b069): the match's order no longer shifts with how many results are shown, and the first run on a new machine downloads the meaning model. Passage count explained: 2,225 programme passages plus 25 outlet passages is 2,250.
 - 12:12 Elastic's own meaning model, ELSER, saved and pushed (2e26f1b): in the cloud it reads every passage and gets one vote in the blend; the laptop leaves it out. Cloud load now takes 470 seconds (Titan, measured 12:01 to 12:09). The cloud was reloaded on Aaron's go-ahead. Demo searches unchanged at the top; Elastic's model alone also gets all three right. A four-helper review found and fixed 7 faults before saving. Not yet re-scored.
 - 12:33 Rhea finished the submission draft, added "Where it falls short" to the README and "Honest limits" to the cheat sheet, and wrote the fit check as not built. Aaron reads the paragraph by 15:30.
+- 12:32 Elastic's hosted re-ranker (Jina) added as its own "Re-ranked" view (0c57178), on Aaron's yes in Titan's session. It adds about half a second to a search. For that view only, the search text and the top results' passages go to Elastic's hosted inference service, billed per use; every other view stays inside the project. Kept (Saturn, 12:37).
 - 12:31 Cassini checked the start-ups toggle in a real browser: counts drop from 226 to 32 and come back exactly; every sponsor shown is a start-up.
 - 12:30 The README's setup commands, as Titan ran them, are in, with the list of what was built and when.
 - 12:29 Warm-up command and the fallback saved and pushed (6ff0e6b): `.venv/bin/python -m ftrt.warm` wakes Elastic's models. A search waits at most 4 seconds for ELSER; if it is still waking, results come without it and the page says so.
@@ -187,6 +187,7 @@ The decisions up to 11:25 are listed in the handoff above. Added since, per Nept
 - 11:17, Aaron: helpers sparingly until 13:20.
 - About 11:30, Aaron: start the team early, before 12:00, now that Neptune has finished.
 - Aaron (relayed by Neptune, 12:05 by Neptune's clock): approved a rewritten 90-second demo script and three new judge answers (why Elastic Cloud, why no geo, why Elastic's own models). Rhea put them in the cheat sheet; the day plan's demo is superseded.
+- 12:32, Aaron (said in Titan's session): yes to the hosted Jina re-ranker; it is kept.
 - 12:35, Aaron: the submission form is one shot, so no early submission. Submit once, after the freeze, the fresh-copy test and a rehearsal, by 16:30 at the latest. Rhea has the submission paragraph ready for Aaron to read by 15:30.
 - 12:31, Titan and Saturn: the Hello World Gazette's wording stays as it was. No true short phrase would lift Faros; it would mean adding an idea the outlet never had.
 - 12:27, Aaron: try Elastic's hosted Jina re-ranker once, ten minutes; keep it if it answers fast, else skip; no raising capacity. A slow Elastic model must never blank the page (fallback). Warm the Elastic models before the 16:15 recording and the 16:30 submission. Fix the Gazette's wording (Faros 13th) only if cheap, otherwise leave it.

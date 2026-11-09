@@ -310,8 +310,13 @@ function fillSponsors() {
   $("pool").textContent = startupsOnly() ? "Sponsors: the " + startups + " start-ups of " + sponsorsAll.length
                                          : "Sponsors: all " + sponsorsAll.length + " (" + startups + " of them start-ups)";
 }
+let kindBeforeStartups = "";
 $("startups").onchange = () => {
   fillSponsors();
+  // only sponsors have a tier, so with start-ups only the plain search is among sponsors, and says so
+  const kind = $("kind");
+  if (startupsOnly()) { kindBeforeStartups = kind.value; kind.value = "sponsor"; kind.disabled = true; kind.title = "Start-ups only: sponsors"; }
+  else { kind.value = kindBeforeStartups; kind.disabled = false; kind.title = ""; }
   // whatever is on screen is asked again, so the change shows at once
   if (door === "press" && answers.press) $("press").requestSubmit();
   if (searchShown && $("q").value.trim()) $("search").requestSubmit();

@@ -15,14 +15,16 @@ round, so a sponsor finds the outlets and talks that fit it. A "Start-ups only" 
 sponsors to the 32 start-ups among the 226, so a small company with the right story can surface
 beside the big names. The programme can be searched by words, by meaning, and both blended; in
 Elastic Cloud, Elastic's own ELSER model adds a further vote. It runs on Elastic Cloud serverless,
-with a copy on a laptop as the fallback. It does not always get it right, and the README says where.
+with a copy on a laptop as the fallback; a "Re-ranked" view hands the top twenty to Elastic's hosted
+re-ranking model, the one view that sends text outside the project. It does not always get it right,
+and the README says where.
 
 ## A shorter version, if the form has a small box
 
 Find the Right Talk, for the press: pick a media outlet and it ranks the KubeCon programme (601
 sessions, 715 speakers, 226 sponsors) by fit, each result with the passage that made it match. A
 vendor door runs it in reverse, and a start-ups switch surfaces small companies. Words, meaning and
-Elastic's ELSER model are blended in Elastic Cloud serverless. All the code was written on the day.
+Elastic's ELSER model are blended in Elastic Cloud serverless, and a re-ranked view uses Elastic's hosted re-ranker. All the code was written on the day.
 
 ## Facts, with who measured them today
 
@@ -48,8 +50,8 @@ starts at 11:00.
 
 - The fit check (an AI judgement of the top results) is not built. Nothing here says it is. It
   stays called the "fit check", never "the judge".
-- Elastic's hosted re-ranker is not claimed: it is built but switched off, and stays out of the
-  words unless Saturn says it is kept.
+- Elastic's hosted re-ranker is KEPT (Saturn, 12:37; Aaron said yes in Titan's session) and is in the
+  paragraph, with its data flow: for the Re-ranked view only, text goes to Elastic's hosted service.
 - Geo queries: not used. The data has no coordinates (Aaron, 11:12).
 - "Nothing is sent anywhere" is no longer true and is not said. In Elastic Cloud the programme and
   every search's text are read by Elastic's own ELSER model inside Aaron's own project.

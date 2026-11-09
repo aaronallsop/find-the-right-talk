@@ -127,7 +127,7 @@ Chronicle is set aside: it stays in the data and is reported honestly as a miss.
 - **The flip:** the order of the outlets it returns is a weak signal, because their scores bunch
   close together; the talks it finds are strong.
 - **Not built:** the fit check (an AI judgement of the top results), and geo queries (the data has
-  no coordinates). Elastic's hosted re-ranker is built but switched off.
+  no coordinates). Elastic's hosted re-ranker is kept (12:37) as a separate "Re-ranked" view.
 
 ## Built on the day, one line per piece
 
@@ -163,3 +163,5 @@ Chronicle is set aside: it stays in the data and is reported honestly as a miss.
 - **The flip (M5, 12:17):** The flip turns the match round: a sponsor, picked or typed in, finds the outlets whose beat and KubeCon assignment fit it, each with the outlet's own passage that matched, and the talks nearest to what it does, with what it is showing at KubeCon counting double.
 - **Start-ups toggle (M4, 12:27):** One 'Start-ups only' switch narrows every sponsor list on the page, the press door's matches, the vendor door's picker and the plain search, to the 32 start-ups among the 226 sponsors, and switching it off brings the full lists back unchanged; for the Breach Chronicle it brings up Maze and Archestra AI, small companies doing exactly what the outlet came to find.
 - **Warming Elastic's models (12:29):** Elastic's models sleep when nobody uses them, so one command wakes them before a demo, and if one is still slow a search answers without it in a few seconds and says so, rather than leaving the page blank.
+- **Re-ranking (12:32):** A 'Re-ranked' switch hands the top twenty blended results to Elastic's own re-ranking model, which reads the question and each passage together and puts them in a new order, so the demo can show the list before and after. For that view only, the text goes to Elastic's hosted service outside the project.
+  Demo note: re-ranked, the GPU search puts vCluster (shares GPUs) above Edera (isolates them): the re-ranker cannot tell the stance either, so say so rather than hope nobody asks.

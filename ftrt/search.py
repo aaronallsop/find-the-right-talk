@@ -15,20 +15,23 @@ on the laptop engine it is skipped. Blended merges the ranked lists (two on the 
 cloud), one vote each, by reciprocal rank fusion, in our own code.
 """
 from . import quiet  # noqa: F401  (first: model offline, library chatter off)
-import argparse, sys, textwrap, time
+import argparse, sys, textwrap, threading, time
+from concurrent.futures import ThreadPoolExecutor
 from elasticsearch import ApiError, TransportError
 from . import config, engine
 from .engine import connect
 
 _model = None
+_model_lock = threading.Lock()   # searches now run side by side; only one of them loads the model
 
 
 def embed(text: str) -> list[float]:
     """The query's 384 meaning numbers, from the same model that read the catalogue."""
     global _model
-    if _model is None:
-        from sentence_transformers import SentenceTransformer
-        _model = SentenceTransformer(config.MODEL_NAME)
+    with _model_lock:
+        if _model is None:
+            from sentence_transformers import SentenceTransformer
+            _model = SentenceTransformer(config.MODEL_NAME)
     return _model.encode([text], normalize_embeddings=True)[0].tolist()
 
 
@@ -150,8 +153,9 @@ def fuse(ranked_lists: list[tuple[list[dict], float]], n: int = 10, k: int = con
 
 def search_blended(client, query: str, n: int = 10, index: str = config.PROGRAMME_INDEX, filt: list | None = None) -> list[dict]:
     depth = max(n, config.BLEND_DEPTH)   # fixed, so the blend does not change with how many are shown
-    lists = [(search_words(client, query, depth, index, filt), 1.0), (search_meaning(client, query, depth, index, filt), 1.0)]
-    elser = search_elser(client, query, depth, index, filt)
+    with ThreadPoolExecutor(max_workers=3) as pool:   # the three ways at once; merged in a fixed order below
+        words, meaning, elser = pool.map(lambda way: way(client, query, depth, index, filt), (search_words, search_meaning, search_elser))
+    lists = [(words, 1.0), (meaning, 1.0)]
     if elser is not None:   # Elastic's model gets one vote like the others, where it exists
         lists.append((elser, 1.0))
     return fuse(lists, n)

@@ -60,6 +60,14 @@ in the background, and the warm-up command wakes it on demand and says how long 
 (0 s)" means it was already awake). A search waits at most 4 seconds for it; if it is still waking,
 the results come without it and the page says so.
 
+**Re-ranked view (Elastic Cloud only).** For the Re-ranked view only, the search text and the top
+results' passages are sent to Elastic's hosted inference service, billed per use. A "Re-ranked" switch on the page (`--mode reranked` in
+Terminal) takes the blended top 20 and has Elastic's hosted Jina re-ranker (`.jina-reranker-v3`)
+re-order them. For that view only, the search text (or the outlet's or sponsor's profile) and those
+20 passages are sent to Elastic's hosted inference service, which is outside your own Elastic Cloud
+project and is billed per use. Every other view stays inside your own Elastic Cloud project, and
+the re-ranker is not used on the laptop engine. Titan measured about half a second added to a search and 1 to 1.5 seconds to a page "Go".
+
 On Elastic Cloud it needs the internet and your project's own key; the local alternative needs no
 internet once set up. No other key. The fit check, an AI judgement of the top results, was not built.
 
@@ -126,7 +134,8 @@ Measured on 9 November against two test outlets whose answer keys were written b
 - **The meaning search** uses all-MiniLM-L6-v2, a small open-source model that runs on this
   laptop and generates no text. In Elastic Cloud, every passage, and the text of every search, is
   also read by Elastic's own ELSER model, which runs inside the project's own Elastic Cloud
-  deployment, not on a separate service.
+  deployment, not on a separate service. The optional "Re-ranked" view is the exception: it sends
+  the search text and the top 20 passages to Elastic's hosted re-ranking service (see above).
 - [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
   wrote none of the code.]
 - [If used: Jules (Google) checked the README's claims against the code at the feature freeze;
