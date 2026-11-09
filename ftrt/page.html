@@ -47,6 +47,8 @@
   .toggle label { display: inline-flex; align-items: center; gap: 8px; margin: 0; cursor: pointer; }
   .toggle input { width: 18px; height: 18px; accent-color: var(--gem); }
   .pool { color: var(--muted); font-size: 14px; }
+  .view { margin: 10px 0 0; font-size: 15px; }
+  .linky { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }
   .note { background: var(--soft); border-radius: 8px; padding: 12px 14px; margin-top: 12px; }
   .error { color: #b3261e; }
   .results-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 8px 0 4px; }
@@ -124,7 +126,7 @@
   <section class="panel" id="match-panel" hidden>
     <div class="results-head">
       <h2 id="match-title"></h2>
-      <div class="switch" role="group" aria-label="Way of matching" id="match-ways">
+      <div class="switch" role="group" aria-label="Way of matching" id="match-ways" hidden>
         <button type="button" data-way="blended" aria-pressed="true">Blended</button>
         <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
         <button type="button" data-way="words" aria-pressed="false">Words</button>
@@ -134,6 +136,7 @@
           <button type="button" data-way="compare" aria-pressed="false">Compare all</button>
       </div>
     </div>
+    <p class="view"><b id="match-view">Best matches</b> · <button type="button" class="linky" id="match-how">How these were found</button></p>
     <div class="tabs" role="tablist" id="match-kinds"></div>
     <p class="note" id="match-left-out" hidden></p>
     <div class="compare" id="match-compare" hidden></div>
@@ -154,7 +157,7 @@
           <option value="talk">Talks</option><option value="speaker">Speakers</option><option value="event">Events</option>
         </select>
       </div>
-      <div>
+      <div id="search-ways-box" hidden>
         <div class="switch" role="group" aria-label="Way of searching" id="search-ways" style="margin:0">
           <button type="button" data-way="blended" aria-pressed="true">Blended</button>
           <button type="button" data-way="meaning" aria-pressed="false">Meaning</button>
@@ -168,6 +171,7 @@
       <div><button class="go" type="submit" style="margin:0">Search</button></div>
     </form>
     <p class="error" id="search-error" hidden></p>
+    <p class="view" id="search-view-line" hidden><b id="search-view">Best matches</b> · <button type="button" class="linky" id="search-how">How these were found</button></p>
     <p class="note" id="search-left-out" hidden></p>
     <div class="compare" id="search-compare" hidden></div>
     <ol class="results" id="search-results"></ol>
@@ -212,7 +216,8 @@ function showResults(list, results, emptyText) {
     const why = el("p", "why");
     why.append(el("b", null, "Found because: "), document.createTextNode(r.passage));
     li.append(head, why);
-    if (r.via) li.append(el("p", "via", "Ranked best by " + r.via + "; found by " + r.found_by + (r.found_by === 1 ? " list" : " lists")));
+    // how it was ranked: shown only once "How these were found" is open
+    if (r.via && !$("match-ways").hidden) li.append(el("p", "via", "Ranked best by " + r.via + "; found by " + r.found_by + (r.found_by === 1 ? " list" : " lists")));
     list.append(li);
   });
 }
@@ -301,7 +306,7 @@ function openDoor(which) {
 
 // the press answer must match the start-ups switch; if not, ask again (vendor answers do not depend on it)
 function pressUpToDate() {
-  if (door === "press" && answers.press && answers.press.startups !== startupsOnly()) $("press").requestSubmit();
+  if (door === "press" && answers.press && answers.press.startups !== startupsOnly()) { internalRun = true; $("press").requestSubmit(); }
 }
 $("door-press").onclick = () => openDoor("press");
 $("door-vendor").onclick = () => openDoor("vendor");
@@ -333,7 +338,9 @@ $("press").onsubmit = async e => {
   e.preventDefault();
   const go = $("press").querySelector(".go"), err = $("press-error");
   let ok = false;
-  if (go.disabled) return;
+  if (go.disabled) { internalRun = false; return; }   // a dropped re-run must not carry its flag into the next one
+  if (!internalRun) showWays("match", false);   // a person's own Go starts again at Best matches
+  internalRun = false;
   err.hidden = true; go.disabled = true; go.textContent = "Matching…";
   try {
     answers.press = await post("/api/match", {outlet_id: $("outlet").value, beat: $("beat").value, assignment: $("assignment").value, startups: startupsOnly()});
@@ -348,6 +355,7 @@ $("vendor").onsubmit = async e => {
   e.preventDefault();
   const go = $("vendor").querySelector(".go"), err = $("vendor-error");
   if (go.disabled) return;
+  showWays("match", false);   // a new Go starts again at Best matches
   err.hidden = true; go.disabled = true; go.textContent = "Finding outlets…";
   try {
     answers.vendor = await post("/api/flip", {sponsor_id: $("sponsor").value, does: $("does").value, showing: $("showing").value});
@@ -356,23 +364,45 @@ $("vendor").onsubmit = async e => {
   go.disabled = false; go.textContent = "Go";
 };
 
+// Best matches (the blended list) by default; "How these were found" shows the way switch
+let internalRun = false;   // a re-run the page makes itself (start-ups switch, way change) keeps the current view
+function showWays(grp, open) {
+  const sw = grp === "match" ? $("match-ways") : $("search-ways-box");
+  sw.hidden = !open;
+  $(grp + "-how").textContent = open ? "Back to the best matches" : "How these were found";
+  $(grp + "-view").textContent = open ? "How these were found: pick a way" : "Best matches";
+  if (!open) {
+    if (grp === "match") { matchWay = "blended"; press($("match-ways"), "aria-pressed", "blended"); }
+    else { searchWay = "blended"; press($("search-ways"), "aria-pressed", "blended"); }
+  }
+}
+$("match-how").onclick = () => { showWays("match", $("match-ways").hidden); renderMatch(); };
+$("search-how").onclick = () => {
+  const opening = $("search-ways-box").hidden, was = searchWay;
+  showWays("search", opening);
+  if (!opening && was !== "blended" && searchShown && $("q").value.trim()) { internalRun = true; $("search").requestSubmit(); }
+};
+
 $("match-ways").onclick = e => { const b = e.target.closest("button"); if (!b) return; matchWay = b.dataset.way; press($("match-ways"), "aria-pressed", matchWay); renderMatch(); };
 $("match-kinds").onclick = e => { const b = e.target.closest("button"); if (!b) return; matchKind = b.dataset.kind; press($("match-kinds"), "aria-selected", matchKind); renderMatch(); };
 $("search-ways").onclick = e => {
   const b = e.target.closest("button"); if (!b) return;
   searchWay = b.dataset.way; press($("search-ways"), "aria-pressed", searchWay);
-  if (searchShown && $("q").value.trim()) $("search").requestSubmit();   // switching way shows that way at once
+  if (searchShown && $("q").value.trim()) { internalRun = true; $("search").requestSubmit(); }   // switching way shows that way at once
 };
 
 $("search").onsubmit = async e => {
   e.preventDefault();
   const err = $("search-error"), go = $("search").querySelector(".go");
   let ok = false;
-  if (go.disabled) return;
+  if (go.disabled) { internalRun = false; return; }   // a dropped re-run must not carry its flag into the next one
+  if (!internalRun) showWays("search", false);   // a person's own search starts again at Best matches
+  internalRun = false;
   err.hidden = true; go.disabled = true; go.textContent = "Searching…";
   try {
     const d = await post("/api/search", {q: $("q").value, mode: searchWay, kind: $("kind").value, startups: startupsOnly()});
     searchShown = true; searchStartups = d.startups; ok = true;
+    $("search-view-line").hidden = false;
     leftOut($("search-left-out"), d.left_out);
     const comparing = d.mode === "compare";
     $("search-compare").hidden = !comparing; $("search-results").hidden = comparing;
@@ -383,7 +413,7 @@ $("search").onsubmit = async e => {
     }
   } catch (x) { err.textContent = x.message; err.hidden = false; }
   go.disabled = false; go.textContent = "Search";
-  if (ok && searchStartups !== startupsOnly()) $("search").requestSubmit();   // the switch moved while this was running
+  if (ok && searchStartups !== startupsOnly()) { internalRun = true; $("search").requestSubmit(); }   // the switch moved while this was running
 };
 
 // the start-ups toggle: fewer sponsors everywhere, and back again
@@ -406,7 +436,7 @@ $("startups").onchange = () => {
   else { kind.value = kindBeforeStartups; kind.disabled = false; kind.title = ""; }
   // whatever is on screen is asked again, so the change shows at once
   pressUpToDate();
-  if (searchShown && $("q").value.trim()) $("search").requestSubmit();
+  if (searchShown && $("q").value.trim()) { internalRun = true; $("search").requestSubmit(); }
 };
 
 // the pickers

@@ -1,35 +1,56 @@
-# find-the-right-talk
+# Find the Right Talk
 
-> **The plan never survives the morning. Find the Right Talk searches the whole KubeCon programme by
-> meaning, so a reporter can find the talk worth filming and a start-up can find the outlet worth
-> calling, in seconds, before the next appointment.**
+> **Built for the press. When a conference plan falls apart, Find the Right Talk shows a media
+> outlet its next story in seconds: the talks, speakers and companies that fit what it covers.**
 
-*Find the Right Talk connects media to vendors at a conference, and vendors to media.*
+It is a tool for media outlets covering a conference. An outlet's profile is matched against the
+whole programme, and the same engine turned round lets a company on the show floor find the
+outlets that would want its story. This build uses KubeCon + CloudNativeCon North America 2026 as
+its example. The idea is not tied to KubeCon: any conference with a programme and a sponsor list
+would work the same way.
 
 ## The problem
 
-Media outlets go to a conference with a plan, and on the first day it usually falls through.
-Reschedules, cancellations and other surprises mean you have to change the plan on the day. In
-practice you walk towards your next appointment and film whatever you find along the way, and you miss
-the hidden gems.
+I'm a video producer, and I have covered a lot of conferences as press. You always arrive with a
+plan, and on the first day it usually falls through. An interview cancels. Another one moves to a
+time you can't make. Now you have a free hour, a crew standing around, and hundreds of talks and
+booths to choose from. What usually happens is that you walk towards your next appointment and film
+whatever you pass on the way. The best story in the building could be two aisles over and you would
+never know.
 
-Vendors, especially smaller companies, want media coverage but do not know who to reach out to, or
-which outlets are even coming.
+The companies on the show floor have the same problem from the other side. A small company with a
+good story wants coverage, but it doesn't know which outlets are in the building or which of them
+would care.
 
 ## The solution
 
-A media outlet gives it a profile: what it covers, who its audience is, and what specifically it wants
-to focus on at this conference. Elasticsearch searches the programme by keyword and by meaning (and,
-in the cloud, with Elastic's own models) and returns the best matches: the talks, speakers and
-sponsors that fit, each with the passage that made it match. Run it before you get to the conference
-and you have a plan, and a second list for the backup plan.
+Each outlet has a short profile: what it covers, who its audience is, and what it came to this
+conference to find. Find the Right Talk reads that profile against the whole programme and returns
+the talks, speakers and sponsors that fit. Every result comes with the exact passage that made it
+match, so you can see why at a glance and decide for yourself.
 
-Turn the same engine round and a vendor finds the outlets, and the talks, that fit its story. Start-ups
-can be shown on their own, so a small company with the right story surfaces beside the big names.
+Elasticsearch does the searching, two ways at once. Keyword search catches exact names and terms.
+Semantic search catches the match when nobody used your words. The two lists are blended into one.
 
-What is built, said plainly: you pick one of 14 outlet profiles, which fills in what that outlet
-always covers, and you type what it came to KubeCon to find (or leave it empty); nothing typed is
-stored, and the tool does not save plans.
+Turn it round and a company does the same thing: say what you do, and get the outlets whose beat
+fits your story. One switch narrows any list to start-ups only, so a small company with the right
+story shows up beside the big names.
+
+Because it works from the published programme, you can run it before you travel. You arrive with a
+plan, and with a ranked list of backups for the moment the plan falls through.
+
+## KubeCon as the example
+
+This repository is loaded with the KubeCon + CloudNativeCon North America 2026 programme: 501 talks,
+715 speakers and 226 sponsors, plus 14 outlet profiles (8 real media partners and 6 labelled
+samples). On the page you pick an outlet, which fills in what it always covers, and type what it
+came to the conference to find. Or you pick a sponsor and see the outlets that fit it.
+
+Two honest limits of today's build: you choose from the loaded profiles rather than creating your
+own, and nothing you type is saved. Creating a profile and saving a plan are the next steps.
+
+The engine reads four spreadsheets: sessions, speakers, sponsors and outlets. Another conference
+means another four in the same layout.
 
 It runs on Elastic Cloud serverless, searches the programme by words and by meaning, and in the
 cloud adds Elastic's own ELSER model, Jina's embedding model and Elastic's hosted re-ranker as
@@ -187,6 +208,7 @@ Measured on 9 November against two test outlets whose answer keys were written b
 
 ## Next steps
 
+- Creating your own outlet profile, and saving a plan.
 - An optional, labelled AI summary of why each result suits the outlet's audience. It was left out on
   purpose: the results already show the exact passage that made each one match ("Found because"),
   which anyone can check, and an AI summary would add cost per search and could not be verified.
