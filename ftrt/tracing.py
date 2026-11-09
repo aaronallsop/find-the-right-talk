@@ -3,7 +3,8 @@
 The settings file lives OUTSIDE this folder, is filled in by Aaron, and is never printed or committed:
     ~/dash0/.env
         DASH0_AUTH_TOKEN=...                                   the Dash0 auth token
-        DASH0_ENDPOINT=https://ingress.<region>.aws.dash0.com  the OTLP (HTTP) endpoint Dash0's settings show
+        DASH0_ENDPOINT=https://ingress.<region>.aws.dash0.com  the OTLP (HTTP) endpoint Dash0's settings show; only
+                                                               its address is used, so a path pasted with it is ignored
         DASH0_DATASET=default                                  optional
 FTRT_DASH0_ENV=/path/to/.env in front of a command reads another file instead. With no file, or no token,
 tracing is off and nothing else changes.
@@ -14,6 +15,7 @@ were left out; for a picked outlet or sponsor, its id. Never the text anyone typ
 """
 import contextlib, contextvars, os
 from pathlib import Path
+from urllib.parse import urlparse
 from dotenv import dotenv_values
 from opentelemetry import trace
 from opentelemetry.trace import StatusCode
@@ -28,9 +30,11 @@ def setup() -> bool:
     if not SETTINGS_FILE.exists():
         return False
     v = dotenv_values(SETTINGS_FILE)
-    token, endpoint = (v.get("DASH0_AUTH_TOKEN") or "").strip(), (v.get("DASH0_ENDPOINT") or "").strip().rstrip("/")
-    if not token or not endpoint:
+    token, endpoint = (v.get("DASH0_AUTH_TOKEN") or "").strip(), (v.get("DASH0_ENDPOINT") or "").strip()
+    address = urlparse(endpoint)
+    if not token or not address.scheme or not address.netloc:
         return False
+    endpoint = f"{address.scheme}://{address.netloc}"   # Dash0 takes traces at <address>/v1/traces; any pasted path would break that
     from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
     from opentelemetry.sdk.resources import Resource
     from opentelemetry.sdk.trace import TracerProvider
