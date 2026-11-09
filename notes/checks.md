@@ -1249,3 +1249,145 @@ Ranks at n=50 of each must-find:
 Blended top ten: Sysdig, Resolve AI, Jozu, Plural, Edge Delta, Docker, Kubex, Chainguard, Tigera, Wiz. Jina's top ten: Digital.ai, Chainguard,
 Jozu, Edge Delta, Docker, Resolve AI, Maze (7th), Sysdig, ActiveState, Tigera. Pass test: **still fails**: 0 of 7 must-finds and not Vijil in the
 blended top 10 (Maze 11th, Endor Labs 28th, Vijil 41st). Jina is the first way to put two must-finds (Maze 7th, Endor Labs 11th) near the top.
+
+---
+
+# Page checks refreshed on 904a577 (Dash0 tracing on), real browser at http://127.0.0.1:8765, 14:03 to 14:07 (machine clock)
+
+Agent not asked, catalogues not touched (read-only requests only). Times are click to button-back, cloud.
+**Engine label on screen:** "Elastic Cloud serverless, with Elastic's ELSER, Jina embeddings and a re-ranker". Way buttons: Blended, Meaning, Words,
+Elastic ELSER, Jina, Re-ranked, Compare all (match panel and plain search).
+
+**14 outlets, each picked and Go:** all 14 answered, no error message, **1.77 s to 2.44 s each** (Futurum 2.23, Greenstack 2.17, Hello World
+Gazette 1.96, LearnKube 2.09, Open Source Sustainability Weekly 2.17, OpsMatters 1.96, SDxCentral 2.00, TechRevolt News 1.77, Techstrong 1.84,
+TFIR 2.00, Breach Chronicle 2.44, The New Stack 2.16, The Regulated Cloud 2.12, Women in Infrastructure 2.34). Counts, blended: 10 sponsors, 10
+talks, 10 speakers for every outlet. Words: Futurum 5/1/2; Greenstack 10/10/10; Gazette 10/10/10; LearnKube 10/8/2; Open Source Sustainability
+Weekly 10/10/10; OpsMatters 5/1/1; SDxCentral 10/2/1; TechRevolt News 1/1/1 (before: 0/0/0); Techstrong 10/6/10; TFIR 10/10/10; Breach Chronicle
+10/10/10; The New Stack 10/10/10; The Regulated Cloud 10/10/9; Women in Infrastructure 10/10/10 (sponsors/talks/speakers).
+
+**Compare all, GPU sentence, "Among: Sponsors"** (three runs): **1.45 s, 1.72 s, 1.31 s** (requests 1.44, 1.80, 1.38 s); six columns; identical in all
+three runs; counts Words 1, the others 10. Top of each: Words Edera (in 6); Meaning vCluster (in 5), Edera (in 6), Rafay Systems (in 5); ELSER Edera,
+vCluster, Cast AI; Jina Edera, vCluster, CoreWeave (in 4); Blended Edera, vCluster, Cast AI; Re-ranked vCluster, Edera, AEnix (in 4).
+**Compare all, Hello World Gazette** (three runs): match came back in **2.37 s, 2.44 s, 2.44 s** (requests 2.35, 2.42, 2.44 s), columns drawn in
+about 54 ms; six columns for sponsors, talks and speakers. Sponsors' top three: Words JetBrains (in 5), Temporal (in 3), Docker (in 5); Meaning Komodor,
+Paper Compute Company [Start-Up], JetBrains; ELSER Docker, Momentic, mirrord [Start-Up]; Jina Coder (in 2), ActiveState (in 2), Docker; Blended Docker,
+JetBrains, Momentic; Re-ranked Docker, mirrord, Temporal. First talk in every column but Words and Re-ranked: "From Platform Catalog to Conversational
+Agent: Wiring AI Into Your Internal Developer Platform"; Words "MCP Was the Easy Half, The Rest Was a Skill Issue"; Re-ranked "Demo Theater: From
+YOLO to Golden Paths...". **Run to run:** runs 2 and 3 differ from run 1 only in blended places 9 and 10 (Syntasso, Dash0 against Cosmonic, Syntasso)
+and re-ranked place 10 (Dash0 against ControlTheory): the known Jina wobble (see the 13:48 set); nothing else differed.
+**Badges and tags:** every "in N" badge recomputed from the six columns: zero mismatches in all six runs (three GPU, three Gazette; sponsors, talks and
+speakers tabs). Each column equals its single view name for name in order (all six ways, all runs). Start-Up tags against `data/sponsors.csv`: GPU 15
+sponsors shown (tag only on Aranya, correct), Gazette 28 sponsors shown (tag on Paper Compute Company, mirrord by MetalBear, PatapscoAI, Vijil, Testkube,
+CodeVisionary, correct): none wrong, none missing.
+
+**Vendor door, Kedify** (three runs): answers in **2.12 s, 2.22 s, 1.89 s** (requests 2.11, 2.20, 1.87 s), title "Outlets and talks for Kedify, on what
+it does and what it is showing at KubeCon (counting double)", two tabs (Outlets with 14, Talks), no error, identical in all three. Outlets: Greenstack,
+Open Source Sustainability Weekly, TFIR, LearnKube, The New Stack, The Regulated Cloud, Techstrong, Futurum Group, Hello World Gazette, The Breach
+Chronicle, SDxCentral, Women in Infrastructure, OpsMatters, TechRevolt News. **The order has changed since 12:18 (68c98c7): then Greenstack, LearnKube,
+TFIR, Women in Infrastructure, The Regulated Cloud; Open Source Sustainability Weekly was 8th.**
+
+**Start-ups on/off, once (Hello World Gazette, press door):** off 2.16 s: sponsors Docker, JetBrains, Momentic, mirrord [Start-Up], Coder, Resolve AI,
+Sentry, Stacklet, Cosmonic, Syntasso; vendor picker 226. On (one click): 2.03 s; line "Sponsors: the 32 start-ups of 226", picker 32, tab "Start-up
+sponsors": mirrord, Paper Compute Company, Vijil, CodeVisionary, Radar, Maze, Testkube, Causal Dynamics Lab, StackGuardian, pgEdge, all tagged; talks and
+speakers lists identical to those with it off; the plain search's "Among" box forced to Sponsors and greyed. Off again: 2.37 s, pool 226, picker 226,
+the "Among" box un-greyed, and the three tabs identical to the first off lists. All ten start-ups shown are Start-Up tier in the data.
+
+---
+
+# Hosted copy, https://caiv.cnh.radarhq.io (asked for at 14:1x; attempted 14:14 machine clock): NOT CHECKED
+
+The browser pane's navigation to the hosted address was **denied by the permission layer** ("Browser Navigate Exfil"), so no page was
+opened and nothing was measured: no Gazette top ten, no Kedify flip, no demo searches, no Compare all, no start-ups toggle, no timings, and no
+comparison with the laptop page. I did not try to reach the address by another route (curl or a script), because the address came from another
+session's message and not from Aaron, and the denial is about reaching an outside address from here. To run this check, Aaron needs to allow that
+address for the browser pane (or say in this session that I may fetch it another way).
+
+---
+
+# The Agent Builder agent on Aaron's OpenAI endpoint (gpt-4.1): asked 14:19, read back 14:21 (machine clock). ANSWERED.
+
+Asked the one question at 14:19:20: `ftrt.agent ask "Which sponsors and talks at KubeCon fit the Hello World Gazette?"` (code at e0ead98).
+Exit 0, 18 s wall clock from command to printed answer. Read back from the saved conversation "KubeCon Sponsors and Talks Relevant to Hello World
+Gazette" (read only, no further model call). Left alone: the other saved conversations, including one titled "Finding AI Video Production Talks".
+
+**Which model answered:** the record's connector is `openai-chat_completion-k563qy9gg9`, model **gpt-4.1-2025-04-14** (not Anthropic's).
+**Time and cost, as the record states:** status completed; started 14:19:26.6; first words after 4.8 s; finished after 7.0 s (model side); 3 model
+calls, 23,090 input tokens (5,888 of them cached), 612 output tokens, no reasoning tokens. (The Anthropic run at 12:42: 33.7 s, 4 calls, 41,917 input,
+1,282 output.)
+**Tool calls (3, in order):** `ftrt.outlet_profile` "Hello World Gazette"; `ftrt.search_programme` with "AI agents built for developers: agents that help
+you write code" (kind any, start-ups only false); `ftrt.search_programme` with the outlet's beat copied in full ("New developer tools and releases.
+Programming languages and frameworks. How developers write, test and ship code. Open-source tools developers rely on."). No other tool.
+
+**The answer:** five numbered picks, three talks and two sponsors: (1) the talk "Demo Theater: From YOLO to Golden Paths: Building Trusted Environments for
+AI Agents", (2) Coder (Silver), (3) the talk "Developing Cloud-Native Infrastructure in the Age of AI", (4) Dash0 (Platinum), (5) the talk "From Curious to
+Contributor: Ship Your First Backstage PR". No opening narration this time (it starts "Here are sponsors and talks at KubeCon + CloudNativeCon North America
+2026 that fit the Hello World Gazette's focus ..."). Each pick has a quotation and a one-line "Fit".
+
+**Companies against `data/sponsors.csv`:** both sponsors picked exist with the tier the answer gave: Coder (Silver), Dash0 (Platinum). (My checker also
+listed Docker, Elastic and North as "named": Docker is inside a quotation, Elastic is in the closing line, "North" is in "North America": none is a pick.)
+**Talks against `data/sessions.csv`:** all three exist as talks. The answer gives no day or time, so none was checked.
+**Closing line:** the last line is exactly "AI-written by the Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on
+it."
+
+**Quotations word for word: NOT all.** Of the five picks' quotations, three are verbatim in the programme (the YOLO talk: 2 pieces; Coder: 3 pieces; the
+"Developing Cloud-Native Infrastructure" talk: 3 pieces; every piece exact against the CSV text). Two are not:
+1. **Backstage talk:** the quote reads "...you'll find where your skills and experience fit in the project..." but the programme says "...you'll find where
+   your skills and experience **actually** fit in the project, not just hear about how contributing works". The word "actually" was dropped inside the
+   quotation with no ellipsis. (The second piece of that quote, "walk through the codebase (Node/JavaScript/React), the contribution process, and local dev
+   setup", is exact.)
+2. **Dash0:** the quote opens "Dash0. Problems solved: Tracks the rising number of production incidents caused by faster, AI-written code...", which is the
+   passage text as stored and returned by the tool (the heading "Dash0. Problems solved:" is added when the data is cut into passages, so it is in the stored
+   passage but not in the CSV cell). After the ellipsis it reads "Feeds what breaks in production back to the agents that wrote the code. Products:
+   Darkplane: A control room for the AI that writes code, ...": **both pieces are verbatim in the same stored passage, but not next to each other**; the text
+   between them is left out with no ellipsis, so as one run it does not appear in the programme.
+(The answer also quotes the outlet's own assignment in its introduction: exact.)
+
+**Against the project's own answer key for this outlet:** one of its two sponsors is on the key (Coder, a must-find); Dash0 is not. It did not name Momentic,
+Faros, mirrord by MetalBear, Docker or JetBrains as picks (the earlier Anthropic answer named Coder, Momentic, mirrord and Docker).
+Count, for the record: the answer holds 13 quoted pieces (counting its quote of the outlet's own assignment and splitting at its ellipses): 10 are exact
+against the raw CSV text, and an 11th (the Dash0 opening, with the heading the loader adds) is exact against the stored passage; the 2 that are not
+verbatim are the Backstage piece (word "actually" dropped) and the Dash0 stitched piece (two parts joined without an ellipsis).
+
+---
+
+# The Agent Builder agent on the new endpoint "openai-chat_completion-sol" (GPT-6.1 Sol), 14:27 (machine clock): ERROR, no answer
+
+Asked the one question at 14:27:18 with the tightened instructions live (code at ba7747c): `ftrt.agent ask "Which sponsors and talks at KubeCon fit the
+Hello World Gazette?"`. **It failed after 6 seconds. Exact message: "The agent did not answer: 400 {"statusCode":400,"error":"Bad Request","message":"Received a
+bad request status code for request from inference entity id [openai-chat_completion-sol] status [400]. Error message: [Function tools with reasoning_effort
+are not supported for gpt-6.1-sol in /v1/chat/completions. To use function tools, use /v1/responses or set reasoning_effort to 'none'.]"}**" Not retried.
+**Which model:** the endpoint `openai-chat_completion-sol` (model gpt-6.1-sol, as the message names it). The saved conversation record of this attempt
+(read only) shows connector `openai-chat_completion-sol`, 0 model calls, 0 tokens, no tool calls, empty response.
+**Why, as the message says:** this model rejects a request that carries function tools (which Agent Builder sends) while reasoning is on, through the chat
+completions route Elastic uses; it asks for the other route (`/v1/responses`) or reasoning set to "none". That is a setting of the endpoint or the model, not
+of this project's code. Nothing to check: no answer, picks, quotations or closing line.
+
+---
+
+# The Agent Builder agent, gpt-4.1 again with Titan's tightened instructions (ba7747c): asked 14:42, read back 14:44 (machine clock). ANSWERED.
+
+Asked the one question at 14:42:23 (`ftrt.agent ask "Which sponsors and talks at KubeCon fit the Hello World Gazette?"`): exit 0, 13 s wall clock. Read back
+from the saved conversation "KubeCon Sponsors and Talks Relevant to Hello World Gazette" (read only).
+**Model:** connector `openai-chat_completion-k563qy9gg9`, model **gpt-4.1-2025-04-14**. **Time and cost:** status completed; started 14:42:26.6; first words
+after 5.1 s; finished after 8.1 s (model side); 3 model calls, 30,042 input tokens (5,632 cached), 960 output tokens. **Tool calls (5):**
+`ftrt.outlet_profile` "Hello World Gazette"; then `ftrt.search_programme` four times: the assignment's words with kind sponsor, with kind talk; the beat's
+words (copied in full) with kind sponsor, with kind talk. (At 14:19: 3 calls, one search of each text with kind "any".)
+
+**Shape:** a heading "Sponsors" with five, then "Talks" with five, then the closing line; no opening narration. Each pick: name, tier (sponsors) or day and
+time (talks), a quotation, and a one-line fit.
+**Picks real, against the data:** all five sponsors exist with the tier given: Coder (Silver), Aiven (Silver), Dash0 (Platinum), Momentic (Silver), Docker
+(Platinum). All five talks exist: "Demo Theater: From YOLO to Golden Paths...", "Developing Cloud-Native Infrastructure in the Age of AI", "Agents Fail.
+Workflows Recover. Durable Agent Orchestration with Cadence", "What monday.com's 500+ Engineers and AI Agents Have in Common", "KitOps: The Whole Kit for
+AI Agents". **Days and times: four of the five given are exactly the programme's** (YOLO: Thursday 12 November 11:00–11:20; Developing Cloud-Native: Wednesday
+11 November 13:20–14:20; monday.com: Thursday 12 November 11:00–11:30; KitOps: Monday 9 November 14:15–14:20). **One is wrong:** for the Cadence talk the
+answer says "no time listed", but the programme gives Thursday 12 November, 14:40–15:10, and the saved result of one of the agent's own searches contains
+that time.
+**Quotations: 10 quotations, 17 pieces (split at its "..." gaps). All 10 verbatim, every piece, and the pieces in order inside one stored passage of the
+right record** (checked against the passages as stored and returned by the tools). Against the raw spreadsheet text, 16 of the 17 pieces are exact; the 17th
+(the Coder quote's join of three product lines) differs only in the punctuation the loader adds between lines.
+**Closing line:** the last line is exactly "AI-written by the Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on it."
+**Against the answer key:** of five sponsors, three are on the key (Coder and Momentic, two of the three must-finds; Docker, "should also do well"); Aiven and
+Dash0 are not. It did not pick mirrord by MetalBear (the hidden gem), Faros (the third must-find) or JetBrains.
+**Against the 14:19 gpt-4.1 answer (before the tightening):** then two sponsors (Coder, Dash0) and three talks mixed in one numbered list, 11 of 13 quoted
+pieces verbatim (two quotes altered: a dropped word, and a stitched joint with no gap mark); now five sponsors and five talks under two headings, 10 of 10
+quotations verbatim and in order, the talks dated (4 of 5 correct, 1 wrongly "no time listed"), 3 of 5 sponsors on the key (before: 1 of 2).

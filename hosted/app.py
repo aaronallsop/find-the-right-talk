@@ -69,6 +69,7 @@ HTML = re.sub(r'[ \t]*<button type="button" data-way="meaning"[^>]*>Meaning</but
 HTML = HTML.replace('["meaning", "Meaning"], ', "").replace("Try Meaning.", "Try Jina or Elastic ELSER.")
 ftrt_page.app.view_functions["page"] = lambda: HTML
 ftrt_page.app.add_url_rule("/healthz", "healthz", lambda: "ok")   # asks the engine nothing, so it costs nothing
+ftrt_page.app.add_url_rule("/readyz", "readyz", lambda: "ok")     # the name Radar's starter manifests probe
 
 # 4. a limit on searches per address (and overall), because every search is billed
 RATE_PER_ADDRESS = int(os.environ.get("HOSTED_RATE_PER_MINUTE", "60"))

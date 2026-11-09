@@ -13,9 +13,10 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
-from . import config, engine, flip, match, search, tracing, warm
+from . import config, engine, fitcheck, flip, match, search, tracing, warm
 
 PAGE_FILE = Path(__file__).with_name("page.html")
+THEME_FILE = Path(__file__).with_name("page-theme.css")   # the page's look, kept apart from its workings
 app = Flask(__name__)
 client = None
 
@@ -43,6 +44,14 @@ def page():
     return PAGE_FILE.read_text(encoding="utf-8")   # read on every request, so an edit shows on reload
 
 
+@app.get("/page-theme.css")
+def theme():
+    """The page's look. If the file is not there, the page keeps its own built-in look."""
+    if not THEME_FILE.exists():
+        return "", 404
+    return THEME_FILE.read_text(encoding="utf-8"), 200, {"Content-Type": "text/css; charset=utf-8"}
+
+
 @app.get("/api/lists")
 def lists():
     """The pickers: the outlets and the sponsors, by name."""
@@ -54,6 +63,23 @@ def lists():
     return jsonify(engine=engine.where(), elser=search.has_elser(client), rerank=search.rerank_on(),
                    jina=search.has_field(client, config.JINA_FIELD),
                    outlets=by_name(outlets), sponsors=by_name(sponsors))
+
+
+@app.get("/api/profile")
+def profile():
+    """The text a pick puts in the first box: an outlet's standing beat, or what a sponsor does. Ids only in the
+    address, never typed text."""
+    outlet_id, sponsor_id = request.args.get("outlet", "").strip(), request.args.get("sponsor", "").strip()
+    try:
+        if outlet_id:
+            name, parts = match.stored_parts(client, outlet_id)
+            return jsonify(name=name, text=parts["beat"]["text"])
+        if sponsor_id:
+            row = flip.find_sponsor(sponsor_id)
+            return jsonify(name=row["name"], text=flip.sponsor_texts(row)["does"])
+    except SystemExit as e:   # no such outlet or sponsor
+        return jsonify(error=str(e)), 404
+    return jsonify(error="Ask for an outlet or a sponsor."), 400
 
 
 @app.post("/api/match")
@@ -68,15 +94,19 @@ def run_match():
 
 
 def _run_match(root, outlet_id, beat, assignment, startups):
+    """Matches what the two boxes say. A picked outlet only filled the first box (with its own beat, which the
+    visitor may have edited) and names the result; the second box is the visitor's own."""
+    name = "Your outlet"
     if outlet_id:
-        try:
-            name, parts = match.stored_parts(client, outlet_id)
-        except SystemExit as e:   # no such outlet in the catalogue
-            return jsonify(error=str(e)), 404
-    elif beat:
-        name, parts = "Your outlet", match.typed_parts(beat, assignment)
-    else:
+        names = match.outlet_names(client)
+        if outlet_id not in names:
+            return jsonify(error=f"No outlet {outlet_id!r}."), 404
+        name = names[outlet_id]
+        if not beat:   # the box was emptied: fall back to the outlet's own beat
+            beat = match.stored_parts(client, outlet_id)[1]["beat"]["text"]
+    if not beat:
         return jsonify(error="Pick an outlet, or say what you always cover."), 400
+    parts = match.typed_parts(beat, assignment)
     if search.has_field(client, config.JINA_FIELD):
         parts = match.with_jina(client, parts)   # Jina asked once per part, shared by the three kinds
     with ThreadPoolExecutor(max_workers=len(match.MATCH_KINDS)) as pool:   # sponsors, talks, speakers at once
@@ -85,10 +115,30 @@ def _run_match(root, outlet_id, beat, assignment, startups):
     sat_out = search.left_out()   # read once: the trace and the page say the same
     root.set_attribute("left_out", ", ".join(sat_out) or "none")
     results = {kind: {way: _plain(rs) for way, rs in found[kind].items()} for kind in match.MATCH_KINDS}
-    on = ("what it always covers and what it came to find (counting double)" if len(parts) == 2
+    on = ("what it always covers and what you came to find (counting double)" if len(parts) == 2
           else "what it always covers")
     return jsonify(title=f"Matches for {name}, on {on}", results=results, startups=startups, left_out=sat_out,
                    kinds=[["sponsor", "Start-up sponsors" if startups else "Sponsors"], ["talk", "Talks"], ["speaker", "Speakers"]])
+
+
+@app.post("/api/fitcheck")
+def run_fitcheck():
+    """The fit check for the press door's top sponsors, asked for after the results are already on the page.
+    Any trouble at all (no model, too slow, an odd answer) comes back as nothing to show, never as an error."""
+    body = request.get_json(silent=True) or {}
+    outlet_id, beat, assignment = _text(body, "outlet_id"), _text(body, "beat"), _text(body, "assignment")
+    sponsors = body.get("sponsors") if isinstance(body.get("sponsors"), list) else []
+    names = [str(n).strip()[:200] for n in sponsors[:config.FITCHECK_TOP]]
+    with tracing.span("fit check", sponsors=len(names)) as step:   # how many and how long; never what was typed
+        try:
+            if outlet_id and not beat:   # the box was emptied: the outlet's own beat, as the match used
+                beat = match.stored_parts(client, outlet_id)[1]["beat"]["text"]
+            items = fitcheck.check(client, beat, assignment, names)
+        except (Exception, SystemExit) as e:
+            step.set_attribute("failed", type(e).__name__)
+            items = None
+        step.set_attribute("shown", bool(items))
+    return jsonify(items=items or [], model=config.FITCHECK_MODEL_NAME)
 
 
 @app.post("/api/flip")
@@ -102,22 +152,26 @@ def run_flip():
 
 
 def _run_flip(sponsor_id, does, showing):
+    """Flips what the two boxes say. A picked sponsor only filled the first box (with its own text, which the
+    visitor may have edited) and names the result; the second box is the visitor's own."""
+    name = "Your company"
     if sponsor_id:
         try:
             row = flip.find_sponsor(sponsor_id)
         except SystemExit as e:   # no such sponsor
             return jsonify(error=str(e)), 404
-        name, texts = row["name"], flip.sponsor_texts(row)
-    elif does:
-        name, texts = "Your company", flip.typed_texts(does, showing)
-    else:
+        name = row["name"]
+        if not does:   # the box was emptied: fall back to the sponsor's own text
+            does = flip.sponsor_texts(row)["does"]
+    if not does:
         return jsonify(error="Pick a sponsor, or say what your company does."), 400
+    texts = flip.typed_texts(does, showing)
     parts = match.parts_from_text(texts)
     if search.has_field(client, config.JINA_FIELD):
         parts = match.with_jina(client, parts)   # Jina asked once per part, shared by outlets and talks
     found = flip.flip(client, parts, config.PAGE_RESULTS)
     results = {kind: {way: _plain(rs) for way, rs in ways.items()} for kind, ways in found.items()}
-    on = ("what it does and what it is showing at KubeCon (counting double)" if "showing" in parts
+    on = ("what it does and what you are showing at KubeCon (counting double)" if "showing" in parts
           else "what it does")
     return jsonify(title=f"Outlets and talks for {name}, on {on}", results=results, left_out=search.left_out(),
                    kinds=[["outlet", "Outlets"], ["talk", "Talks"]])

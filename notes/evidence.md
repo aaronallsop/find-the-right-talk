@@ -6,7 +6,7 @@ the project's Elastic Cloud serverless engine unless a line says otherwise. A se
 repeated runs gave the identical list, scores included. Each result names the version of the code (the commit
 hash from the repository history) it was measured on; a result is a statement about that version only.
 
-**Draft stamp: first written 12:44 on 9 November, section 3a added 13:48. To be re-run and re-stamped after the 15:45 freeze;
+**Draft stamp: first written 12:44 on 9 November, section 3a added 13:48, section 5.0 added 14:07. To be re-run and re-stamped after the 15:45 freeze;
 until then each line stands for the version named on it.**
 
 ## 1. The data, loaded from a fresh copy of the public repository
@@ -193,6 +193,20 @@ With it on, every sponsor shown (40 match rows, 10 search rows, 32 picker rows) 
 talks and speakers lists do not change; the lists after switching off are identical to the lists before. In
 version c4a8ae8 the page no longer lets "Talks" be chosen while it is on (the box is set to sponsors and greyed).
 
+### 5.0 Refreshed on the latest code (version 904a577, 14:03 to 14:07, real browser; supersedes the times and counts in 5.1 to 5.4)
+- **Engine on screen:** "Elastic Cloud serverless, with Elastic's ELSER, Jina embeddings and a re-ranker".
+- **All 14 outlets** answered with no error message, each in 1.77 s to 2.44 s; every outlet gave 10 sponsors, 10 talks and 10 speakers in the
+  blended view. Words finds fewer for some (for example OpsMatters 5/1/1, TechRevolt News 1/1/1 sponsors/talks/speakers).
+- **Compare all (six columns: words, meaning, ELSER, Jina, blended, re-ranked), three runs each:** the GPU sentence among sponsors in 1.45 s,
+  1.72 s, 1.31 s (identical columns each time); the Hello World Gazette match in 2.37 s, 2.44 s, 2.44 s, then drawn in about 54 ms. Every "in N"
+  badge was recomputed from the columns (zero mismatches in six runs); each column equals its single view name for name and in order; every Start-Up
+  tag (GPU: 15 sponsors shown; Gazette: 28) matches the data, none missing or wrong. Between the Gazette runs only places 9 and 10 of blended and
+  place 10 of re-ranked moved (the Jina variation in 3a).
+- **The vendor door for Kedify,** three runs: 2.12 s, 2.22 s, 1.89 s; 14 outlets and a Talks tab, identical each time; first five Greenstack, Open Source
+  Sustainability Weekly, TFIR, LearnKube, The New Stack (these differ from the order at 12:18 in section 4, before ELSER and Jina were added).
+- **Start-ups only, on and off once:** 2.03 s on, 2.37 s off; the pool line goes 226, 32, 226; the vendor picker 226, 32, 226; with it on the ten
+  sponsors shown are all Start-Ups; talks and speakers are unchanged; after switching off the lists are identical to the ones before.
+
 ### 5.5 The engine is named on screen
 The page shows "Elastic Cloud serverless, with Elastic's ELSER" beside the title (screenshot, 12:36).
 
@@ -203,32 +217,50 @@ behaves for anyone but the person who built it. The word counts quoted for the B
 single count over the sponsors' text. The Gazette misses its own key's pass test by one company; the Breach
 Chronicle misses it entirely. No geographic search is offered: the data has no coordinates.
 
-## 7. The Elastic Agent Builder agent (version 44b827a)
+## 7. The Elastic Agent Builder agent (version e0ead98 for the second answer; 44b827a for the first)
 
-An AI-written second way in: an agent in Elastic's Agent Builder with three read-only tools over today's two
-catalogues, answering in Elastic's hosted language model (Anthropic Claude Sonnet 4.5).
+An AI-written second way in: an agent in Elastic's Agent Builder with three read-only tools over today's two catalogues. The model behind it is whatever
+the project's default connector is when it runs; two real answers were obtained, on two different models. The same single question was used both
+times: "Which sponsors and talks at KubeCon fit the Hello World Gazette?". Both answers were read back from the saved conversation records, and checked
+by a program against the data; the checker made no model call.
 
-**One real answer, checked from the saved record (13:08 on 9 November; the checker made no model call).** The
-question "Which sponsors and talks at KubeCon fit the Hello World Gazette?" was asked at 12:42:49. The record says:
-completed; first words after 11.6 seconds, finished after 33.7 seconds; 4 calls to the model, 41,917 input and
-1,282 output tokens; three tool calls (the outlet's profile, then two searches of the programme, one with the
-outlet's assignment and one with its beat). What was checked in the answer:
+| | First answer, 12:42 (Anthropic Claude Sonnet 4.5, on Elastic's hosted service) | Second answer, 14:19 (OpenAI gpt-4.1-2025-04-14, the project owner's own endpoint) |
+|---|---|---|
+| Time | first words 11.6 s, finished 33.7 s | first words 4.8 s, finished 7.0 s (18 s from command to printed answer) |
+| Model calls, tokens | 4 calls; 41,917 input, 1,282 output | 3 calls; 23,090 input (5,888 cached), 612 output |
+| Tool calls | 3: the outlet's profile, then two searches of the programme (the assignment's words, then the beat's) | the same 3 (the beat's words copied in full) |
+| Companies named exist in the data, with the right tier | 5 of 5 (Coder, Dash0, Momentic, mirrord by MetalBear, Docker) | 2 of 2 (Coder, Dash0) |
+| Talks named exist | 5 of 5; the 3 dated ones matched the programme's day and time | 3 of 3; no day or time given |
+| Quotations word for word in the programme's text | 19 of 19 | 11 of 13 quoted pieces verbatim (against the stored passage text, which carries headings such as "Dash0. Problems solved:" that the raw spreadsheet does not); 3 of the 5 picks' quotations are fully verbatim; the other 2 pieces are not: one drops a word ("actually") inside a quotation without marking it, one joins two separated parts of one passage with no ellipsis |
+| Ends with the AI-written line, exactly | yes | yes |
+| Against the answer key for this outlet | 4 of its 5 sponsors are on the key (Coder, Momentic, the hidden gem mirrord, Docker) | 1 of its 2 sponsors is on the key (Coder); Dash0 is not |
+| Also | opens with a line of the model's own narration; ten picks against "up to five" | five picks (three talks, two sponsors); no narration |
+
+**Third answer, 14:42 (gpt-4.1 again, after the agent's instructions were tightened to ask for exact quotations with "..." for gaps, sponsors then talks).**
+Same question; record: model gpt-4.1-2025-04-14; first words 5.1 s, finished 8.1 s (13 s from command to printed answer); 3 model calls, 30,042 input
+(5,632 cached) and 960 output tokens; 5 tool calls (the outlet's profile, then the assignment's words and the beat's words, each searched once for
+sponsors and once for talks). Checked by program against the data:
 
 | Check | Result |
 |---|---|
-| Every company named is a sponsor in the data | 5 of 5 (Coder, Dash0, Momentic, mirrord by MetalBear, Docker), with the tier the answer gave |
-| Every talk named exists, and the day and time given are the programme's | 5 of 5 exist; the 3 that were dated match |
-| Every quotation appears word for word in the programme's text | 19 of 19 |
+| Shape | "Sponsors" (5) then "Talks" (5), then the closing line; no opening narration |
+| Every company named exists, with the right tier | 5 of 5 (Coder, Aiven, Dash0, Momentic, Docker) |
+| Every talk named exists | 5 of 5; the day and time given are the programme's for 4 of 5; for the fifth (the Cadence talk) the answer says "no time listed" although the programme lists Thursday 12 November, 14:40-15:10 |
+| Quotations word for word, pieces in order, inside one stored passage of the right record | 10 of 10 quotations (17 pieces, split at its "..." gaps) |
 | Ends with the AI-written line, exactly | yes |
-| Against the answer key for this outlet | 4 of its 5 sponsors are on the key (Coder, Momentic, the hidden gem mirrord, Docker); Faros and JetBrains were not named; Dash0 is not on the key |
+| Against the answer key for this outlet | 3 of its 5 sponsors are on the key (Coder, Momentic, Docker); Aiven and Dash0 are not; the hidden gem (mirrord), Faros and JetBrains were not picked |
 
-Two things a reader should know: the answer opens with a line of the model's own narration ("Perfect! I now have
-comprehensive results..."), and its one-line reasons are the model's wording, which was not checked; only the
-quotations were. This is one answer from one question, not a repeated measurement.
+Compared with the 14:19 answer from the same model before the tightening (two sponsors and three talks in one list; 11 of 13 quoted pieces verbatim, two
+quotations altered): every quotation is now verbatim, the answer has the two lists, and it names more of the key's companies; one date was wrongly given as
+missing.
 
-**The quota is tight.** The same single question, asked three more times (12:53, 13:06 and 13:38), was refused
-every time after 30 to 43 seconds with the trial's rate limit (HTTP 429): "wait 8m44s for your trial quota to be
-refilled", then "wait 6m7s", then "wait 3m36s". At 13:38, after the project's default model had been reported
-switched, the refusal and the saved record still named Elastic's hosted Anthropic model
-(anthropic-claude-4.5-sonnet), so the switch had not taken effect for the agent at that time. A live answer from
-the agent cannot be relied on within a short window.
+The three answers are single answers to one question, not repeated measurements, and the one-line reasons in each are the model's own wording, which was not
+checked; only the quotations, names and the closing line were. **The quota was tight on Anthropic's hosted model:** the same question, asked three more
+times (12:53, 13:06 and 13:38) was refused every time after 30 to 43 seconds with the trial's rate limit (HTTP 429: "wait 8m44s", "wait 6m7s", "wait
+3m36s"); at 13:38 the refusal and the saved record still named the Anthropic model. The second answer above came after the agent was switched to the
+project owner's own OpenAI endpoint.
+
+**A third model tried and failed, 14:27.** After the agent's instructions were tightened and the default model was switched to a newer OpenAI endpoint
+(gpt-6.1-sol), the same question was refused in 6 seconds with an error from that endpoint (HTTP 400): "Function tools with reasoning_effort are not
+supported for gpt-6.1-sol in /v1/chat/completions. To use function tools, use /v1/responses or set reasoning_effort to 'none'." No model call was made, so
+nothing about an answer from that model has been checked.

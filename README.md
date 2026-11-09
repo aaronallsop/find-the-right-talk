@@ -1,24 +1,87 @@
-# find-the-right-talk
+# Find the Right Talk
 
-**Which talks and sponsors at KubeCon should a given media outlet cover?** Pick an outlet and this
-ranks the programme (talks, speakers and sponsors) by how well each fits what that outlet covers,
-and shows the passage that made each one match. Turn the same engine round and a sponsor finds the
-outlets and talks that fit it. Start-ups can be shown on their own, so a small company with the
-right story surfaces beside the big names.
+> **Built for the press. When a conference plan falls apart, Find the Right Talk shows a media
+> outlet its next story in seconds: the talks, speakers and companies that fit what it covers.**
+
+It is a tool for media outlets covering a conference. An outlet's profile is matched against the
+whole programme, and the same engine turned round lets a company on the show floor find the
+outlets that would want its story. This build uses KubeCon + CloudNativeCon North America 2026 as
+its example. The idea is not tied to KubeCon: any conference with a programme and a sponsor list
+would work the same way.
+
+> **For judges, in four lines**
+> 1. The live page: https://caiv.cnh.radarhq.io (on Radar's cluster, until 13 November).
+> 2. Elastic's asks: four of five done (serverless, ingest, Jina embeddings, an Agent Builder agent
+>    with custom tools); Workflows is not used. See "What Elastic asked entrants to use" below.
+> 3. The four sponsor tools, one proof each: Elastic (the programme is loaded on a serverless
+>    Elasticsearch project and searched with ELSER, Jina and a re-ranker); Gitar (reviewed all the code,
+>    "Approved", its one finding fixed); Radar (the live page above, deployed by Argo CD); Dash0 (the
+>    dashboard shows one service, three operations, no errors).
+> 4. The measured evidence, including the misses: `notes/evidence.md`.
+
+## The problem
+
+I'm a video producer, and I have covered a lot of conferences as press. You always arrive with a
+plan, and on the first day it usually falls through. An interview cancels. Another one moves to a
+time you can't make. Now you have a free hour, a crew standing around, and hundreds of talks and
+booths to choose from. What usually happens is that you walk towards your next appointment and film
+whatever you pass on the way. The best story in the building could be two aisles over and you would
+never know.
+
+The companies on the show floor have the same problem from the other side. A small company with a
+good story wants coverage, but it doesn't know which outlets are in the building or which of them
+would care.
+
+## The solution
+
+Each outlet has a short profile: what it covers, who its audience is, and what it came to this
+conference to find. Find the Right Talk reads that profile against the whole programme and returns
+the talks, speakers and sponsors that fit. Every result comes with the exact passage that made it
+match, so you can see why at a glance and decide for yourself.
+
+Elasticsearch does the searching, two ways at once. Keyword search catches exact names and terms.
+Semantic search catches the match when nobody used your words. The two lists are blended into one.
+
+Turn it round and a company does the same thing: say what you do, and get the outlets whose beat
+fits your story. One switch narrows any list to start-ups only, so a small company with the right
+story shows up beside the big names.
+
+Because it works from the published programme, you can run it before you travel. You arrive with a
+plan, and with a ranked list of backups for the moment the plan falls through.
+
+## KubeCon as the example
+
+This repository is loaded with the KubeCon + CloudNativeCon North America 2026 programme: 501 talks,
+715 speakers and 226 sponsors, plus 14 outlet profiles (8 real media partners and 6 labelled
+samples). On the page you pick an outlet, which fills in what it always covers, and type what it
+came to the conference to find. Or you pick a sponsor and see the outlets that fit it.
+
+Two honest limits of today's build: you choose from the loaded profiles rather than creating your
+own, and nothing you type is saved. Creating a profile and saving a plan are the next steps.
+
+The engine reads four spreadsheets: sessions, speakers, sponsors and outlets. Another conference
+means another four in the same layout.
 
 It runs on Elastic Cloud serverless, searches the programme by words and by meaning, and in the
-cloud adds Elastic's own ELSER model and Elastic's hosted re-ranker as further voices. All the code
-was written on 9 November 2026, at the WeMakeDevs Cloud Native Hackathon, Elasticsearch track, Salt
-Lake City, by Claude Code under the direction of Aaron Allsop.
+cloud adds Elastic's own ELSER model, Jina's embedding model and Elastic's hosted re-ranker as
+further voices. It also has an Elastic Agent Builder agent, a code review by Gitar, tracing
+in Dash0, and a hosted copy on Radar. All the code was written on 9 November 2026, at the WeMakeDevs
+Cloud Native Hackathon, Elasticsearch track, Salt Lake City, by Claude Code under the direction of
+Aaron Allsop.
 
 ## What you can see
 
-- **Two doors on one page.** "I'm press": pick an outlet, or type what it always covers and what
-  it came to KubeCon to find, and get the talks, speakers and sponsors that fit, each with the
-  passage that matched and the part of the outlet's profile that found it. "I'm a vendor" (the
-  flip): pick a sponsor, or describe your company, and get the outlets whose beat and KubeCon
-  assignment fit it, each with the outlet's own passage, and the talks nearest to what you do.
-  What a sponsor is showing at KubeCon, like an outlet's assignment, counts double.
+- **Best matches, and how they were found.** Results show one "Best matches" list by default (the
+  blended result). A "How these were found" link reveals the six ways (words, meaning, Elastic's ELSER,
+  Jina's embeddings, blended, re-ranked) and Compare all, side by side.
+- **Two doors on one page.** "I'm press": pick an outlet and its beat ("What we always cover") is
+  filled in for you; "What we came to KubeCon to find" is the visitor's own to type (or leave empty,
+  and it matches on the beat alone). Go returns the talks, speakers and sponsors that fit, each with the
+  passage that matched and the part of the profile that found it. "I'm a vendor" (the flip): pick a
+  sponsor and "what my company does" is filled in for you, or describe your company, and get the
+  outlets whose beat and KubeCon assignment fit it, each with the outlet's own passage, and the
+  talks nearest to what you do. What a sponsor is showing at KubeCon, like an outlet's assignment,
+  counts double. Nothing typed is stored.
 - **The start-up flag.** A "Start-ups only" switch narrows every sponsor list to the 32 start-ups
   among the 226 sponsors, and switching it off brings the full lists back.
 - **Words, meaning, and Elastic's voice.** On the page, "Compare all" shows six
@@ -50,13 +113,19 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
   second is added to a search and 1 to 1.5 seconds to a page "Go" (measured 9 November).
 - **Elastic Agent Builder** runs an AI agent, "Find the Right Talk" (in Kibana: Agents), with three
   read-only tools over today's two catalogues only. It is a second, AI-written way in, not the
-  engine: it does not run the project's own blend. Its answers are written by a language model on
-  Elastic's hosted inference service (Anthropic's Claude Sonnet 4.5, the project's default), so the
-  questions and the passages it reads go there, billed per use. Every answer ends "AI-written by the
-  Find the Right Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on it."
-  On Elastic's trial it answers about one long question every 7 minutes. Titan measured one
-  Gazette answer in 41 seconds on 9 November and checked all 14 of its quotations word for word
-  against the programme; Cassini's check of it is still to come.
+  engine: it does not run the project's own blend. Its answers come from a language model reached
+  through Elastic's AI connector in the project: since about 14:20 on 9 November that is an OpenAI
+  model (gpt-4.1) through an endpoint the author created; before that it was the project's default
+  model, Anthropic's Claude Sonnet 4.5 on Elastic's hosted inference service. Elastic's own models do
+  the searching; the connector's model only writes the answer. The questions and the passages the
+  agent reads go to that model, billed per use. Every answer ends "AI-written by the Find the Right
+  Talk agent (Elastic Agent Builder). Check each quoted passage before you rely on it." The agent
+  must quote the programme's own passage for every company or talk it suggests. Checked on 9 November:
+  on the earlier model, all 14 quotations in one Gazette answer were word for word (Titan); on the
+  OpenAI model one answer took 7 seconds, and 2 of its 13 quotations were not word for word (Cassini).
+  After its instructions were tightened, all 10 quotations in an answer were verbatim, it named five
+  sponsors and then five talks, 3 of the 5 sponsors were on the answer key, and one time claim was
+  wrong (fixed in the save labelled 67bcaac).
 - **The blend is this project's own code:** each ranked list votes (reciprocal rank fusion), so it
   takes any number of voices.
 - **Geo queries are not used:** the data has no coordinates (rooms in one building and a region
@@ -64,7 +133,7 @@ Lake City, by Claude Code under the direction of Aaron Allsop.
 
 ## What Elastic asked entrants to use
 
-Status at 13:45 on 9 November, one line each:
+Status on 9 November, one line each:
 
 1. **Elastic Cloud serverless:** done. Everything runs on a serverless Elasticsearch project.
 2. **Ingesting data:** done. The programme, speakers, sponsors and outlets are loaded as 2,250
@@ -72,34 +141,58 @@ Status at 13:45 on 9 November, one line each:
 3. **Jina models for embeddings:** done. Jina's embedding model is one more voice in the blend, and
    Elastic's hosted Jina re-ranker re-orders the blended top 20 (the "Re-ranked" view).
 4. **An Agent Builder agent with custom tools:** done. "Find the Right Talk" has three tools of our
-   own over the two catalogues.
-5. **Elastic Workflows:** not used.
+   own over the two catalogues, and its answers come from the model behind Elastic's AI connector.
+5. **Elastic Workflows:** not used. The plan was to try it only if everything else was done by 15:00,
+   with a 45-minute cap; it was not needed to finish the rest, and this is final.
 
-**The five main code files, so you can see Elasticsearch is the core** (each is in `ftrt/`):
+**The main code files, so you can see Elasticsearch is the core** (all in `ftrt/` unless said):
 
-- `engine.py`: the one way the code reaches Elasticsearch, in Elastic Cloud or on a laptop.
-- `load.py`: loads the spreadsheets into two new catalogues, one document per passage, each holding
-  the words, 384 numbers for its meaning, and (in the cloud) Elastic's ELSER reading of it.
-- `search.py`: the searches: words, meaning, Elastic's ELSER, the blend (reciprocal rank fusion, in
-  this project's own code) and the re-ranked view.
-- `match.py`: an outlet's own profile searches the programme (the press door); `flip.py` does the
-  same the other way round (the vendor door).
-- `agent.py`: sets up the Agent Builder agent and its three tools in Elastic Cloud from a script.
+- `engine.py`: the one way the code reaches Elasticsearch: Elastic Cloud serverless by default, the
+  laptop engine as the fallback.
+- `load.py`: rebuilds the two catalogues from the spreadsheets, one document per passage, each with
+  its words, 384 numbers from the small model, Elastic's ELSER reading and 1,024 Jina numbers (all the
+  numbers are gathered first, so a failure never leaves a half-built catalogue).
+- `search.py`: the ways of searching (words, meaning, Elastic's ELSER, Jina), the blend (reciprocal
+  rank fusion, in this project's own code), the re-ranked view and Compare all.
+- `match.py` and `flip.py`: the press door (an outlet's beat and KubeCon assignment search the
+  programme, the assignment counting double) and the vendor door (a sponsor finds its outlets and
+  nearest talks).
+- `agent.py` (with `agent_instructions.md`): sets up the Elastic Agent Builder agent and its three
+  read-only tools from a script.
+- `page.py` and `page.html`: the two-door page on this laptop, with Compare all and the start-ups
+  switch.
+- `tracing.py`: sends a trace of each search to Dash0 with OpenTelemetry (step names and timings
+  only, never the typed text or the question).
+- `hosted/app.py` (with `hosted/Dockerfile` and `hosted/radar/deployment.yaml`): the lean hosted page
+  (words, ELSER and Jina), meant to be served through Radar once the Argo CD step is applied.
 
 ## The other sponsor tools
 
-Status at 13:55 on 9 November:
+Status on 9 November:
 
-- **Gitar (Sonar):** done. It reviewed all of today's code; see "Who did what, and how AI was used".
-- **Dash0:** the tracing is built. When a Dash0 settings file (`~/dash0/.env`, with
+- **Gitar:** done. It reviewed all of today's code; its one finding was confirmed and fixed, and
+  Gitar now says "Approved" (the start-ups switch could leave an older answer on screen); see
+  "Who did what, and how AI was used". Nothing it wrote was merged.
+- **Dash0:** done and confirmed. The author's Dash0 dashboard shows one service (the page) with three
+  operations (press door, vendor door, plain search), traces from about 14:01 to 14:05 and at about 14:20, the slowest about 2.9 seconds, and no errors. It traces the laptop page only; the hosted Radar copy is not traced. Tracing: when a Dash0 settings file (`~/dash0/.env`, with
   `DASH0_AUTH_TOKEN` and `DASH0_ENDPOINT`, kept outside the project and never committed) is filled
   in, the page sends a trace of each search to Dash0 using OpenTelemetry. Without the file, tracing
   is off and nothing else changes. What goes to Dash0: the names of the steps (the match, each way
   of searching, the re-rank, fetching passages), how long each took, how many results each found,
   which of Elastic's models were left out, and the id of a picked outlet or sponsor. What never
-  goes: the text anyone typed, or the search question.
-- **Radar:** in progress (a cluster has started, and it deploys from a public repository made from Radar's starter template), with a hard stop at 15:15. If a hosted page is not live by then, this line
-  will say so.
+  goes: the text anyone typed, or the search question. Error messages are kept out of the traces
+  too, so the cloud address does not travel with them.
+- **Radar:** done, and live (Dione checked it from the public address, and Saturn opened it in a browser). A hosted copy runs at
+  https://caiv.cnh.radarhq.io on Radar's Kubernetes cluster, deployed by GitOps (Argo CD) from
+  github.com/aaronallsop/caiv-radar. It leaves out the laptop's own meaning model, so its rankings can
+  differ slightly from the laptop page: it offers Blended, Words, ELSER, Jina, Re-ranked and Compare
+  all, and no plain Meaning way, by design. Opened in a real browser, it showed 14 outlets and 226
+  sponsors, and the Hello World Gazette's match came back with Docker, Momentic and JetBrains first,
+  each with its passage. The cluster is deleted on 13 November. The hosted copy uses
+  the author's own Elastic Cloud project through a cluster secret, so a visitor's search is run, and
+  billed per use, on that project, and the text of a search goes to Elastic's models (and, in the
+  Re-ranked view, to Elastic's hosted service) as described above. It limits each visitor to 20
+  requests a minute and the whole page to 120 a minute.
 
 ## Where it falls short
 
@@ -114,11 +207,24 @@ Measured on 9 November against two test outlets whose answer keys were written b
   vulnerabilities and sandboxes. It stays in the data as a reported miss.
 - **The flip** (a sponsor finds outlets) puts its outlets in a weak order, because the scores bunch
   close together; the talks it finds are on target.
+- **The ranking is not exactly repeatable at places 9 and 10.** In 13 runs of the Gazette at the same
+  settings the blended top eight and the re-ranked top nine never changed, but places 9 and 10 flipped
+  between two versions (Cosmonic and Syntasso, or Syntasso and Dash0), because Jina's scores differ in
+  the fourth decimal in some runs. Words, meaning and ELSER never changed.
 - **Meaning finds the topic, not the stance:** re-ranked, the GPU search puts vCluster (which
   shares GPUs) above Edera (which isolates them); the re-ranker cannot tell the stance either.
 - **It never says "nothing fits":** meaning always returns the nearest thing.
 - **The fit check, an AI judgement of the top results, was not built.** The Agent Builder agent is a
-  different thing: it answers in words, and it is slow (41 seconds for one answer when measured).
+  different thing: it answers in words; in one check on 9 November 2 of 13 quotations were not word for word, and after
+  its instructions were tightened one answer had a wrong time claim (since fixed), so check each quoted
+  passage and claim against the programme.
+
+## Next steps
+
+- Creating your own outlet profile, and saving a plan.
+- An optional, labelled AI summary of why each result suits the outlet's audience. It was left out on
+  purpose: the results already show the exact passage that made each one match ("Found because"),
+  which anyone can check, and an AI summary would add cost per search and could not be verified.
 
 ## What existed before the day, and what was built on it
 
@@ -133,7 +239,8 @@ Measured on 9 November against two test outlets whose answer keys were written b
   Elastic Cloud connection (laptop engine as fallback); 11:47 passages fit what the meaning model
   reads; 11:48 the match; 11:54 the page; 11:56 steadier results; 12:12 Elastic's ELSER as a further
   voice; 12:14 the page moves to port 8765; 12:17 the flip; 12:25 the start-ups switch; 12:29 a slow
-  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker; 12:46 the Agent Builder agent; 13:22 a code review by Sonar's Gitar, and its one finding fixed.
+  Elastic model never blanks the page, and the warm-up command; 12:32 Elastic's hosted re-ranker; 12:46 the Agent Builder agent; 13:22 a code review by Gitar, and its one finding fixed;
+  13:44 Jina's embeddings as a further voice; 13:49 Dash0 tracing; 14:00 the hosted copy for Radar, live by about 14:15.
   The commit history starts at the beginning of the hackathon: the first commit holds no code, only
   the data, the notes, the rulebook (`CLAUDE.md`), the licence, the ignore list and this README.
 
@@ -156,19 +263,21 @@ Measured on 9 November against two test outlets whose answer keys were written b
   the search text and the top 20 passages to Elastic's hosted re-ranking service, the second sends
   every passage once at load and each search's question when it runs to Elastic's hosted inference
   service (see above). The
-  Agent Builder agent is the other: its answers are written by Anthropic's Claude Sonnet 4.5 on
-  Elastic's hosted inference service, and are labelled as AI-written.
-- **Sonar's Gitar** reviewed all of today's code on a review pull request that was never merged: it
-  approved with suggestions. Its one finding was confirmed and fixed (the start-ups switch could
+  Agent Builder agent is the other: its answers are written by an OpenAI model (gpt-4.1) reached
+  through Elastic's AI connector, so its questions and the passages it reads go to OpenAI, billed to
+  the author; they are labelled as AI-written.
+- **Gitar** reviewed all of today's code on a review pull request that was never merged: it
+  first approved with suggestions, and now says "Approved" with its one finding closed. The finding was confirmed and fixed (the start-ups switch could
   leave an older answer on screen when switching doors or mid-search; every answer now re-runs if the
   setting changed). A second note, that the loader rebuilds both catalogues from the spreadsheets,
   is by design. Nothing Gitar wrote was merged.
-- [If used: Gemini (Google) read the README as a newcomer would and answered questions; it
-  wrote none of the code.]
 
 ## Checked by Aaron
 
-[One line per check Aaron did himself on the day, and what he saw.]
+Between about 15:00 and 15:10 on 9 November Aaron tested both pages himself (the laptop page and the
+Radar page): the Hello World Gazette with a typed second box, the start-ups switch, the Kedify flip,
+and Compare all on two demo sentences. He found that the Compare-all grid stayed on screen under other
+views; it was fixed on both pages.
 
 ## Set it up
 

@@ -1,6 +1,7 @@
 """An Elastic Agent Builder agent over today's two catalogues, set up from this script.
 
     python -m ftrt.agent setup                 # creates (or replaces) the 3 tools and the agent in Elastic Cloud
+    python -m ftrt.agent instructions          # updates only the agent's instructions, in place, from agent_instructions.md
     python -m ftrt.agent ask "Which sponsors and talks fit the Hello World Gazette?"
     python -m ftrt.agent remove                # deletes the 3 tools and the agent again
 
@@ -130,6 +131,19 @@ def setup():
     print(f"   agent {AGENT_ID}: created. In Kibana: Agents, then 'Find the Right Talk'.")
 
 
+def instructions():
+    """Update only the agent's instructions, in place: its tools and every other setting stay as they are."""
+    status, current = _call("GET", f"/api/agent_builder/agents/{_ours(AGENT_ID)}")
+    if status != 200:
+        raise SystemExit(f"The agent is not there ({status}); run setup first.")
+    configuration = {**current["configuration"], "instructions": INSTRUCTIONS.read_text(encoding="utf-8")}
+    status, body = _call("PUT", f"/api/agent_builder/agents/{AGENT_ID}",
+                         {"name": current["name"], "description": current.get("description", ""), "configuration": configuration})
+    if status != 200:
+        raise SystemExit(f"Could not update the instructions: {status} {body}")
+    print(f"   agent {AGENT_ID}: instructions updated ({len(configuration['instructions'])} characters); tools unchanged")
+
+
 def ask(question: str):
     status, body = _call("POST", "/api/agent_builder/converse", {"agent_id": AGENT_ID, "input": question})
     if status != 200:
@@ -143,12 +157,12 @@ def ask(question: str):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("action", choices=["setup", "ask", "remove"])
+    ap.add_argument("action", choices=["setup", "instructions", "ask", "remove"])
     ap.add_argument("question", nargs="?")
     a = ap.parse_args()
     if a.action == "ask" and not a.question:
         sys.exit("ask needs a question in quotes")
-    {"setup": setup, "remove": remove, "ask": lambda: ask(a.question)}[a.action]()
+    {"setup": setup, "instructions": instructions, "remove": remove, "ask": lambda: ask(a.question)}[a.action]()
 
 
 if __name__ == "__main__":

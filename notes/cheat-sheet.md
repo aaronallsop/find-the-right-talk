@@ -113,12 +113,81 @@ key by one place (Faros 13th); the flip's outlet order is a weak signal while it
 re-ranked, the GPU search puts vCluster above Edera. The Breach Chronicle is set aside: it stays in
 the data and is reported honestly as a miss.
 
-## The 3-minute video (draft by Rhea, 12:50, for Aaron to approve or change)
+## The 3-minute video (Aaron's final script, approved 14:58, sent by Neptune; supersedes the 12:05 and 12:50 versions)
 
-Under three minutes spoken. Words marked **[Aaron]** are Aaron's own approved words, kept verbatim;
-every other line is Rhea's draft in Aaron's voice, written only from results Cassini or Titan
-measured today. Change anything. Nothing on screen is staged: each shot is a real thing the page or
-Terminal does.
+Aaron's words, kept as written. Square brackets are what is on screen, not words to say.
+
+1. [The page, press door, nothing picked. 0:00]
+   "I'm a video producer. I've covered a lot of conferences as media, and the plan never survives the
+   morning. An interview cancels, another one moves, and suddenly you've got ninety free minutes, six
+   hundred talks, two hundred booths, and no idea where to start. You don't want to sit in the press
+   room, but you can't read the whole schedule either. So I built the thing I wanted in that moment.
+   This is KubeCon's own programme, public data with credit, searchable by meaning in Elastic Cloud
+   serverless, built today from an empty folder."
+2. [Pick Hello World Gazette; its beat fills in. Type "AI agents that help developers write code" in "What we came to KubeCon to find"; Go. 0:30] (Titan, 14:57: the result is JetBrains, Momentic, mirrord, Docker, Coder. With nothing typed it matches on the beat alone: JetBrains, Black Duck, Spotify, Aikido Security, HeroDevs. Read what is on screen before you name the companies.)
+   "I'm press. This outlet covers developer tools, and it came with one assignment: AI agents that
+   help developers write code. The match reads that brief and ranks the whole programme against it
+   in about two seconds. Docker, JetBrains, Momentic, Coder: the companies you'd expect. And every
+   result shows the passage that made it fit, so you can check my working." [Scroll to mirrord.]
+   "This one is mirrord, a start-up. Nobody finds it by booth size. The passage says exactly why it
+   fits."
+3. [Start-ups toggle. 0:55]
+   "Start-ups only: two hundred and twenty-six sponsors become thirty-two. That's the hidden-gem list,
+   and it's the list a reporter never has time to make."
+4. [Vendor door, pick Kedify, Go. 1:10]
+   "Same engine turned round. I'm a vendor whose press meeting just cancelled. Which outlets should I
+   be talking to instead?" [Point at the list.] "Greenstack, Open Source Sustainability Weekly, TFIR,
+   LearnKube, The New Stack, each with the line from the outlet's own profile that matched. And
+   below, the talks nearest my story."
+5. [Click "How these were found" once, then Compare all, and type "scale up for a traffic spike and back down afterwards". 1:35]
+   "Under the hood, six columns. Keyword search finds nothing: no sponsor uses those words. My small
+   local model, Elastic's ELSER and Jina's embeddings all find Kedify, the autoscaling start-up. The
+   blend lets every list vote, and Jina's re-ranker reads the top twenty again."
+6. [Compare all (already open), "SLSA Level 3". 1:55]
+   "The other way round: an exact standard name. Keyword wins, ActiveState and Docker, because their
+   text says it. Meaning blurs. That's why there are six columns and why the page shows which one
+   found what."
+7. [Agent clip, pre-recorded. 2:10]
+   "And an agent, built in Elastic's Agent Builder with three read-only tools on these catalogues.
+   Ask it what the Gazette should cover, and it answers with real companies, real talks, and quotes
+   it can point to."
+8. [Radar page in the browser, then the Dash0 trace. 2:30]
+   "The hosted version runs on Radar's Kubernetes cluster, searching with Elastic's models alone.
+   Every press of Go is traced in Dash0, so you can see the searches running in parallel. And Sonar's
+   Gitar reviewed every line of today's code."
+9. [GitHub: the commit history scrolling from the 11:00 commit. 2:45]
+   "All of it written today. The first commit, at eleven, has no code in it; the history shows the
+   rest. Where does it fail? Meaning finds the topic, not the stance, and my hardest test outlet, the
+   Breach Chronicle, is a miss that I report rather than hide. Next time an interview cancels, I've
+   got my next three stories before I've finished my coffee."
+
+**Checks before recording (Neptune's, kept under the script):** the Gazette's top five and Kedify's outlet
+list are Cassini's afternoon measurements; if the final save changes either, read what is on screen.
+Beat 7 only if the agent clip exists; cut it otherwise. Beat 8's Sonar line needs the review pull
+request (PR 1) visible as closed, not deleted.
+
+**Things to confirm before recording (Rhea's flags; the words are Aaron's, these are checks):**
+- **Beat 5, Jina finds Kedify:** the measured result is that meaning, and Elastic's ELSER alone, put
+  Kedify first. I have not seen Jina's own column for that sentence. Read the Compare all screen; if
+  Jina does not show Kedify, drop "and Jina's embeddings" from the sentence.
+- **Beat 8, Dash0 and Radar are different pages:** the Dash0 dashboard shows traces from the laptop
+  page only; the hosted Radar copy is not traced. "Every press of Go is traced" is true of the
+  laptop page, so show the Dash0 trace from a Go on the laptop page, not from the Radar page.
+  "Searches running in parallel" is not something anyone has measured; check the trace view shows it
+  before saying it.
+- **Beat 8, "Sonar's Gitar":** nobody has confirmed the link to Sonar. Say "Gitar" unless Aaron has
+  checked.
+- **Beat 8, "Elastic's models alone":** the hosted copy also uses the words search, so say "without
+  the laptop's own meaning model" if you want it exact.
+- **Beat 7, the agent:** Cassini found 2 of 13 quotations in the agent's answer on the OpenAI model
+  were not word for word. "Quotes it can point to" is only safe if the clip you record has exact
+  quotations; check the saved answer against the programme first.
+- **Length:** the spoken words come to about 460, which is about 3 minutes 15 seconds at a steady 140
+  words a minute, or about 3 minutes at 150 to 155. The timings in the script put beat 9 at 2:45, but
+  beat 9 alone is about 80 words, roughly 35 seconds. It is tight against the 3-minute limit; rehearse
+  with a timer, and if it runs over, cut the optional Dash0 and Radar sentence in beat 8 or the last
+  sentence of beat 9 first.
+- **Beat 2, "about two seconds":** measured about 2.4 to 2.5 seconds for a Gazette Go.
 
 **Before recording (Aaron):** at 16:10 run `.venv/bin/python -m ftrt.warm` (and again at 16:25 before
 submitting). **The agent is its own clip, recorded once (Aaron, 13:10), at about 14:05 after the
@@ -127,37 +196,13 @@ go/no-go,** in the cloud Kibana (Agents, "Find the Right Talk"), using the scree
 before that (refused questions use the trial allowance too). If Elastic refuses, stop and tell Saturn;
 do not retry on camera.
 
-**Screen check before recording, 16:05 (Dione):**
-1. Film the cloud Kibana, never localhost:5601: the laptop Kibana lists Aaron's private catalogues.
-   Check the address bar before recording.
-2. Use a private window or a fresh browser profile with two tabs only: cloud Kibana and
-   http://127.0.0.1:8765. Hide the bookmarks bar, turn Do Not Disturb on, and keep any Terminal or
-   settings file out of shot.
-3. In Kibana do not open Settings, API keys, Connectors, Elasticsearch Endpoints, Discover, Dev Tools,
-   or the Agent Builder's Traces or Logs. Crop out the project name and address if you can.
-4. Clear any leftover typed text on the page first.
-
-| # | Seconds | On screen | Aaron says |
-|---|---|---|---|
-| 1 | 0:00 to 0:45 | The page, press door, nothing picked yet. "Elastic Cloud serverless, with Elastic's ELSER" visible. | **[Aaron]** "I'm a video producer. I've covered a lot of conferences as media, and the plan never survives the morning. An interview cancels, another one moves, and suddenly you've got ninety free minutes, six hundred talks, two hundred booths, and no idea where to start. You don't want to sit in the press room, but you also can't read the whole schedule. So I built the thing I wanted in that moment: KubeCon's own programme, public data with credit, made searchable by meaning in Elastic Cloud, today." |
-| 2 | 0:45 to 1:10 | Pick Hello World Gazette, press Go. Matches come up. Point at the passage under one match. Point at mirrord, flagged Start-Up. | **[Aaron]** "Hello World Gazette is a newsletter for developers about new tools being created. They are at KubeCon to focus specifically on ai agents that are built to help developers work day to day." Then (draft): "Every result shows the passage that made it fit, so you can check my working. And start-ups are flagged: mirrord, a start-up, is in the top ten." |
-| 3 | 1:10 to 1:35 | Search box. Type: scale up for a traffic spike and back down afterwards. Show the Words column empty and the Meaning column with Kedify first, tagged Start-Up. | (draft) "Now the same programme searched by words and by meaning. I describe a problem in my own words: scale up for a traffic spike and back down afterwards. Words find nothing, because no sponsor uses those words. Meaning finds Kedify, a start-up." |
-| 4 | 1:35 to 2:05 | "Compare all" on the GPU sentence: keeping different tenants' GPU workloads isolated from each other on shared hardware. Five columns: Words, Meaning, Elastic ELSER, Blended, Re-ranked. Point at Edera in Words and vCluster in the re-ranked column. | (draft) "Compare all runs one search five ways, including Elastic's own ELSER model and Elastic's re-ranker. Words find Edera, who isolate GPUs. Meaning puts vCluster first, who share them. Re-ranked, vCluster is still above Edera. So the models find the topic, not the stance, and I want you to see that." |
-| 5 | 2:05 to 2:25 | Vendor door. Pick Kedify. Its outlets and nearest talks come up. | (draft) "Same engine, turned round. I'm a vendor, Kedify. Which outlets should I talk to, and which talks are near my story?" |
-| 6 | 2:25 to 2:45 | **The agent clip, recorded once in advance (about 14:05) and cut in here.** The recorded Agent Builder answer, with its quoted passages and the line "AI-written by the Find the Right Talk agent (Elastic Agent Builder)". | (draft) "And an Elastic Agent Builder agent answers in plain words. It must quote the programme's own passage for every company it suggests, and it labels its answer AI-written." |
-| 7 | 2:45 to 2:55 | Back to the page, Elastic Cloud serverless on screen. | (draft) "Elastic Cloud serverless, Elastic's own models, all the code written today from an empty folder." |
-
-**Spoken length:** see the count at the end of this section. If it runs long, cut shot 5 or shot 6
-first (the flip and the agent), then shorten shot 4.
-
-**Do not say** (not measured, or not true): that it answers "in a second"; that "nothing is sent
-anywhere"; anything about the Breach Chronicle as the demo outlet; that the agent is fast (one
-answer took 41 seconds, so the video shows a recording of one answer, not a live wait).
-
-**If Aaron wants it honest on screen:** the optional line for shot 2: "It isn't perfect: one company I
-expected, Faros, comes thirteenth."
-
-**Spoken word count:** about 302 words, which is about 129 seconds at a normal pace of 140 words a minute.
+**Screen check before recording (Dione's list; the full version is in "For Aaron" on `BOARD.md`):**
+record a browser, not the Claude app; one new private window with the bookmarks bar hidden; tabs
+in this order: the laptop page, the GitHub README (signed out), the Radar page, Dash0 traces, the
+cloud Kibana's Agent Builder; Do Not Disturb on; quit apps that can pop up. Film only the cloud Kibana,
+never the local one. Never show a key, a token, a settings file, the kubeconfig, the Elastic console,
+Radar Cloud (app.radarhq.io), Dash0 settings, your real email, or anything from your private project.
+Clear typed boxes first. In the Terminal, only run `.venv/bin/python -m ftrt.warm`.
 
 ## Built on the day, one line per piece
 

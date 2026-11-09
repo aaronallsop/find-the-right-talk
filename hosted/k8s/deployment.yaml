@@ -26,6 +26,12 @@ spec:
               valueFrom: {secretKeyRef: {name: ftrt-elastic, key: ES_CLOUD_URL}}
             - name: ES_CLOUD_API_KEY
               valueFrom: {secretKeyRef: {name: ftrt-elastic, key: ES_CLOUD_API_KEY}}
+            # searches are billed to Elastic: the overall cap is what protects the bill (the per-address one
+            # trusts a header any visitor can fake)
+            - name: HOSTED_RATE_PER_MINUTE
+              value: "20"
+            - name: HOSTED_RATE_OVERALL_PER_MINUTE
+              value: "120"
           readinessProbe:
             httpGet: {path: /healthz, port: 8080}
             periodSeconds: 5
