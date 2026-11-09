@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
-from . import config, engine, flip, match, search, warm
+from . import config, engine, flip, match, search, tracing, warm
 
 PAGE_FILE = Path(__file__).with_name("page.html")
 app = Flask(__name__)
@@ -62,6 +62,11 @@ def run_match():
     body = request.get_json(silent=True) or {}
     outlet_id, beat, assignment = _text(body, "outlet_id"), _text(body, "beat"), _text(body, "assignment")
     startups = bool(body.get("startups"))   # the start-ups toggle narrows the sponsors; talks and speakers are unaffected
+    with tracing.span("press door", outlet=outlet_id or "typed", startups=startups) as root:
+        return _run_match(root, outlet_id, beat, assignment, startups)
+
+
+def _run_match(root, outlet_id, beat, assignment, startups):
     if outlet_id:
         try:
             name, parts = match.stored_parts(client, outlet_id)
@@ -74,8 +79,9 @@ def run_match():
     if search.has_field(client, config.JINA_FIELD):
         parts = match.with_jina(client, parts)   # Jina asked once per part, shared by the three kinds
     with ThreadPoolExecutor(max_workers=len(match.MATCH_KINDS)) as pool:   # sponsors, talks, speakers at once
-        found = dict(zip(match.MATCH_KINDS, pool.map(
-            lambda kind: match.match(client, parts, config.PAGE_RESULTS, kind, startups and kind == "sponsor"), match.MATCH_KINDS)))
+        found = dict(zip(match.MATCH_KINDS, pool.map(tracing.carry(
+            lambda kind: match.match(client, parts, config.PAGE_RESULTS, kind, startups and kind == "sponsor")), match.MATCH_KINDS)))
+    root.set_attribute("left_out", ", ".join(search.left_out()) or "none")
     results = {kind: {way: _plain(rs) for way, rs in found[kind].items()} for kind in match.MATCH_KINDS}
     on = ("what it always covers and what it came to find (counting double)" if len(parts) == 2
           else "what it always covers")
@@ -88,6 +94,11 @@ def run_flip():
     """The vendor door: a picked sponsor, or the two typed boxes, finds the outlets that fit it and the nearest talks."""
     body = request.get_json(silent=True) or {}
     sponsor_id, does, showing = _text(body, "sponsor_id"), _text(body, "does"), _text(body, "showing")
+    with tracing.span("vendor door", sponsor=sponsor_id or "typed"):
+        return _run_flip(sponsor_id, does, showing)
+
+
+def _run_flip(sponsor_id, does, showing):
     if sponsor_id:
         try:
             row = flip.find_sponsor(sponsor_id)
@@ -123,6 +134,11 @@ def run_search():
         return jsonify(error="Type something to search for."), 400
     if (mode not in search.MODES and mode != "compare") or kind not in (None, "talk", "event", "speaker", "sponsor"):
         return jsonify(error="Unknown search."), 400
+    with tracing.span("plain search", mode=mode, kind=kind or "all", startups=startups):
+        return _run_search(q, mode, kind, startups)
+
+
+def _run_search(q, mode, kind, startups):
     if mode == "compare":   # every way at once; a way that is not here (laptop) or did not answer comes back empty
         found = search.compare_all(client, q, config.PAGE_RESULTS, filt=search.filters(kind, startups))
         return jsonify(ways={way: (None if rs is None else _plain(rs)) for way, rs in found.items()},
@@ -145,6 +161,8 @@ def main():
     global client
     client = engine.connect()
     search.embed("warm up")   # load the meaning model now, not on the first search
+    print("Traces of each search go to Dash0" if tracing.setup() else
+          f"Tracing off (no Dash0 settings in {tracing.SETTINGS_FILE}); everything else works the same")
     # Elastic's models sleep when idle: wake them in the background, so the page opens at once; until they
     # answer, searches go ahead without them and the page says so
     threading.Thread(target=warm.warm, args=(client,), daemon=True).start()

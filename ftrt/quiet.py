@@ -26,6 +26,10 @@ os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
 os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
 os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
 os.environ.setdefault("HF_HUB_VERBOSITY", "error")        # the "Could not reach the Hub" note (offline is on purpose)
+# The Elasticsearch library traces its own requests once tracing is on, with the engine's full address in each; only
+# this project's named steps go to Dash0 (ftrt/tracing.py), so the library's own tracing stays off.
+os.environ["OTEL_PYTHON_INSTRUMENTATION_ELASTICSEARCH_ENABLED"] = "false"
+os.environ["OTEL_PYTHON_INSTRUMENTATION_ELASTICSEARCH_CAPTURE_SEARCH_QUERY"] = "omit"
 
 # the last one is torch's "Redirects are not supported on macOS" note, printed on every start
 for _name in ("sentence_transformers", "huggingface_hub", "transformers", "torch",
